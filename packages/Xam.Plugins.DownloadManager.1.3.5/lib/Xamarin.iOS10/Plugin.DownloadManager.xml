@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Plugin.DownloadManager</name>
+    </assembly>
+    <members>
+        <member name="T:Plugin.DownloadManager.CrossDownloadManager">
+            <summary>
+            Cross platform DownloadManager implemenations
+            </summary>
+        </member>
+        <member name="F:Plugin.DownloadManager.CrossDownloadManager.BackgroundSessionCompletionHandler">
+            <summary>
+            Set the background session completion handler.
+            @see: https://developer.xamarin.com/guides/ios/application_fundamentals/backgrounding/part_4_ios_backgrounding_walkthroughs/background_transfer_walkthrough/#Handling_Transfer_Completion
+            </summary>
+        </member>
+        <member name="F:Plugin.DownloadManager.CrossDownloadManager.UrlSessionDownloadDelegate">
+            <summary>
+            The URL session download delegate.
+            @see https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSURLSessionDownloadDelegate_protocol/#//apple_ref/occ/intfm/NSURLSessionDownloadDelegate/URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:
+            </summary>
+        </member>
+        <member name="F:Plugin.DownloadManager.CrossDownloadManager.AvoidDiscretionaryDownloadInBackground">
+            <summary>
+            Wether you should use a normal download session configuration instead of as background download session configuration when the app is in the background to avoid the discretionary.
+            This makes the app download in the same process to be able to download immediately instead of waiting for the systems scheduling algorithm.
+            The download will however not continue if the app is suspended while downloading.
+            @see https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/1411552-discretionary?language=objc
+            </summary>
+        </member>
+        <member name="P:Plugin.DownloadManager.CrossDownloadManager.Current">
+            <summary>
+            The platform-implementation
+            </summary>
+        </member>
+        <member name="T:Plugin.DownloadManager.DownloadManagerImplementation">
+            <summary>
+            The iOS implementation of the download manager.
+            </summary>
+        </member>
+        <member name="M:Plugin.DownloadManager.DownloadManagerImplementation.InitBackgroundSession(Plugin.DownloadManager.UrlSessionDownloadDelegate)">
+            We initialize the background session with the following options
+            - nil as queue: The method, called on events could end up on any thread
+            - Only one connection per host
+        </member>
+        <member name="F:Plugin.DownloadManager.DownloadFileImplementation.Task">
+            The task, running in the background
+        </member>
+        <member name="M:Plugin.DownloadManager.DownloadFileImplementation.#ctor(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            Initializing a new object to add it to the download-queue
+        </member>
+        <member name="M:Plugin.DownloadManager.DownloadFileImplementation.#ctor(Foundation.NSUrlSessionTask)">
+            Called when re-initializing the app after the app shut down to be able to still handle on-success calls.
+        </member>
+        <member name="M:Plugin.DownloadManager.UrlSessionDownloadDelegate.DidResume(Foundation.NSUrlSession,Foundation.NSUrlSessionDownloadTask,System.Int64,System.Int64)">
+            A Task was resumed (or started ..)
+        </member>
+        <member name="M:Plugin.DownloadManager.UrlSessionDownloadDelegate.DidWriteData(Foundation.NSUrlSession,Foundation.NSUrlSessionDownloadTask,System.Int64,System.Int64,System.Int64)">
+            The Task keeps receiving data. Keep track of the current progress ...
+        </member>
+        <member name="M:Plugin.DownloadManager.UrlSessionDownloadDelegate.MoveDownloadedFile(Plugin.DownloadManager.DownloadFileImplementation,Foundation.NSUrl,System.String)">
+            Move the downloaded file to it's destination
+        </member>
+    </members>
+</doc>

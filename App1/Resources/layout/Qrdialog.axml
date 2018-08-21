@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fondo1"
+        android:scaleType="fitXY"
+        android:background="@android:color/black"
+        android:alpha="0.5" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearlayout0">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:id="@+id/linearLayout4"
+            android:gravity="left"
+            android:alpha="0.7">
+            <ImageView
+                android:src="@drawable/home"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageView4" />
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:id="@+id/space3" />
+            <ImageView
+                android:src="@drawable/play"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/imageView5"
+                android:layout_gravity="center" />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/textView2"
+                android:gravity="center"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:scrollHorizontally="true" />
+        </LinearLayout>
+        <TextView
+            android:text="Escanea el codigo para conectar"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textView1"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:id="@+id/imageView1" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout3"
+            android:gravity="center">
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/space2" />
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:id="@+id/space1" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

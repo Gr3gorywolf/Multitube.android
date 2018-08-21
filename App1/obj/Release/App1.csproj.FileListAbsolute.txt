@@ -1,0 +1,333 @@
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\App1.dll
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\App1.pdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\App1.App1.apk
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\App1.App1-Signed.apk
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\Xamarin.Android.Support.v4.dll
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\ZXing.Net.Mobile.Core.dll
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\zxing.portable.dll
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\ZXingNetMobile.dll
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\App1.csprojResolveAssemblyReference.cache
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\App1.dll
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\App1.pdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\bin\App1.App1.apk
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\layout\perfectmain.xml
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\layout\main.xml
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\values\strings.xml
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\icon.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\previous.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\skip.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\play.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\volumeup.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\volumedown.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\fastfowardarrows.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\downloadbutton.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\maximize.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\add.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\search.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\rightarrow.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\R.cs.flag
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\uploadflags.txt
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\layout\perfectmaindos.xml
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\drawable\fastfowardarrowscopia.png
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\res\layout\customwebbrowser.xml
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\App1.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\Java.Interop.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\Mono.Android.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\mscorlib.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.ComponentModel.Composition.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.Core.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.Net.Http.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.Runtime.Serialization.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.ServiceModel.Internals.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.Xml.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\bin\Release\System.Xml.Linq.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\App1.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\Java.Interop.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\Mono.Android.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\mscorlib.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\System.Core.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\System.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\android\assets\System.Runtime.Serialization.dll.mdb
+C:\Users\lou\documents\visual studio 2015\Projects\App1\App1\obj\Release\App1.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Youtube PC Remote.dll.config
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Youtube PC Remote.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Youtube PC Remote.pdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Youtube.PC.apk
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Youtube.PC-Signed.apk
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Newtonsoft.Json.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Xamarin.Android.Support.v4.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Xamarin.Android.Support.v7.AppCompat.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\YoutubeExtractor.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\YoutubeSearch.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\ZXing.Net.Mobile.Core.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\zxing.portable.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\ZXingNetMobile.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Newtonsoft.Json.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\YoutubeExtractor.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\Youtube PC Remote.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\Youtube PC Remote.pdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\bin\Youtube.PC.apk
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\perfectmain.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\customwebbrowser.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\downloadcenter.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\customsearcher.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\agregardialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\layout1.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\main.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\values\strings.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\search.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\rightarrow.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\pauseroundbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\error.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\playbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\pausebutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\add.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\play.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\skip.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\previous.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\maximize.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\volumeup.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\volumedown.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\fastfowardarrows.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\fastfowardarrowscopia.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\downloadbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\iconss.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\icon.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\youtubelogo.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\microphone.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\home.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\menu1.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\rightarroww.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\R.cs.flag
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\uploadflags.txt
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\App1.csprojResolveAssemblyReference.cache
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\reproducirlista.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\songplaylist.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\ModernHttpClient.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\OkHttp.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\ModernHttpClient.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\perfectmainoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\speaker.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\playbutton2.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\pausebutton2.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Youtube PC Remote.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\qrdialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Java.Interop.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\Mono.Android.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\mscorlib.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.ComponentModel.Composition.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.Core.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.Net.Http.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.Runtime.Serialization.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.ServiceModel.Internals.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.Xml.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\bin\Release\System.Xml.Linq.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\Java.Interop.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\ModernHttpClient.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\Mono.Android.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\mscorlib.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\System.Core.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\System.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\System.Net.Http.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\System.Runtime.Serialization.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\android\assets\Youtube PC Remote.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\downloadcenteroffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\menulistaoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\crearlistaoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\loadplaylistoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\clipboardadd.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\clipboarddelete.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\plus.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\deletebutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\closecircularbuttonofacross.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\layoutlistilla.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\closebutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\icooon.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\drawable\icooooooooon.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\res\layout\eliminardialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1\App1\obj\Release\Youtube PC Remote.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Multitube.dll.config
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Multitube.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Multitube.pdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Youtube.PC.apk
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Youtube.PC-Signed.apk
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\FastAndroidCamera.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\FluentFTP.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\libvideo.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\ModernHttpClient.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\mooftpservlib.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Newtonsoft.Json.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\OkHttp.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Plugin.DownloadManager.Abstractions.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Plugin.DownloadManager.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Xamarin.Android.Support.Design.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Xamarin.Android.Support.v13.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Xamarin.Android.Support.v4.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Xamarin.Android.Support.v7.AppCompat.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Xamarin.Android.Support.v7.RecyclerView.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\YoutubeSearch.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\ZXing.Net.Mobile.Core.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\zxing.portable.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\ZXingNetMobile.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\FastAndroidCamera.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\FluentFTP.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\ModernHttpClient.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Newtonsoft.Json.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Plugin.DownloadManager.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Plugin.DownloadManager.Abstractions.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\App1.csprojResolveAssemblyReference.cache
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\Multitube.dll
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\Multitube.pdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\bin\Youtube.PC.apk
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\menusincronizacion.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmain.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\customwebbrowser.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\downloadcenter.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\customsearcher.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\agregardialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layout1.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\reproducirlista.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmainoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\qrdialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\downloadcenteroffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\menulistaoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\crearlistaoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\loadplaylistoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutlistilla.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\eliminardialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\configuraciones.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\downloadcenterofflinedialog.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\agregaralistahecha.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutvideo.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layout2.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutfastsearcher.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmainoffline2.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmain2.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmainoffline3.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmain3.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmainoffline5.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmain4.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutminiplayer.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutvacio.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutplayeroffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutlistaplayeroffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutminiplayeronline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutlistaplayerindependiente.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutinfooffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\actsyncoffline.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\perfectmainmenu.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\conectaralservidor.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\layoutbio.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\main.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\values\strings.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\search.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\rightarrow.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\pauseroundbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\error.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\playbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\pausebutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\add.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\play.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\skip.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\previous.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\maximize.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\volumeup.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\volumedown.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fastfowardarrows.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fastfowardarrowscopia.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\downloadbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\iconss.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\icona.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\youtubelogo.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\microphone.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\home.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\layout\menu1.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\rightarroww.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\songplaylist.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\speaker.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\playbutton2.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\pausebutton2.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\icon.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\clipboardadd.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\clipboarddelete.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\plus.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\deletebutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\closecircularbuttonofacross.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\closebutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\icooon.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\icooooooooon.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\syncfull.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\synchalf.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\folder.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\save.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\settings.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\warningsignonatriangularbackground.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\addlist.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\edit.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\file.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\menucircularbutton.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\sync.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\playlist.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\list.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\videoplayer.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\menu.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\leftarrow.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\drwaablegris.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\drwaable.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\drwaablerojo.xml
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\linksymbol.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\tabletwithwifisignalonscreen.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\musicalnote.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\qrcodescan.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\remotecontrolbuttons.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\onlinevideo.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\playarrow.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fondo1.jpg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fondo2.jpg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fondo3.jpg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fondo4.jpg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\fondosparaminiaturasdeyoutubeminimalist1920x1080wallpaper203803.jpg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\violador.jpg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\minimizeee.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\miimagen.jpeg
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\information.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\res\drawable\trashbinsymbol.png
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\R.cs.flag
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\uploadflags.txt
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Multitube.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Java.Interop.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Microsoft.CSharp.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Mono.Android.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\Mono.CSharp.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\mscorlib.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.ComponentModel.Composition.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Core.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.IO.Compression.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Net.Http.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Net.Sockets.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Numerics.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Runtime.Serialization.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Runtime.Serialization.Primitives.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.ServiceModel.Internals.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Xml.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\bin\Release\System.Xml.Linq.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\Java.Interop.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\Microsoft.CSharp.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\ModernHttpClient.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\Mono.Android.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\Mono.CSharp.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\mscorlib.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\Multitube.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Core.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Net.Http.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Net.Sockets.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Numerics.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Runtime.Serialization.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Runtime.Serialization.Primitives.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Xml.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\android\assets\System.Xml.Linq.dll.mdb
+C:\Users\Gr3\Documents\Visual Studio 2015\Projects\App1 v3\App1\obj\Release\Multitube.dll.mdb

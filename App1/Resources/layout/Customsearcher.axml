@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fondo1"
+        android:scaleType="fitXY"
+        android:background="@android:color/black"
+        android:alpha="0.5" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearlayout0">
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout1">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:id="@+id/linearLayout4"
+                android:gravity="left"
+                android:alpha="0.7">
+                <ImageView
+                    android:src="@drawable/home"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/imageView3" />
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/space3" />
+                <ImageView
+                    android:src="@drawable/play"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/imageView4"
+                    android:layout_gravity="center" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textView1"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:scrollHorizontally="true" />
+            </LinearLayout>
+        </LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:id="@+id/space2" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout2"
+            android:gravity="center">
+            <ImageView
+                android:src="@drawable/microphone"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/imageView2" />
+            <EditText
+                android:layout_height="match_parent"
+                android:id="@+id/editText1"
+                android:layout_width="200dp"
+                android:hint="Nombre del video"
+                android:singleLine="true" />
+            <ImageView
+                android:src="@drawable/search"
+                android:layout_width="45dp"
+                android:layout_height="48dp"
+                android:id="@+id/imageView1" />
+        </LinearLayout>
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:id="@+id/progresss"
+            android:progressTint="#ffff0000"
+            style="?android:attr/progressBarStyleHorizontal" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout3">
+            <ListView
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/listView1" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

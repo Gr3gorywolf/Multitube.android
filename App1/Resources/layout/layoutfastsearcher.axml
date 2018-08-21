@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="@android:color/black"
+    android:alpha="1">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="350dp"
+        android:layout_height="45dp"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:background="@android:color/black"
+        android:alpha="1">
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:id="@+id/edittext1"
+            android:singleLine="true" />
+        <ImageView
+            android:src="@drawable/search"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/ricochet"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp" />
+        <ImageView
+            android:src="@drawable/closebutton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/imageView2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar1" />
+</LinearLayout>

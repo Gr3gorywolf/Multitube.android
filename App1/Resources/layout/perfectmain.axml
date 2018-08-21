@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:id="@+id/linearLayout0"
+    android:gravity="end">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/linearLayout7"
+        android:gravity="left"
+        android:layout_gravity="bottom"
+        android:alpha="70">
+        <ImageView
+            android:src="@drawable/downloadbutton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView8" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/space13" />
+        <ImageView
+            android:src="@drawable/youtubelogo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView14" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/space14" />
+        <ImageView
+            android:src="@drawable/songplaylist"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView16" />
+        <ImageView
+            android:src="@drawable/sync"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView17"
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout6"
+        android:gravity="left"
+        android:backgroundTint="#00000000">
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:id="@+id/imageView13" />
+        <TextView
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textView1"
+            android:gravity="center" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:gravity="center"
+        android:showDividers="none">
+        <ImageView
+            android:src="@drawable/fastfowardarrowscopia"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView7" />
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space5" />
+        <ImageView
+            android:src="@drawable/previous"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView2" />
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space1" />
+        <ImageView
+            android:src="@drawable/play"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageView3" />
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space2" />
+        <ImageView
+            android:src="@drawable/skip"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView4" />
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space3" />
+        <ImageView
+            android:src="@drawable/fastfowardarrows"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView5" />
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space4" />
+        <ImageView
+            android:src="@drawable/maximize"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView6" />
+    </LinearLayout>
+    <Space
+        android:id="@+id/space7"
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout3"
+        android:gravity="left">
+        <ImageView
+            android:src="@drawable/volumedown"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView9" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space12" />
+        <ImageView
+            android:src="@drawable/volumeup"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/imageView10" />
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space11" />
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:id="@+id/space8" />
+    </LinearLayout>
+    <Space
+        android:layout_width="200px"
+        android:layout_height="20dp"
+        android:id="@+id/space6" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout4">
+        <ImageView
+            android:src="@drawable/microphone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/imageView15" />
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/editText1"
+            android:hint="Nombre del video" />
+        <Space
+            android:layout_width="10px"
+            android:layout_height="match_parent"
+            android:id="@+id/space9" />
+        <ImageView
+            android:src="@drawable/add"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/imageView11" />
+        <Space
+            android:layout_width="10px"
+            android:layout_height="match_parent"
+            android:id="@+id/space10" />
+        <ImageView
+            android:src="@drawable/playbutton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/imageView12" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout5">
+        <ListView
+            android:id="@+id/listView1"
+            android:fadeScrollbars="false"
+            android:fastScrollAlwaysVisible="true"
+            android:scrollbars="none"
+            android:verticalScrollbarPosition="defaultPosition"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:saveEnabled="true" />
+    </LinearLayout>
+</LinearLayout>
