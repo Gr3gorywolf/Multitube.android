@@ -12,24 +12,24 @@ using Android.Widget;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Net.Sockets;
-
+using Android.Support.Design;
 using System.Threading;
 namespace App1
 {
-    [Activity(Label = "agregarlistaoffline", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity(Label = "agregarlistaoffline", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class agregarlistaoffline : Activity
     {
         ListView listbox;
         EditText textbox;
-        ImageView botonagregar;
+        Android.Support.Design.Widget.FloatingActionButton botonagregar;
         ImageView botonsalir;
         LinearLayout lineall;
         LinearLayout lineall2;
-        ImageView botoneliminar;
+        Android.Support.Design.Widget.FloatingActionButton botoneliminar;
         List<string> listalinks = new List<string>();
 
         List<string> listanombres= new List<string>();
-        string elementossincortar;
+       
         TcpClient cliente = new TcpClient();
         public bool eneliminacion = false;
         protected override void OnCreate(Bundle savedInstanceState)
@@ -39,61 +39,57 @@ namespace App1
             cliente.Connect(Intent.GetStringExtra("ipadre"), 1024);
             listbox = FindViewById<ListView>(Resource.Id.listView1);
             textbox= FindViewById<EditText>(Resource.Id.editText1);
-            botonagregar = FindViewById<ImageView>(Resource.Id.imageView2);
-            botoneliminar= FindViewById<ImageView>(Resource.Id.imageView3);
+            botonagregar = FindViewById<Android.Support.Design.Widget.FloatingActionButton>(Resource.Id.imageView2);
+            botoneliminar= FindViewById<Android.Support.Design.Widget.FloatingActionButton>(Resource.Id.imageView3);
             botonsalir = FindViewById<ImageView>(Resource.Id.imageView1);
-            elementossincortar = "";
-            elementossincortar = clasesettings.gettearvalor("elementosactuales");
-         
-       
+          
+          //  elementossincortar = clasesettings.gettearvalor("elementosactuales");      
             lineall = FindViewById<LinearLayout>(Resource.Id.linearlayout0);
             lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-            RunOnUiThread(() => listbox.Adapter = adaptadolo);
+            RunOnUiThread(() => {
+                var parcelable = listbox.OnSaveInstanceState();
+                listbox.Adapter = adaptadolo;
+                listbox.OnRestoreInstanceState(parcelable);
+            });
             clasesettings.ponerfondoyactualizar(this);
 
-            if (elementossincortar.Trim().Length> 5)
-            {
-            
-                listanombres = elementossincortar.Split('$')[0].Split(';').ToList();
-                listalinks = elementossincortar.Split('$')[1].Split(';').ToList();
-            
-            }
-            if (listanombres.Count > 0)
-            {
-                if (listanombres[listanombres.Count - 1].Trim() == "")
-                {
-                    listanombres.RemoveAt(listanombres.Count - 1);
+  
+            AlertDialog.Builder adx = new AlertDialog.Builder(this);
+            adx.SetCancelable(false);
+            adx.SetTitle("Cargar elementos en reproduccion");
+            adx.SetIcon(Resource.Drawable.alert);
+            adx.SetMessage("Desea cargar todos los elementos que estan en reproduccion actualmente?");
+            adx.SetNegativeButton("No",nox);
+            adx.SetPositiveButton("Si", six);
+            adx.Create();
+            adx.Show();
 
-                }
-                if (listalinks[listalinks.Count - 1].Trim() == "")
-                {
-                    listalinks.RemoveAt(listalinks.Count - 1);
-
-                }
-            }
            
-            botoneliminar.SetBackgroundResource(Resource.Drawable.closecircularbuttonofacross);
-            ArrayAdapter adaptador = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, listanombres);
-            listbox.Adapter = adaptador;
-           // lineall.SetBackgroundColor(Android.Graphics.Color.DarkGray);
-            animar2(lineall2);
+            eneliminacion = true;
+           /* adapterlistaremoto adaptador = new adapterlistaremoto(this, listanombres,listalinks);
+            listbox.Adapter = adaptador;*/
+            lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor("#2b2e30"));
+           // animar2(lineall2);
             botoneliminar.Click += delegate
             {
-                animar(botoneliminar);
+               // animar(botoneliminar);
                 if (!eneliminacion)
                 {
-                   botoneliminar.SetBackgroundResource(Resource.Drawable.menucircularbutton);
+                   //botoneliminar.SetBackgroundResource(Resource.Drawable.playlistcheck);
                     adaptadorlista adalter = new adaptadorlista(this, listanombres,listalinks, textbox.Text, false, true);
+                    var parcelable = listbox.OnSaveInstanceState();
+
                     listbox.Adapter = adalter;
+                    listbox.OnRestoreInstanceState(parcelable);
                     eneliminacion = true;
                 }
                 else
                 {
-                    botoneliminar.SetBackgroundResource(Resource.Drawable.closecircularbuttonofacross);
-                    adaptador = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, listanombres);
-                    listbox.Adapter = adaptador;
-                    eneliminacion = false;
+                  //  botoneliminar.SetBackgroundResource(Resource.Drawable.playlistedit);
+                  /*  adaptadorzz = new adapterlistaremoto(this, listanombres,listalinks);
+                    listbox.Adapter = adaptadorzz;
+                    eneliminacion = false;*/
                 }
                
 
@@ -101,8 +97,8 @@ namespace App1
             botonagregar.Click += delegate{
                 
              
-   animar(botonagregar);
-                if (textbox.Text.Length >= 1)
+  // animar(botonagregar);
+                if (textbox.Text.Length >= 3)
                 {
                    
 
@@ -113,7 +109,7 @@ namespace App1
                         string elementosfull = "";
                         escritor = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + RemoveIllegalPathCharacters( textbox.Text));
 
-                        if (listanombres.Count - 1 > 0 && listanombres.Count - 1 > 0 && listanombres[0].Trim() != "" && listalinks[0].Trim() != "")
+                        if (listanombres.Count  > 0 && listalinks.Count  > 0 && listanombres[0].Trim() != "" && listalinks[0].Trim() != "")
                         {
                             elementosfull = string.Join(";", listanombres) + ";" + "$" + string.Join(";", listalinks) + ";";
                         }
@@ -123,7 +119,7 @@ namespace App1
                         }
                         escritor.Write(elementosfull);
                         escritor.Close();
-                        cliente.Client.Send(Encoding.Default.GetBytes("actualizarplaylist()"));
+                        menulistaoffline.gettearinstancia().llenarlista();
                         cliente.Client.Disconnect(false);
                         Toast.MakeText(this, "Lista guardada satisfactoriamente", ToastLength.Long).Show();
                         Finish();
@@ -147,7 +143,7 @@ namespace App1
 
                 }
                 else{
-                    Toast.MakeText(this, "Por favor digite un nombre para la lista de reproduccion", ToastLength.Long).Show();
+                    Toast.MakeText(this, "El nombre de la lista de reproduccion debe tener almenos 3 caracteres", ToastLength.Long).Show();
                 }
             };
             botonsalir.Click += delegate
@@ -166,14 +162,36 @@ namespace App1
             var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
             return r.Replace(path, "");
         }
+        public  void six(object sender, EventArgs e)
+        {
+            listanombres = mainmenu_Offline.gettearinstancia().lapara;
+            listalinks = mainmenu_Offline.gettearinstancia().laparalinks;
 
+
+
+            // botoneliminar.SetBackgroundResource(Resource.Drawable.playlistedit);
+            if (listanombres.Count > 0)
+            {
+                adapterlistaremotoconeliminar adalter22 = new adapterlistaremotoconeliminar(this, listanombres, listalinks, textbox.Text, false, true);
+                var parcelable = listbox.OnSaveInstanceState();
+                listbox.Adapter = adalter22;
+                listbox.OnRestoreInstanceState(parcelable);
+            }
+
+
+        }
+        public  void nox(object sender, EventArgs e)
+        {
+           
+
+        }
         public void ok(object sender, EventArgs e)
         {
             StreamWriter escritor;
 
             string elementosfull = "";
             escritor = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + RemoveIllegalPathCharacters(textbox.Text));
-            if(listanombres.Count-1>0 && listanombres.Count - 1 > 0 && listanombres[0].Trim()!="" && listalinks[0].Trim() != "")
+            if(listanombres.Count>0 && listalinks.Count > 0 && listanombres[0].Trim()!="" && listalinks[0].Trim() != "")
             {
                  elementosfull = string.Join(";", listanombres)+";" + "$" + string.Join(";", listalinks)+";";
             }
@@ -183,7 +201,8 @@ namespace App1
             }
             escritor.Write(elementosfull);
             escritor.Close();
-            cliente.Client.Send(Encoding.Default.GetBytes("actualizarplaylist()"));
+            //  cliente.Client.Send(Encoding.Default.GetBytes("actualizarplaylist()"));
+            menulistaoffline.gettearinstancia().llenarlista();
             cliente.Client.Disconnect(false);
             Toast.MakeText(this, "Lista guardada satisfactoriamente", ToastLength.Long).Show();
             Finish();

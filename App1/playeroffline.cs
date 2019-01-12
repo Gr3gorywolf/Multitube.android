@@ -17,10 +17,23 @@ using Android.Support.V4;
 using Android.Renderscripts;
 using Android.Media.Session;
 using Android.Graphics.Drawables;
+using Android.Support.Design.Widget;
+using Android.Support.V4.Widget;
+using Android.Support.V7.Widget;
+using Android.Support.V7.App;
+using Android.Support.V7.AppCompat;
+using Android.Support.V7.View;
+using Android.Support.V7.Util;
+using Android.Support.V7.Content;
+using Android.Glide;
+using Android.Glide.Request;
+
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
-    public class playeroffline : Activity,ISurfaceHolderCallback
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+    public class playeroffline : Android.Support.V7.App.AppCompatActivity, ISurfaceHolderCallback
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
     {
         public int posactual;
         public bool videofullscreen = false;
@@ -30,11 +43,11 @@ namespace App1
         public bool videoenholder = false;
         public bool desdethread = false;
         MediaPlayer musicaplayer = new MediaPlayer();
-       public List<string> nombreses = new List<string>();
-        public List<string> portadases = new List<string>();
+        public List<string> nombreses = new List<string>();
+        public List<string> linkeses = new List<string>();
         public List<string> patheses = new List<string>();
-        public List<Android.Graphics.Bitmap> imageneses = new List<Bitmap>();
-        public Dictionary<string ,int > diccionario = new Dictionary<string , int>();
+
+        public Dictionary<string, int> diccionario = new Dictionary<string, int>();
         public int counter = 0;
         public bool sincronized = false;
         public int indiceactual = 0;
@@ -60,13 +73,24 @@ namespace App1
         public ISurfaceHolder holder;
         TextView textovideomusica;
         ImageView imagenvideomusica;
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         public ImageView fondo;
         public long millis = 0;
         ImageView entrarenmodovideo;
         public string postcachepath = "";
         broadcast_receiver br;
         public int postcachepos = 0;
+        public MediaSession mSession;
+        DrawerLayout sidem;
+        NavigationView itemsm;
+        ImageView botonaccion;
+        Android.Support.V7.Widget.SearchView searchview;
+        Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout panel;
+
+
+
         public static playeroffline gettearinstancia()
         {
             return instancia;
@@ -118,11 +142,34 @@ namespace App1
             var barraabajo = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             var botonborrar = FindViewById<ImageView>(Resource.Id.imageView46);
             entrarenmodovideo = FindViewById<ImageView>(Resource.Id.imageView47);
+            sidem = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            itemsm = FindViewById<NavigationView>(Resource.Id.content_frame);
+            botonaccion = FindViewById<ImageView>(Resource.Id.btnaccion);
+            searchview = FindViewById<Android.Support.V7.Widget.SearchView>(Resource.Id.searchView);
+       
             ////////////////////////////////////////////////miselaneo////////////////////////////////
+
+            panel = FindViewById<Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout>(Resource.Id.sliding_layout);
+         
+            
+            panel.IsUsingDragViewTouchEvents = true;
+            panel.DragView = FindViewById<RelativeLayout>(Resource.Id.scrollable);
+            var solapa = FindViewById<LinearLayout>(Resource.Id.solapita);
+            solapa.Click += delegate
+            {
+
+                if (panel.IsExpanded)
+                    panel.CollapsePane();
+                else
+                    panel.ExpandPane();
+            };
+            //  panel.Clickable = false;
+            //   panel.IsUsingDragViewTouchEvents = true;
+
             imagenvideomusica.SetBackgroundResource(Resource.Drawable.videoplayer);
-            barraariba.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
-            barraabajo.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
-            sidemenu.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+        //    barraariba.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
+          //  barraabajo.SetBackgroundColor(Color.ParseColor("#2b2e30"));
+          //  sidemenu.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
             clasesettings.guardarsetting("tapnumber", "0");
             clasesettings.guardarsetting("offlineactivo", "si");
             holder = video.Holder;
@@ -134,9 +181,19 @@ namespace App1
             Drawable d = wm.Drawable;
           var  fondoblurreado = clasesettings.CreateBlurredImageformbitmap(this, 20, ((BitmapDrawable)d).Bitmap);
             fondo.SetImageBitmap(fondoblurreado);
-       
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.my_toolbar);
+            SetSupportActionBar(toolbar);
+         
+           
+            //Enable support action bar to display hamburger
+     
+            SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.hambur);
+           SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.Title = "";
+            //SupportActionBar.SetBackgroundDrawable( new ColorDrawable(Color.ParseColor("#2b2e30")) );
+         //   SupportActionBar.SetHomeButtonEnabled(true);
+        
 
-          
             if (clasesettings.gettearvalor("mediacache").Trim() != "")
             {
 
@@ -180,7 +237,7 @@ namespace App1
                            .SetActions(PlaybackState.ActionFastForward | PlaybackState.ActionPause | PlaybackState.ActionPlay | PlaybackState.ActionPlayPause | PlaybackState.ActionSeekTo | PlaybackState.ActionSkipToNext | PlaybackState.ActionSkipToPrevious)
                            .SetState(PlaybackStateCode.Playing, 0, 1f, SystemClock.ElapsedRealtime())
                            .Build();
-                MediaSession mSession = new MediaSession(this, PackageName);
+               mSession = new MediaSession(this, PackageName);
                 Intent intent = new Intent(this, typeof(broadcast_receiver));
                 PendingIntent pintent = PendingIntent.GetBroadcast(this, 4564, intent, PendingIntentFlags.UpdateCurrent);
                 mSession.SetMediaButtonReceiver(pintent);
@@ -191,11 +248,7 @@ namespace App1
             {
 
             }
-            new Thread(() =>
-            {
-                counterenzero();
-            }).Start();
-
+      
          
             botonborrar.Visibility = ViewStates.Gone;
             /***********************************************************************
@@ -220,15 +273,126 @@ namespace App1
             instancia = this;
             video.Visibility = ViewStates.Gone;
             /////////////////////////////////////////////////////////clicks////////////////////////////////////////
+            panel.PanelExpanded += delegate
+            {
+                botonaccion.SetBackgroundResource(Resource.Drawable.folder);
+
+            };
+            panel.PanelCollapsed += delegate
+            {
+                if (Clouding_serviceoffline.gettearinstancia() != null)
+                {
+                    if (Clouding_serviceoffline.gettearinstancia().musicaplayer.IsPlaying)                 
+                            botonaccion.SetBackgroundResource(Resource.Drawable.pausebutton2);                  
+                    else                            
+                            botonaccion.SetBackgroundResource(Resource.Drawable.playbutton2);
+                  }
+
+                  
+              
+            };
+
+        
+
+            searchview.QueryTextChange += (aa, aaa) =>
+            {
+             
+                var adaptadol2 = new adapterlistaoffline(this, nombreses.Where(a => a.ToLower().Contains(aaa.NewText.ToLower())).ToList(), linkeses, "", nombreses, diccionario, patheses);
+
+                RunOnUiThread(() => {
+
+                    var parcelable = lista.OnSaveInstanceState();
+                    lista.Adapter = adaptadol2;
+                    lista.OnRestoreInstanceState(parcelable);
+
+                });
+            };
+
+
+
+            botonaccion.Click += delegate
+            {
+
+
+
+                if (panel.IsExpanded)
+                {
+                    Android.Net.Uri selectedUri= Android.Net.Uri.Parse(System.IO.Path.GetPathRoot( patheses[indiceactual]));
+                    Intent intent = new Intent(Intent.ActionView);
+                    intent.SetDataAndType(selectedUri, "resource/folder");
+                    StartActivity(Intent.CreateChooser(intent,"Seleccione un explorador"));
+                }
+                else {
+                    playpause.PerformClick();
+                }
+
+            };
+
+
+            itemsm.NavigationItemSelected += (sender, e) => {
+                //  e.MenuItem.SetChecked(true);
+
+                //react to click here and swap fragments or navigate
+                e.MenuItem.SetChecked(true);
+                e.MenuItem.SetChecked(true);
+        
+             
+               
+                if (e.MenuItem.TitleFormatted.ToString().Trim() == "Audios") {
+                    if (showingvideosresults)
+                    {
+                        SupportActionBar.Show();
+                        searchview.SetQuery("", false);
+                        showingvideosresults = false;
+                        indiceactual = -1;
+                        cargarmp3();
+                    }
+                }
+                else
+                  if (e.MenuItem.TitleFormatted.ToString().Trim() == "Videos")
+                {
+                    if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d2"))
+                    {
+
+                       
+                        if (!showingvideosresults)
+                        {
+                            SupportActionBar.Show();
+                            searchview.SetQuery("", false);
+                            showingvideosresults = true;
+                            indiceactual = -1;
+                            cargarvideos();
+                        }
+                      
+                    }
+                    else
+                    {
+                        Toast.MakeText(this, "No tiene videos descargados actualmente", ToastLength.Long).Show();
+
+                    }
+                }
+                else
+                  if (e.MenuItem.TitleFormatted.ToString().Trim() == "Sync")
+                {
+                    StartActivity(typeof(actividadsync));
+                }
+                e.MenuItem.SetChecked(false);
+                e.MenuItem.SetChecked(false);
+                sidem.CloseDrawers();
+              
+            };
             entrarenmodovideo.Click += delegate
             {
+                panel.CollapsePane();
+                SupportActionBar.Show();
                 animar(entrarenmodovideo);
                 if (video.Visibility == ViewStates.Visible)
                 {
                     lista.Visibility = ViewStates.Visible;
                     video.Visibility = ViewStates.Gone;
-                    entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videoplayer);
-
+                    entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videorojo);
+                    video.KeepScreenOn =false;
+                    Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
 
                 }
                 else
@@ -239,7 +403,9 @@ namespace App1
                     {
                         holder.AddCallback(this);
                     }
-                    entrarenmodovideo.SetBackgroundResource(Resource.Drawable.list);
+                    entrarenmodovideo.SetBackgroundResource(Resource.Drawable.listaroja);
+                    video.KeepScreenOn = true;
+                    Window.AddFlags(WindowManagerFlags.KeepScreenOn);
                 }
 
             };
@@ -251,7 +417,7 @@ namespace App1
             };
             botonborrar.Click += delegate
             {
-                filter.Text = "";
+                searchview.SetQuery("", false);
                 botonborrar.Visibility = ViewStates.Gone;
             };
             barraariba.Click += delegate
@@ -269,17 +435,21 @@ namespace App1
                     if (!videofullscreen)
                     {
                         video.Visibility = ViewStates.Visible;
-                        barraariba.Visibility = ViewStates.Invisible;
-                        barraabajo.Visibility = ViewStates.Invisible;
+                       // barraariba.Visibility = ViewStates.Invisible;
+                       // barraabajo.Visibility = ViewStates.Invisible;
                         sidemenu.Visibility = ViewStates.Invisible;
+                        FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility = ViewStates.Gone;
                         abrirmenu.Visibility = ViewStates.Visible;
-                        videofullscreen = true;
+                        SupportActionBar.Hide();
+                       videofullscreen = true;
                     }
                     else
                     {
+                        SupportActionBar.Show();
                         video.Visibility = ViewStates.Visible;
-                        barraariba.Visibility = ViewStates.Visible;
-                        barraabajo.Visibility = ViewStates.Visible;
+                        FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility = ViewStates.Visible;
+                        ///   barraariba.Visibility = ViewStates.Visible;
+                        //   barraabajo.Visibility = ViewStates.Visible;
                         videofullscreen = false ;
                     }
                     
@@ -289,11 +459,15 @@ namespace App1
             portada.Click += delegate
             {
                 animar(portada);
-                filter.Text = "";
-                var adaptadol2 = new adapterlistaoffline(this, nombreses.Where(a => a.ToLower().Contains(filter.Text.ToLower())).ToList(), portadases, "", nombreses, diccionario, patheses);
+                searchview.SetQuery("", false);
+                var adaptadol2 = new adapterlistaoffline(this, nombreses.Where(a => a.ToLower().Contains(searchview.Query.ToLower())).ToList(), linkeses, "", nombreses, diccionario, patheses);
 
-                RunOnUiThread(() => lista.Adapter = adaptadol2);
-                if (filter.Text.Length >= 1)
+                RunOnUiThread(() => {
+                    var parcelable = lista.OnSaveInstanceState();
+                    lista.Adapter = adaptadol2;
+                    lista.OnRestoreInstanceState(parcelable);
+                });
+                if (searchview.Query.Length >= 1)
                 {
                     botonborrar.Visibility = ViewStates.Visible;
                 }
@@ -333,18 +507,24 @@ namespace App1
             };
             showvideos.Click += delegate
             {
+                
                 animar(showvideos);
                 lista.Visibility = ViewStates.Visible;
                 video.Visibility = ViewStates.Gone;
-                entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videoplayer);
+               
+                entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videorojo);
                 if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d2"))
                 {
 
-                    filter.Text = "";
+                    searchview.SetQuery("", false);
                     if (!showingvideosresults)
                 {
                         var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-                        RunOnUiThread(() => lista.Adapter = adaptadolo);
+                        RunOnUiThread(() => {
+                            var parcelable = lista.OnSaveInstanceState();
+                            lista.Adapter = adaptadolo;
+                            lista.OnRestoreInstanceState(parcelable);
+                        });
                         animar2(lista);
                     imagenvideomusica.SetBackgroundResource(Resource.Drawable.musicalnote);
                         textovideomusica.Text = "Musica";
@@ -355,7 +535,13 @@ namespace App1
                 }else
                 {
                         var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-                        RunOnUiThread(() => lista.Adapter = adaptadolo);
+                        RunOnUiThread(() => {
+                            var parcelable = lista.OnSaveInstanceState();
+                            lista.Adapter = adaptadolo;
+                            lista.OnRestoreInstanceState(parcelable);
+
+                        }
+                        );
                         animar2(lista);
                         imagenvideomusica.SetBackgroundResource(Resource.Drawable.videoplayer);
                         textovideomusica.Text = "Videos";
@@ -378,17 +564,21 @@ namespace App1
                 }
             };
             lista.ItemClick += (a, aa) => {
+                if (nombreses.Count > 0) {
+                    var vii = aa.View.FindViewById<TextView>(Resource.Id.textView1);
+                  
 
-              var vii=  aa.View.FindViewById<TextView>(Resource.Id.textView1);
-               
-                reproducir(nombreses.IndexOf(vii.Text),false);
+                  
+
+                    reproducir(nombreses.IndexOf(vii.Text), false);
+                }
+                  
+                
             };
             filter.TextChanged += delegate
             {
 
-                var adaptadol2 = new adapterlistaoffline(this, nombreses.Where(a => a.ToLower().Contains(filter.Text.ToLower())).ToList(), portadases, "",nombreses,diccionario,patheses);
                
-                    RunOnUiThread(() => lista.Adapter = adaptadol2);
                 if (filter.Text.Length >= 1)
                 {
                     botonborrar.Visibility = ViewStates.Visible;
@@ -520,9 +710,13 @@ namespace App1
         {
         
             lista = FindViewById<ListView>(Resource.Id.listView1);
-            var adaptadol2 = new adapterlistaoffline(this, nombreses.Where(a => a.ToLower().Contains(filter.Text.ToLower())).ToList(), portadases, "", nombreses, diccionario, patheses);
+            var adaptadol2 = new adapterlistaoffline(this, nombreses.Where(a => a.ToLower().Contains(searchview.Query.ToLower())).ToList(), linkeses, "", nombreses, diccionario, patheses);
           
-            RunOnUiThread(() => lista.Adapter = adaptadol2);
+            RunOnUiThread(() => {
+                var parcelable = lista.OnSaveInstanceState();
+                lista.Adapter = adaptadol2;
+                lista.OnRestoreInstanceState(parcelable);
+            });
             lista.SetSelection(posactual);
           
             base.OnResume();
@@ -578,7 +772,7 @@ namespace App1
         public void cargarmp3()
         {
             nombreses.Clear();
-            portadases.Clear();
+            linkeses.Clear();
             patheses.Clear();
             var listaordenado = new List<string>();
             string todomezclado = "";
@@ -602,7 +796,7 @@ namespace App1
                 if (ax.Trim().Length > 1)
                 {
                     nombreses.Add(ax.Split('²')[0]);
-                    portadases.Add(ax.Split('²')[1]);
+                    linkeses.Add(ax.Split('²')[1]);
                     patheses.Add(ax.Split('²')[2]);
                 }
 
@@ -612,11 +806,14 @@ namespace App1
             {
                 RunOnUiThread(() =>
                 {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
                     dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
                     dialogoprogreso.SetCanceledOnTouchOutside(false);
                     dialogoprogreso.SetCancelable(false);
                     dialogoprogreso.SetTitle("Cargando...");
                     dialogoprogreso.SetMessage("Por favor espere");
+                    
                     dialogoprogreso.Show();
                 });
                 sync();
@@ -624,12 +821,20 @@ namespace App1
             comprobarpatheses();
           
            
-            var adaptadol = new adapterlistaoffline(this, nombreses, portadases, "", nombreses,diccionario,patheses);
-            RunOnUiThread(() => lista.Adapter = adaptadol);
+            var adaptadol = new adapterlistaoffline(this, nombreses, linkeses, "", nombreses,diccionario,patheses);
+            RunOnUiThread(() => {
+                var parcelable = lista.OnSaveInstanceState();
+                lista.Adapter = adaptadol;
+                lista.OnRestoreInstanceState(parcelable);
+            });
             if (nombreses.Count == 0)
             {
                 var adaptadolllll = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-                RunOnUiThread(() => lista.Adapter = adaptadolllll);
+                RunOnUiThread(() => {
+                    var parcelable = lista.OnSaveInstanceState();
+                    lista.Adapter = adaptadolllll;
+                    lista.OnRestoreInstanceState(parcelable);
+                });
             }
             listaordenado = new List<string>();
             todomezclado = "";
@@ -638,7 +843,7 @@ namespace App1
         public void cargarvideos()
         {
             nombreses.Clear();
-            portadases.Clear();
+            linkeses.Clear();
             patheses.Clear();
             string todomezclado = "";
             var listaordenado = new List<string>();
@@ -662,7 +867,7 @@ namespace App1
                     if (ax.Trim().Length > 1)
                     {
                         nombreses.Add(ax.Split('²')[0]);
-                        portadases.Add(ax.Split('²')[1]);
+                        linkeses.Add(ax.Split('²')[1]);
                         patheses.Add(ax.Split('²')[2]);
                     }
 
@@ -672,7 +877,9 @@ namespace App1
             {
                 RunOnUiThread(() =>
                 {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
                     dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
                     dialogoprogreso.SetCanceledOnTouchOutside(false);
                     dialogoprogreso.SetCancelable(false);
                     dialogoprogreso.SetTitle("Cargando...");
@@ -683,12 +890,20 @@ namespace App1
             }
             comprobarpatheses();
           
-            var adaptadol = new adapterlistaoffline(this, nombreses, portadases, "", nombreses,diccionario,patheses);
-            RunOnUiThread(() => lista.Adapter = adaptadol);
+            var adaptadol = new adapterlistaoffline(this, nombreses, linkeses, "", nombreses,diccionario,patheses);
+            RunOnUiThread(() => {
+                var parcelable = lista.OnSaveInstanceState();
+                lista.Adapter = adaptadol;
+                lista.OnRestoreInstanceState(parcelable);
+            });
             if (nombreses.Count == 0)
             {
                 var adaptadolllll = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-                RunOnUiThread(() => lista.Adapter = adaptadolllll);
+                RunOnUiThread(() => {
+                    var parcelable = lista.OnSaveInstanceState();
+                    lista.Adapter = adaptadolllll ;
+                    lista.OnRestoreInstanceState(parcelable);
+                });
             }
             listaordenado = new List<string>();
             todomezclado = "";
@@ -715,9 +930,15 @@ namespace App1
 
         public override void OnBackPressed()
         {
-           
-            clasesettings.preguntarsimenuosalir(this);
-           // base.OnBackPressed();
+            if (sidem.IsDrawerOpen(Android.Support.V4.View.GravityCompat.Start))
+                RunOnUiThread(() => { sidem.CloseDrawers(); });
+            else { 
+            if (!panel.IsExpanded)
+                clasesettings.preguntarsimenuosalir(this);
+            else
+                RunOnUiThread(() => panel.CollapsePane());
+            }
+            // base.OnBackPressed();
         }
 
 
@@ -733,8 +954,8 @@ namespace App1
 
             StopService(new Intent(this, typeof(Clouding_serviceoffline)));
             clasesettings.recogerbasura();
-            UnregisterReceiver(br);
-            instancia = null;
+          //  UnregisterReceiver(br);
+         //   instancia = null;
             clasesettings.guardarsetting("offlineactivo", "no");
             base.OnDestroy();
         }
@@ -749,30 +970,37 @@ namespace App1
         public void receiver()
         {
 
-
+        
             while (detenedor)
             {
-                if (Clouding_serviceoffline.gettearinstancia() != null) { 
-                if (Clouding_serviceoffline.gettearinstancia().musicaplayer.IsPlaying)
-                {
-                    RunOnUiThread(() => porcientoreproduccion.Max = Clouding_serviceoffline.gettearinstancia().musicaplayer.Duration);
-                    RunOnUiThread(() => porcientoreproduccion.Progress = Clouding_serviceoffline.gettearinstancia().musicaplayer.CurrentPosition);
+                if (Clouding_serviceoffline.gettearinstancia() != null) {
+                    if (Clouding_serviceoffline.gettearinstancia().musicaplayer.IsPlaying)
+                    {
+                       
+                        RunOnUiThread(() => porcientoreproduccion.Max = Clouding_serviceoffline.gettearinstancia().musicaplayer.Duration);
+                        RunOnUiThread(() => porcientoreproduccion.Progress = Clouding_serviceoffline.gettearinstancia().musicaplayer.CurrentPosition);
+                        if ( !panel.IsExpanded) {
+                           
+                           RunOnUiThread(()=> botonaccion.SetBackgroundResource(Resource.Drawable.pausebutton2));
+                        }
+                    }
+                    else {
+                        if (!panel.IsExpanded)
+                        {
 
+                            RunOnUiThread(() => botonaccion.SetBackgroundResource(Resource.Drawable.playbutton2));
+                        }
+
+                    }
                 }
-                }
+               
+
                 // clasesettings.guardarsetting("tapnumber", "0");
                 Thread.Sleep(1000);
             }
 
         }
-        public void counterenzero()
-        {
-           /*while (!detenedor)
-            {
-               counter = 0;
-                Thread.Sleep(800);
-            }*/
-        }
+  
         public void comprobarpatheses()
         {
             var listanewpath = new List<string>();
@@ -785,19 +1013,27 @@ namespace App1
                 {
                     listanewpath.Add(patheses[i]);
                     listanewname.Add(nombreses[i]);
-                    listanewlink.Add(portadases[i]);
+                    listanewlink.Add(linkeses[i]);
                   
                 }
                 i++;
             }
             nombreses = new List<string>(listanewname);
-            portadases = new List<string>(listanewlink);
+            linkeses = new List<string>(listanewlink);
             patheses = new List<string>(listanewpath);
          
 
            
-            var adaptadol = new adapterlistaoffline(this, nombreses, portadases, "",nombreses,diccionario,patheses);
-            RunOnUiThread(() => lista.Adapter = adaptadol);
+            var adaptadol = new adapterlistaoffline(this, nombreses, linkeses, "",nombreses,diccionario,patheses);
+            RunOnUiThread(() =>
+            {
+
+                var parcelable = lista.OnSaveInstanceState();
+
+                lista.Adapter = adaptadol;
+                lista.OnRestoreInstanceState(parcelable);
+            }
+            );
             listanewpath = new List<string>();
             listanewname = new List<string>();
             listanewlink = new List<string>();
@@ -822,7 +1058,7 @@ namespace App1
         {
 
             diccionario.Clear();
-            imageneses.Clear();
+         
 
             if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d"))
             {
@@ -885,23 +1121,22 @@ namespace App1
 
                     if (!File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + fullportadas[i].Split('=')[1]))
                     {
-                        using (var webbrowser = new WebClient())
+                        new Thread(() =>
                         {
-                            webbrowser.DownloadFile(new Uri("https://i.ytimg.com/vi/" + fullportadas[i].Split('=')[1] + "/mqdefault.jpg"), Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + fullportadas[i].Split('=')[1]);
-                        }
+                            using (var webbrowser = new WebClient())
+                            {
+                                webbrowser.DownloadFile(new Uri("https://i.ytimg.com/vi/" + fullportadas[i].Split('=')[1] + "/mqdefault.jpg"), Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + fullportadas[i].Split('=')[1]);
+                            }
+                        }).Start();
                     }
                 }
                 catch (Exception)
                 {
 
                 }
-                using (Android.Graphics.Bitmap imagen = Android.Graphics.BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + fullportadas[i].Split('=')[1]))
+                if (!diccionario.ContainsKey(fullnombre[i]))
                 {
-
-
-                    imageneses.Add(getRoundedShape(imagen, i));
-
-
+                    diccionario.Add(fullnombre[i],new Random().Next(999999999));
                 }
             }
 
@@ -934,122 +1169,7 @@ namespace App1
             }
             desdethread = false;
         }
-        public static Bitmap scaleDown(Bitmap realImage)
-        {
-
-            Bitmap newBitmap = Bitmap.CreateScaledBitmap(realImage, 250, 250, false);
-                  
-            return newBitmap;
-        }
-
-
-        public Bitmap getRoundedShape(Bitmap scaleBitmapImage,int pos)
-        {
-
-            try
-            {
-                int targetWidth = 90;
-                int targetHeight = 90;
-                Bitmap targetBitmap = Bitmap.CreateBitmap(targetWidth,
-                            targetHeight, Bitmap.Config.Argb4444);
-
-
-                using (Canvas canvas = new Canvas(targetBitmap))
-                {
-
-
-                    Android.Graphics.Path path = new Android.Graphics.Path();
-                    path.AddCircle(((float)targetWidth - 1) / 2,
-                        ((float)targetHeight - 1) / 2,
-                        (Math.Min(((float)targetWidth),
-                            ((float)targetHeight)) / 2),
-                        Android.Graphics.Path.Direction.Ccw);
-
-                    canvas.ClipPath(path);
-                    Bitmap sourceBitmap = scaleBitmapImage;
-                    canvas.DrawBitmap(sourceBitmap,
-                        new Rect(0, 0, sourceBitmap.Width,
-                            sourceBitmap.Height),
-                        new Rect(0, 0, targetWidth, targetHeight), null);
-                }
-                if (!diccionario.ContainsKey(fullnombre[pos]))
-                {
-                    diccionario.Add(fullnombre[pos], targetBitmap.GenerationId);
-                }
-
-             
-                return targetBitmap;
-
-              
-            }
-            catch (Exception e)
-            {
-              
-                var sddd = e;
-                if (!diccionario.ContainsKey(fullnombre[pos]))
-                {
-                    diccionario.Add(fullnombre[pos],0);
-                }
-              
-                return scaleBitmapImage;
-            }
-          
-        }
-
-
-
-
-
-
-
-
-
-        public Bitmap getRoundedShape2(Bitmap scaleBitmapImage, int pos)
-        {
-
-            try
-            {
-                int targetWidth = 90;
-                int targetHeight = 90;
-                Bitmap targetBitmap = Bitmap.CreateBitmap(targetWidth,
-                            targetHeight, Bitmap.Config.Argb4444);
-
-
-                using (Canvas canvas = new Canvas(targetBitmap))
-                {
-
-
-                    Android.Graphics.Path path = new Android.Graphics.Path();
-                    path.AddCircle(((float)targetWidth - 1) / 2,
-                        ((float)targetHeight - 1) / 2,
-                        (Math.Min(((float)targetWidth),
-                            ((float)targetHeight)) / 2),
-                        Android.Graphics.Path.Direction.Ccw);
-
-                    canvas.ClipPath(path);
-                    Bitmap sourceBitmap = scaleBitmapImage;
-                    canvas.DrawBitmap(sourceBitmap,
-                        new Rect(0, 0, sourceBitmap.Width,
-                            sourceBitmap.Height),
-                        new Rect(0, 0, targetWidth, targetHeight), null);
-                }
-             
-
-
-                return targetBitmap;
-
-
-            }
-            catch (Exception e)
-            {
-
-                var sddd = e;
-               
-
-                return scaleBitmapImage;
-            }
-
-        }
+        
 
 
 
@@ -1108,7 +1228,7 @@ namespace App1
 
                     if (System.IO.Path.GetFileName(patheses[indice]).EndsWith(".mp4"))
                     {
-                        RunOnUiThread(() => entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videoplayer));
+                        RunOnUiThread(() => entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videorojo));
                         RunOnUiThread(() => entrarenmodovideo.Visibility = ViewStates.Visible);
                     }
                     else
@@ -1120,11 +1240,20 @@ namespace App1
                     RunOnUiThread(() => playpause.SetBackgroundResource(Resource.Drawable.pausebutton2));
                     RunOnUiThread(() => titulo.Text = nombreses[indice]);
                     Clouding_serviceoffline.gettearinstancia().tituloactual = nombreses[indice];
-                    Clouding_serviceoffline.gettearinstancia().linkactual = Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + portadases[indice].Split('=')[1];
+                    Clouding_serviceoffline.gettearinstancia().linkactual = Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + linkeses[indice].Split('=')[1];
                     RunOnUiThread(() => {
                         try
                         {
-                            portada.SetImageBitmap(imageneses.First(info => info.GenerationId == diccionario[nombreses[indice]]));
+
+                            Glide.With(this)
+                            .Load(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + linkeses[indice].Split('=')[1])
+                            .Apply(RequestOptions.NoTransformation().Placeholder(Resource.Drawable.image))
+                            .Into(portada);
+                            Glide.With(this)
+                                 .Load(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + linkeses[indice].Split('=')[1])
+                                 .Apply(RequestOptions.NoTransformation().Placeholder(Resource.Drawable.image))
+                                 .Into(FindViewById<ImageView>(Resource.Id.bgimg));
+
                         }
                         catch (Exception) {
 
@@ -1138,7 +1267,7 @@ namespace App1
                     {
                         RunOnUiThread(() => fondo.DestroyDrawingCache());
                         //  RunOnUiThread(() => fondo = FindViewById<ImageView>(Resource.Id.fondo1));
-                        RunOnUiThread(() => fondo.SetImageBitmap(clasesettings.CreateBlurredImageoffline(this, 20, portadases[indiceactual])));
+                        RunOnUiThread(() => fondo.SetImageBitmap(clasesettings.CreateBlurredImageoffline(this, 20, linkeses[indiceactual])));
                         animar5(fondo);
                     }
                     if (desdecache)
@@ -1205,7 +1334,7 @@ namespace App1
                 clasesettings.recogerbasura();
             }
             catch (Exception) {
-                Toast.MakeText(this, "error al reproducir", ToastLength.Long).Show();
+              RunOnUiThread(()=> Toast.MakeText(this, "Error al reproducir", ToastLength.Long).Show());
             }
         }
 
@@ -1221,6 +1350,10 @@ namespace App1
                 Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
                 animacion.SetDuration(300);
                 animacion.Start();
+                Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+                animacion2.SetDuration(300);
+                animacion2.Start();
+
                 animacion.AnimationEnd += delegate
                 {
                     imagen.SetLayerType(LayerType.None, null);
@@ -1290,7 +1423,7 @@ namespace App1
                                 .SetActions(PlaybackState.ActionFastForward | PlaybackState.ActionPause | PlaybackState.ActionPlay | PlaybackState.ActionPlayPause | PlaybackState.ActionSeekTo | PlaybackState.ActionSkipToNext | PlaybackState.ActionSkipToPrevious)
                                 .SetState(PlaybackStateCode.Playing, 0, 1f, SystemClock.ElapsedRealtime())
                                 .Build();
-                        MediaSession mSession = new MediaSession(this, PackageName);
+                      mSession = new MediaSession(this, PackageName);
                         Intent intent = new Intent(this, typeof(broadcast_receiver));
                         PendingIntent pintent = PendingIntent.GetBroadcast(this, 4564, intent, PendingIntentFlags.UpdateCurrent);
                         mSession.SetMediaButtonReceiver(pintent);
@@ -1318,7 +1451,16 @@ namespace App1
         
 
         }
-
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    sidem.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
         public void animarycerrar(Java.Lang.Object imagen)
         {
             RunOnUiThread(() =>

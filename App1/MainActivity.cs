@@ -16,7 +16,7 @@ namespace App1
 {
 
   
-    [Activity( Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize,Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity( Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize,Theme = "@style/Theme.DesignDemo")]
   
     public class MainActivity : Activity
     {
@@ -60,17 +60,23 @@ namespace App1
             clasesettings.guardarsetting("videoactivo", "no");
             clasesettings.guardarsetting("progresovideoactual","");
             clasesettings.guardarsetting("tapnumber", "");
+          
             List<string> arraydatos = new List<string>();
             arraydatos.Add(Android.Manifest.Permission.Camera);
             arraydatos.Add(Android.Manifest.Permission.ReadExternalStorage);
             arraydatos.Add(Android.Manifest.Permission.WriteExternalStorage);
-           if(Build.VERSION.SdkInt >= BuildVersionCodes.M)
+          
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
             {
                 RequestPermissions(arraydatos.ToArray(), 0);
             }
 
          
             /////////////////////////////////////////////
+            ///
+         
+            if (prefs.Contains("video"))
+                clasesettings.guardarsetting("video", "-1");
             prefEditor = prefs.Edit();
             if (prefs.Contains("ipanterior"))
             {
@@ -199,7 +205,7 @@ namespace App1
                 TcpClient cliente = new TcpClient();
                 string pasasion;
                 cliente.Client.Connect(textboxl.Text, 1024);
-                cliente.Client.Disconnect(true);
+                cliente.Client.Disconnect(false);
                 pasasion = textboxl.Text;
 
                 Intent activity2 = new Intent(this, typeof(mainmenu));
@@ -234,7 +240,7 @@ namespace App1
                 TcpClient cliente = new TcpClient();
                 string pasasion;
                 cliente.Client.Connect(textboxl.Text, 1024);
-                cliente.Client.Disconnect(true);
+                cliente.Client.Disconnect(false);
                 pasasion = textboxl.Text;
 
                 Intent activity2 = new Intent(this, typeof(mainmenu));
@@ -259,6 +265,9 @@ namespace App1
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
         }
         public void animar2(Java.Lang.Object imagen)
         {

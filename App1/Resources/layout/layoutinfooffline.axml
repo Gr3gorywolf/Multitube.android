@@ -1,133 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="300dp"
-    android:layout_width="300dp"
-    android:minWidth="25px"
-    android:minHeight="25px">
-    <ImageView
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:id="@+id/imageView10"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:background="@android:color/black"
-        android:alpha="0.5" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/linearLayout1"
-        android:gravity="right"
-        android:layout_alignParentTop="true">
-        <ImageView
-            android:src="@drawable/closebutton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/imageView1"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="4dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_below="@id/linearLayout1"
-        android:id="@+id/linearLayout2"
-        android:gravity="center"
-        android:layout_marginBottom="10dp">
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/imageView2" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:id="@+id/linearLayout3"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/black"
-        android:alpha="0.7">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/imageView3"
-            android:layout_gravity="center" />
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/seekBar1" />
-    </LinearLayout>
-    <TextView
-        android:text="Nombre:"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayout2"
-        android:id="@+id/textView1"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="5dp" />
-    <TextView
-        android:text="Link:"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView1"
-        android:id="@+id/textView2"
-        android:layout_marginLeft="5dp" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_above="@id/linearLayout3"
-        android:id="@+id/linearLayout4"
-        android:layout_marginBottom="5dp"
-        android:gravity="center">
-        <ImageView
-            android:src="@drawable/folder"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/imageView4" />
-        <ImageView
-            android:src="@drawable/playbutton2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/imageView11"
-            android:layout_marginLeft="10dp" />
-    </LinearLayout>
-    <TextView
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView1"
-        android:id="@+id/textView3"
-        android:layout_below="@id/linearLayout2"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="20dp"
-        android:singleLine="true"
-        android:scrollHorizontally="true"
-        android:isScrollContainer="true"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:ellipsize="marquee" />
-    <TextView
-        android:text="Medium Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/textView2"
-        android:id="@+id/textView4"
-        android:layout_below="@id/textView3"
-        android:layout_marginLeft="5dp"
-        android:textColor="#0000cc"
-        android:singleLine="true"
-        android:scrollHorizontally="true"
-        android:isScrollContainer="true"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever" />
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="300dp"
+	android:layout_width="300dp"
+	android:minWidth="25px"
+	android:minHeight="25px"
+	android:background="?attr/colorPrimary"
+	>
+
+		<ImageView
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+	
+		android:adjustViewBounds="true"
+		android:scaleType="centerCrop"
+		android:background="@android:color/black"
+		android:alpha="1"
+		android:layout_marginRight="7dp"
+		android:layout_marginTop="7dp"
+		android:layout_marginLeft="7dp"
+		android:layout_marginBottom="41dp" />
+	<ImageView
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:id="@+id/imageView10"
+		android:adjustViewBounds="true"
+		android:scaleType="centerCrop"
+		android:background="@android:color/black"
+		android:alpha="0.25"
+		android:layout_marginRight="7dp"
+		android:layout_marginTop="7dp"
+		android:layout_marginLeft="7dp"
+		android:layout_marginBottom="41dp" />
+	<LinearLayout
+		android:orientation="horizontal"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		android:id="@+id/linearLayout1"
+		android:gravity="right"
+		android:layout_alignParentTop="true"
+		android:visibility="gone">
+		<ImageView
+			android:src="@drawable/closebutton"
+			android:layout_width="25dp"
+			android:layout_height="25dp"
+			android:id="@+id/imageView1"
+			android:layout_marginRight="4dp"
+			android:layout_marginTop="4dp" />
+	</LinearLayout>
+	<LinearLayout
+		android:orientation="vertical"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:layout_width="match_parent"
+		android:layout_height="70dp"
+		android:layout_below="@id/linearLayout1"
+		android:id="@+id/linearLayout2"
+		android:gravity="center"
+		android:layout_marginBottom="10dp"
+		android:visibility="gone">
+		<ImageView
+			android:layout_width="70dp"
+			android:layout_height="70dp"
+			android:id="@+id/imageView2"
+			android:visibility="gone" />
+	</LinearLayout>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="35dp"
+		android:id="@+id/linearLayout3"
+		android:layout_alignParentBottom="true"
+		android:background="?attr/colorPrimaryDark"
+		android:alpha="0.7"
+		android:layout_marginLeft="7dp"
+		android:layout_marginRight="7dp"
+		android:layout_marginBottom="7dp">
+		<ImageView
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:id="@+id/imageView3"
+			android:layout_gravity="center" />
+		<SeekBar
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/seekBar1" />
+	</LinearLayout>
+	<TextView
+		android:text="Nombre:"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/linearLayout2"
+		android:id="@+id/textView1"
+		android:layout_marginBottom="20dp"
+		android:layout_marginLeft="15dp"
+		android:visibility="gone" />
+	<TextView
+		android:text="Link:"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textView1"
+		android:id="@+id/textView2"
+		android:layout_marginLeft="15dp"
+		android:visibility="gone" />
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_marginBottom="12dp"
+		android:layout_centerInParent="true">
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="120dp"
+			android:id="@+id/boton1"
+			android:layout_height="wrap_content">
+			<ImageView
+				android:src="@drawable/folder"
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_gravity="center"
+				android:layout_centerInParent="true"
+			 />
+			<TextView
+				android:text="Ver carpeta"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:gravity="center"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:singleLine="true"   />
+		</LinearLayout>
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="120dp"
+			android:layout_height="wrap_content"
+			android:id="@+id/boton2"
+         
+           >
+			<ImageView
+				android:src="@drawable/onlinevideo"
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_gravity="center"
+			/>
+			<TextView
+				android:text="Abrir en youtube"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:gravity="center"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:singleLine="true"
+				
+            />
+		</LinearLayout>
+	</LinearLayout>
+	<TextView
+		android:text="Medium Text"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/textView1"
+		android:id="@+id/textView3"
+		android:layout_below="@id/linearLayout2"
+		android:layout_marginLeft="15dp"
+		android:singleLine="true"
+		android:scrollHorizontally="true"
+		android:isScrollContainer="true"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:ellipsize="marquee"
+		android:layout_marginTop="15dp"
+		android:layout_marginRight="15dp"
+		android:gravity="center" />
+	<TextView
+		android:text="Medium Text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/textView2"
+		android:id="@+id/textView4"
+		android:layout_below="@id/textView3"
+		android:layout_marginLeft="5dp"
+		android:textColor="#0000cc"
+		android:singleLine="true"
+		android:scrollHorizontally="true"
+		android:isScrollContainer="true"
+		android:ellipsize="marquee"
+		android:marqueeRepeatLimit="marquee_forever"
+		android:visibility="gone" />
 </RelativeLayout>

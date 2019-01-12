@@ -18,7 +18,7 @@ using System.Net;
 using Android.Support.V13.App;
 using Android.Media.Session;
 namespace App1
-{
+{ 
     [Service(Exported = true)]
     [IntentFilter(new[] { Intent.ActionMediaButton })]
     public class Clouding_serviceoffline : Service , AudioManager.IOnAudioFocusChangeListener
@@ -227,10 +227,17 @@ namespace App1
 
 
                     musicaplayer = Android.Media.MediaPlayer.Create(this, Android.Net.Uri.Parse(downloadurl.Trim()));
-
+#pragma warning disable 414
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
                     musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore 414
                     musicaplayer.SetWakeMode(this, WakeLockFlags.Partial);
+#pragma warning disable 414
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
                     var focusResult = audioManager.RequestAudioFocus(this, Stream.Music, AudioFocus.Gain);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore 414
                     if (focusResult != AudioFocusRequest.Granted)
                     {
                         //could not get audio focus
@@ -244,12 +251,10 @@ namespace App1
 
                     musicaplayer.Completion += delegate
                     {
-                        playeroffline.gettearinstancia().RunOnUiThread(() =>
-                       {
-                                playeroffline.gettearinstancia().siguiente.PerformClick();
-                            });
-
-
+                         playeroffline.gettearinstancia().RunOnUiThread(() =>
+                         {
+                           playeroffline.gettearinstancia().reproducir(playeroffline.gettearinstancia().indiceactual + 1, false);
+                         });
                     };
                     mostrarnotificacion();
                 }
@@ -309,15 +314,12 @@ namespace App1
 
             List<PendingIntent> listapending = listapendingintents();
           
-      
             RemoteViews contentView = new RemoteViews(PackageName, Resource.Layout.layoutminiplayer);
             if (linkactual.Trim().Length > 1)
             {
                 try
                 {
-
-
-                    contentView.SetImageViewBitmap(Resource.Id.imageView1, playeroffline.gettearinstancia().imageneses.First(info => info.GenerationId == playeroffline.gettearinstancia().diccionario[tituloactual]));
+                   // contentView.SetImageViewBitmap(Resource.Id.imageView1, playeroffline.gettearinstancia().imageneses.First(info => info.GenerationId == playeroffline.gettearinstancia().diccionario[tituloactual]));
                    contentView.SetImageViewBitmap(Resource.Id.fondo1, clasesettings.CreateBlurredImageoffline(this, 20, linkactual));
                 }
                 catch (Exception){
@@ -327,27 +329,85 @@ namespace App1
              ///   contentView.SetImageViewBitmap(Resource.Id.fondo1, clasesettings.CreateBlurredImageoffline(this, 20, linkactual));
 
             }
-            contentView.SetTextViewText(Resource.Id.textView1, tituloactual);
-        
+            contentView.SetTextViewText(Resource.Id.textView1, tituloactual);        
             contentView.SetOnClickPendingIntent(Resource.Id.imageView1, listapending[5]);
-
-            
             contentView.SetOnClickPendingIntent(Resource.Id.imageView2, listapending[0]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView4, listapending[1]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView3, listapending[2]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView6, listapending[3]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView5, listapending[4]);
-            listapending.Clear();
-            var   nBuilder = new Notification.Builder(this);
 
-            nBuilder.SetContent(contentView);
-            nBuilder.SetOngoing(true);
+
+            
+            Notification.Action accion1 = new Notification.Action(Resource.Drawable.playpause, "Playpause", listapending[0]);
+            Notification.Action accion2 = new Notification.Action(Resource.Drawable.skipnext, "Siguiente", listapending[1]);
+            Notification.Action accion3 = new Notification.Action(Resource.Drawable.skipprevious, "Anterior", listapending[2]);
+            Notification.Action accion4 = new Notification.Action(Resource.Drawable.skipforward, "adelantar", listapending[3]);
+            Notification.Action accion5 = new Notification.Action(Resource.Drawable.skipbackward, "atrazar", listapending[4]);
+            
+            /*
+             
+             1-playpause
+             2-siguiente
+             3-anterior
+             4-adelantar
+             5-atrazar
            
-            nBuilder.SetSmallIcon(Resource.Drawable.play);
-       
+             */
+
+
+
+            Notification.MediaStyle estilo = new Notification.MediaStyle();
+            if (playeroffline.gettearinstancia() != null)
+            {
+                estilo.SetMediaSession(playeroffline.gettearinstancia().mSession.SessionToken);
+               
+                estilo.SetShowActionsInCompactView(1, 2, 3);
+                
+            }
+
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+            var nBuilder = new Notification.Builder(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+
+            if (Build.VERSION.SdkInt < BuildVersionCodes.Lollipop)
+            {
+#pragma warning disable 414
+                try
+                {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                    nBuilder.SetContent(contentView);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                }
+                catch (Exception) {
+
+                }
+               
+#pragma warning restore 414
+            }
+            else {
+                nBuilder.SetStyle(estilo);
+                nBuilder.SetLargeIcon(GetImageBitmapFromUrl(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + playeroffline.gettearinstancia().linkeses[playeroffline.gettearinstancia().nombreses.IndexOf(tituloactual)].Split('=')[1]));
+                nBuilder.SetContentTitle(tituloactual);
+                
+                nBuilder.SetContentText(playeroffline.gettearinstancia().linkeses[playeroffline.gettearinstancia().nombreses.IndexOf(tituloactual)]);
+               nBuilder.AddAction(accion5);
+                nBuilder.AddAction(accion3);
+                nBuilder.AddAction(accion1);
+                nBuilder.AddAction(accion2);
+                nBuilder.AddAction(accion4);
+                nBuilder.SetContentIntent(listapending[5]);
+                nBuilder.SetColor(Android.Graphics.Color.ParseColor("#ce2c2b"));
+
+                //  nBuilder.AddAction()
+            }
+
+            nBuilder.SetOngoing(true);
+            nBuilder.SetSmallIcon(Resource.Drawable.play);      
             Notification notification = nBuilder.Build();
             StartForeground(19248736, notification);
-       
+            listapending.Clear();
         }
 
 
@@ -365,16 +425,9 @@ namespace App1
             Bitmap imageBitmap = null;
             try
             {
-
-
-                if (url.Trim() != "") {
-
+                    if (url.Trim() != "") {
                     imageBitmap = BitmapFactory.DecodeFile(url);
-                       
-                      
-
                     }
-
             }
             catch (Exception) { }
             return imageBitmap;
@@ -388,7 +441,7 @@ namespace App1
                 /////1
 
                 Intent internado = new Intent(this, typeof(serviciointerpreter));
-                internado.PutExtra("querry1","si");
+            internado.PutExtra("querry1","si");
             internado.PutExtra("querry2","");
             internado.PutExtra("querry3","");
             internado.PutExtra("querry4","");
@@ -439,7 +492,17 @@ namespace App1
             var pendingIntent5= PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado5, 0);
             listapending.Add(pendingIntent5);
             /////6
-            Intent internado6 = new Intent(this, typeof(playeroffline));
+            Intent internado6;
+            if (actvideo.gettearinstacia() != null)
+            {
+                internado6 = new Intent(this, typeof(actvideo));
+
+
+            }
+            else {
+                internado6 = new Intent(this, typeof(playeroffline));
+            }
+         
         
             var pendingIntent6 = PendingIntent.GetActivity(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado6, PendingIntentFlags.UpdateCurrent);
             listapending.Add(pendingIntent6);

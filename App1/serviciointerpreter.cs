@@ -9,7 +9,14 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Threading;
+using Firebase.Xamarin.Database;
+using Firebase.Xamarin.Auth;
+using Firebase.Xamarin.Token;
+using System.IO;
 using System.Net.Sockets;
+using Firebase.Xamarin.Database.Query;
+
 namespace App1
 {
     [Service(Exported =true)]
@@ -276,6 +283,105 @@ namespace App1
 
 
     ////////////////////////////////////////////////////////////////////
+
+
+
+    [Service(Exported = true)]
+    public class serviciointerpreter234 : IntentService
+    {
+        public IBinder Binder { get; private set; }
+
+        protected override async void OnHandleIntent(Android.Content.Intent intent)
+        {
+
+
+
+            ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
+            var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+
+            var resultado = await scanner.Scan();
+            if (resultado != null)
+            {
+
+                
+
+                    
+
+                      
+
+
+
+         
+
+
+                Random rondom = new Random();
+                char[] array = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
+                string serial = rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                    +
+                    rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                     +
+                    rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                     +
+                    rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                     +
+                    rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString();
+
+              //  Toast.MakeText(this, "Por favor espere mientras se vinculan los dispositivos", ToastLength.Long).Show();
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDozWqE4WZwrY_VVutTTnIlzbG-NkEni_I"));
+
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync("gregoryalexandercabral@gmail.com", "gregory123456");
+                var token = auth.FirebaseToken;
+                var firebase = new FirebaseClient("https://dadass-d7a51.firebaseio.com");
+                var mapita = new Dictionary<string, string>();
+                mapita.Add(clasesettings.gettearid(), serial);
+
+                await firebase.Child("WEB").Child(resultado.Text).WithAuth(token).PatchAsync<Dictionary<string, string>>(mapita);
+
+
+
+            }
+            this.StopSelf();
+
+
+
+
+
+
+        }
+
+        public override IBinder OnBind(Intent intent)
+        {
+
+
+
+            return this.Binder;
+        }
+        public override void OnCreate()
+        {
+            base.OnCreate();
+
+
+
+        }
+
+
+        public void si(object sender, EventArgs e)
+        {
+
+
+        }
+        public void no(object sender, EventArgs e)
+        {
+
+            this.StopSelf();
+        }
+    }
+
+
+
+
+
+    /// //////////////////////////////////////////////////////////////////
 
     [Service(Exported = true)]
     public class serviciointerpreter2 : IntentService

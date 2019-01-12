@@ -14,32 +14,49 @@ using System.Net;
 using System.Net.Http;
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.Dialog.NoActionBar")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
     public class actfastsearcher : Activity
     {
         string termino = "";
         string ip = "";
-        ProgressBar progreso;
+       
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+        public ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.layoutfastsearcher);
-            EditText textobuscar = FindViewById<EditText>(Resource.Id.edittext1);
-            ImageView botonbuscarr = FindViewById<ImageView>(Resource.Id.ricochet);
+            EditText textobuscar = FindViewById<EditText>(Resource.Id.editText1);
+          //  ImageView botonbuscarr = FindViewById<ImageView>(Resource.Id.ricochet);
             ImageView botoncerrar = FindViewById<ImageView>(Resource.Id.imageView2);
             ip = Intent.GetStringExtra("ipadres");
-            progreso = FindViewById<ProgressBar>(Resource.Id.progressBar1);
-            progreso.Max = 100;
+          
             this.SetFinishOnTouchOutside(false);
-            botonbuscarr.Click += delegate
+
+
+            textobuscar.KeyPress += (aaxx, e) =>
             {
-             
-                    termino = textobuscar.Text;
-                    new Thread(() => { buscaryabrir(); }).Start();
-                    Toast.MakeText(this, "Buscando resultados...", ToastLength.Long).Show();
-                   progreso.Progress = 10;
-               
+                if (e.Event.Action == KeyEventActions.Down && e.KeyCode == Keycode.Enter)
+                {
+                    // Code executed when the enter key is pressed down
+
+                    if (textobuscar.Text.Trim().Length>3)
+                    {
+                        termino = textobuscar.Text;
+                        new Thread(() => { buscaryabrir(); }).Start();
+                    }
+                    else {
+                        Toast.MakeText(this, "La busqueda debe contener almenos 3 caracteres", ToastLength.Long).Show() ;
+                        }
+
+                }
+                else
+                {
+                    e.Handled = false;
+                }
             };
+         
             botoncerrar.Click += delegate
             {
                 this.Finish();
@@ -52,37 +69,58 @@ namespace App1
 
         public void buscaryabrir()
         {
+
+
+            RunOnUiThread(() =>
+            {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                dialogoprogreso.SetCanceledOnTouchOutside(false);
+                dialogoprogreso.SetCancelable(false);
+                dialogoprogreso.SetTitle("Buscando resultados...");
+                dialogoprogreso.SetMessage("Por favor espere");
+                dialogoprogreso.Show();
+            });
             try
             {
                 string url = getearurl(termino);
-            RunOnUiThread(() => progreso.Progress = 50);
-           if (url != "%%nulo%%")
-            {
+                //  RunOnUiThread(() => progreso.Progress = 50);
+                if (url != "%%nulo%%")
+                {
 
 
-            var a=clasesettings.gettearvideoid(url, true);
-                RunOnUiThread(() => progreso.Progress = 100);
-                Intent intentar = new Intent(this, typeof(customdialogact));
-            
-                RunOnUiThread(() => {
+                    var a = clasesettings.gettearvideoid(url, true,-1);
+                    //    RunOnUiThread(() => progreso.Progress = 100);
+                    Intent intentar = new Intent(this, typeof(customdialogact));
 
-                
-                    intentar.PutExtra("ipadress", ip);
-                    intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg") ;
-                    intentar.PutExtra("url", url);
-                    intentar.PutExtra("titulo", a.titulo);
-                    intentar.PutExtra("color", "DarkGray");
-                    StartActivity(intentar);
-                  
+                    RunOnUiThread(() =>
+                    {
+                        dialogoprogreso.Dismiss();
+
+                        intentar.PutExtra("ipadress", ip);
+                        intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
+                        intentar.PutExtra("url", url);
+                        intentar.PutExtra("titulo", a.titulo);
+                        intentar.PutExtra("color", "DarkGray");
+                        StartActivity(intentar);
 
 
-                });
+
+                    });
+                }
+                else {
+                    RunOnUiThread(() =>
+                    {
+                        dialogoprogreso.Dismiss();
+                    });
                 }
             }
             catch (Exception)
             {
                 RunOnUiThread(() => Toast.MakeText(this, "No se encotraron resultados", ToastLength.Long).Show());
-                RunOnUiThread(() => progreso.Progress = 0);
+                dialogoprogreso.Dismiss();
             }
         }
         
@@ -112,7 +150,7 @@ namespace App1
 
 
                     HttpClient cliente = new HttpClient(new ModernHttpClient.NativeMessageHandler());
-                    var retorno = cliente.GetStringAsync("https://decapi.me/youtube/videoid?search=" + titttt);
+                    var retorno = cliente.GetStringAsync("http://decapi.me/youtube/videoid?search=" + titttt);
                     prra = retorno.Result;
 
 

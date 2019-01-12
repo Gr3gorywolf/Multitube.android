@@ -85,9 +85,63 @@ namespace App1
             contentView.SetOnClickPendingIntent(Resource.Id.imageView6, listapending[3]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView5, listapending[4]);
 
-            var nBuilder = new Notification.Builder(this);
 
-            nBuilder.SetContent(contentView);
+            /*
+
+            1-playpause
+            2-siguiente
+            3-anterior
+            4-adelantar
+            5-atrazar
+
+            */
+
+            Notification.Action accion1 = new Notification.Action(Resource.Drawable.playpause, "Playpause", listapending[0]);
+            Notification.Action accion2 = new Notification.Action(Resource.Drawable.skipnext, "Siguiente", listapending[1]);
+            Notification.Action accion3 = new Notification.Action(Resource.Drawable.skipprevious, "Anterior", listapending[2]);
+            Notification.Action accion4 = new Notification.Action(Resource.Drawable.skipforward, "adelantar", listapending[3]);
+            Notification.Action accion5 = new Notification.Action(Resource.Drawable.skipbackward, "atrazar", listapending[4]);
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+            var nBuilder = new Notification.Builder(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+            Notification.MediaStyle estilo = new Notification.MediaStyle();
+            if (mainmenu.gettearinstancia() != null)
+            {
+              //  estilo.SetMediaSession(mainmenu.gettearinstancia().mSession.SessionToken);
+
+                estilo.SetShowActionsInCompactView(1, 2, 3);
+
+            }
+            if (Build.VERSION.SdkInt < BuildVersionCodes.Lollipop)
+            {
+#pragma warning disable 414
+                try {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                    nBuilder.SetContent(contentView);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                }
+                catch (Exception) { 
+                    }
+            
+#pragma warning restore 414
+            }
+            else
+            {
+
+
+                nBuilder.SetStyle(estilo);
+                nBuilder.SetLargeIcon(clasesettings.GetImageBitmapFromUrl(linkactual));
+                nBuilder.SetContentTitle(tituloactual);
+                nBuilder.SetContentText("Desde: "+mainmenu.gettearinstancia().devicename);
+                nBuilder.AddAction(accion5);
+                nBuilder.AddAction(accion3);
+                nBuilder.AddAction(accion1);
+                nBuilder.AddAction(accion2);
+                nBuilder.AddAction(accion4);
+                nBuilder.SetContentIntent(listapending[5]);
+                nBuilder.SetColor(Android.Graphics.Color.ParseColor("#ce2c2b"));
+            }
             nBuilder.SetOngoing(true);
 
             nBuilder.SetSmallIcon(Resource.Drawable.play);

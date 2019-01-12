@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+     android:background="?attr/colorPrimaryDark">
+
+	<android.support.design.widget.AppBarLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/progresoind" 
+			>
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/my_toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+			
+			android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			
+		>
+		
+				<android.support.v7.widget.SearchView
+					android:id="@+id/searchView"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:iconifiedByDefault="true"
+					android:queryHint="Buscar"
+					android:layout_gravity="right"
+					android:layout_centerHorizontal="true" />
+			</android.support.v7.widget.Toolbar>
+		<android.support.design.widget.TabLayout   
+               android:id="@+id/tabs"  
+               android:layout_width="match_parent"  
+               app:tabGravity="fill"
+               app:tabMode="fixed" 
+               app:tabIndicatorHeight="3dp"  
+            
+               android:elevation="4dp"
+               android:layout_height="wrap_content" /> 
+		</android.support.design.widget.AppBarLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,7 +47,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:background="@android:color/black"
-        android:alpha="0.5" />
+        android:alpha="0" />
     <LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
@@ -19,19 +56,23 @@
         android:layout_height="30dp"
         android:id="@+id/linearLayout2"
         android:gravity="right"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+		>
         <ImageView
             android:src="@drawable/closebutton"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:id="@+id/imageView5"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp" />
+            android:layout_marginRight="5dp"		
+		android:visibility="gone"
+		/>
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+		android:layout_marginTop="108dp"
         android:gravity="center">
         <ImageView
             android:layout_width="150dp"
@@ -48,37 +89,17 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:id="@+id/imageView3" />
-            <ImageView
-                android:src="@drawable/qrcodescan"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:id="@+id/imageView6"
-                android:layout_marginLeft="20dp" />
+
+			<Button
+				android:text="Escanear"
+				android:layout_width="120dp"
+				android:layout_height="45dp"
+				android:id="@+id/imageView6"
+				android:background="@drawable/largefloating"
+				android:elevation="7dp" />
+           
         </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/relativeLayout1"
-            android:minWidth="25px"
-            android:minHeight="25px">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:id="@+id/linearLayout3"
-                android:gravity="center">
-                <EditText
-                    android:layout_width="200dp"
-                    android:id="@+id/editText1"
-                    android:layout_height="match_parent" />
-                <ImageView
-                    android:src="@drawable/deletebutton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/imageView7"
-                    android:layout_marginLeft="5dp" />
-            </LinearLayout>
-        </RelativeLayout>
+   
         <ListView
             android:minWidth="25px"
             android:minHeight="25px"

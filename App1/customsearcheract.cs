@@ -17,9 +17,11 @@ using System.Threading;
 using Android.Speech;
 using System.Net.Sockets;
 using Android.Graphics;
+using Android.Glide;
+
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class customsearcheract : Activity
     {
         public string ipadresss;
@@ -33,20 +35,24 @@ namespace App1
         public List<Android.Graphics.Bitmap> imagelist;
         public List<string> nombreses;
         public List<string> linkeses;
+        public List<string> autoreses;
+        public List<string> duraciones;
         public EditText texto;
         public int voz = 7;
-        public TcpClient cliet;
+       
         string color = "none";
         public Thread procc;
         public TextView tv1;
         public Videosimage videoimagen;
         public LinearLayout lineaa;
-        public ProgressBar progresooo;
+      //  public ProgressBar progresooo;
         public LinearLayout lineall2;
         public List<Android.Graphics.Bitmap> imageneses = new List<Android.Graphics.Bitmap>();
         public List<Android.Graphics.Bitmap> imagenesesblur = new List<Android.Graphics.Bitmap>();
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+        public ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
 
-       
         protected override void OnCreate(Bundle savedInstanceState)
         {
            
@@ -54,15 +60,15 @@ namespace App1
 
             SetContentView(Resource.Layout.Customsearcher);
             ///////////////////////////////////////declaraciones/////////////////////////////////
-            cliet = new TcpClient();
+           
             string ip = Intent.GetStringExtra("ipadre").Trim();
-            cliet.Client.Connect(ip, 1024);
+           
             listaimagen = new List<Videosimage>();
             viddeos = new List<Videos>();
             imagelist = new List<Android.Graphics.Bitmap>();
-          
+         
             texto = FindViewById<EditText>(Resource.Id.editText1);
-            ImageView botonbuscar = FindViewById<ImageView>(Resource.Id.imageView1);
+          //  ImageView botonbuscar = FindViewById<ImageView>(Resource.Id.imageView1);
             ImageView botonreconocer= FindViewById<ImageView>(Resource.Id.imageView2);
             ImageView playpause = FindViewById<ImageView>(Resource.Id.imageView4);
            tv1 = FindViewById<TextView>(Resource.Id.textView1);
@@ -70,15 +76,24 @@ namespace App1
             ImageView botonhome = FindViewById<ImageView>(Resource.Id.imageView3);
             lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout4);
             listbox = FindViewById<ListView>(Resource.Id.listView1);
-            progresooo = FindViewById<ProgressBar>(Resource.Id.progresss);
+          //  progresooo = FindViewById<ProgressBar>(Resource.Id.progresss);
           
             clasesettings.ponerfondoyactualizar(this);
+            var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+            RunOnUiThread(() => {
+
+                var parcelable = listbox.OnSaveInstanceState();
+                listbox.Adapter = adaptadol;
+                listbox.OnRestoreInstanceState(parcelable);
+            });
             ////////////////////////////////////////////////miselaneo///////////////////////////////////
             color = Intent.GetStringExtra("color");
             nombreses = new List<string>();
             linkeses = new List<string>();
-            lineall2.SetBackgroundColor(Android.Graphics.Color.Black);
-            animar2(lineall2);
+            autoreses= new List<string>();
+            duraciones = new List<string>();
+        //   lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor("#4f5459"));
+          //  animar2(lineall2);
             tv1.Selected = true;
 
          
@@ -103,33 +118,44 @@ namespace App1
             }
 
             /////////////////////////////////////////////////threads///////////////////////////////////////////////
-            lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+          //  lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor("#2b2e30"));
             procc = new Thread(new ThreadStart(cojerstream));
             procc.Start();
 
           var  procc2 = new Thread(new ThreadStart(cargardesdecache));
             procc2.Start();
             ////////////////////////////////////////events//////////////////////////////////////////////////////
-            botonbuscar.Click += delegate
+            texto.KeyPress += (aaxx, e) =>
             {
-                animar(botonbuscar);
-                if (buscando == false) { 
-                termino = texto.Text;
-                    Toast.MakeText(this, "Buscando.. por favor espere", ToastLength.Long);
-                    foreach (string aa in Directory.GetFiles(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser"))
+                if (e.Event.Action == KeyEventActions.Down && e.KeyCode == Keycode.Enter)
+                {
+                    // Code executed when the enter key is pressed down
+
+                    if (buscando == false)
                     {
-                        File.Delete(aa);
+                        termino = texto.Text;
+                        //  Toast.MakeText(this, "Buscando.. por favor espere", ToastLength.Long);
+                        foreach (string aa in Directory.GetFiles(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser"))
+                        {
+                            File.Delete(aa);
+                        }
+                        clasesettings.recogerbasura();
+                        Thread proc = new Thread(new ThreadStart(buscar));
+                        proc.Start();
                     }
-                    clasesettings.recogerbasura();
-                    Thread proc = new Thread(new ThreadStart(buscar));
-                proc.Start();
+
+                }
+                else
+                {
+                    e.Handled = false;
                 }
             };
+        
             botonhome.Click +=delegate {
                 animar(botonhome);
               
                 procc.Abort();
-                cliet.Client.Disconnect(true);
+               
                 clasesettings.recogerbasura();
                 this.Finish();
                
@@ -138,7 +164,12 @@ namespace App1
             playpause.Click += delegate
             {
                 animar(playpause);
-                cliet.Client.Send(Encoding.ASCII.GetBytes("playpause()"));
+                if (mainmenu.gettearinstancia() != null)
+                    mainmenu.gettearinstancia().play.PerformClick();
+                else
+                if (mainmenu_Offline.gettearinstancia() != null)
+                   mainmenu_Offline.gettearinstancia().play.PerformClick();
+             
             };
 
             botonreconocer.Click += delegate
@@ -162,20 +193,21 @@ namespace App1
           
                 listbox.ItemClick += (easter, sender) =>
             {
-              
+                if (nombreses.Count > 0) { 
                     if (sender.Position >= 0) {
 
                     Intent intentar = new Intent(this, typeof(customdialogact));
                     string ipadree = Intent.GetStringExtra("ipadre");
                     intentar.PutExtra("ipadress", ipadree);
-                    intentar.PutExtra("imagen", viddeos[sender.Position].imgurl);
-                    intentar.PutExtra("url", viddeos[sender.Position].url);
-                    intentar.PutExtra("titulo", viddeos[sender.Position].nombre);
+                    intentar.PutExtra("imagen", "http://i.ytimg.com/vi/" + linkeses[sender.Position].Split('=')[1] + "/mqdefault.jpg");
+                    intentar.PutExtra("url", linkeses[sender.Position]);
+                    intentar.PutExtra("titulo", nombreses[sender.Position]);
                     intentar.PutExtra("color", color);
                     StartActivity(intentar);
                 }
-              
-        };
+                }
+
+            };
 
 
 
@@ -199,8 +231,19 @@ namespace App1
                     if (matches.Count != 0)
                     {
 
-                        texto.Text = " " + matches[0];
-              
+                        texto.Text =  matches[0];
+                        if (buscando == false)
+                        {
+                            termino = texto.Text;
+                            //  Toast.MakeText(this, "Buscando.. por favor espere", ToastLength.Long);
+                            foreach (string aa in Directory.GetFiles(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser"))
+                            {
+                                File.Delete(aa);
+                            }
+                            clasesettings.recogerbasura();
+                            Thread proc = new Thread(new ThreadStart(buscar));
+                            proc.Start();
+                        }
 
                     }
 
@@ -220,35 +263,53 @@ namespace App1
             listaimagen.Clear();
             nombreses.Clear();
             linkeses.Clear();
+            autoreses.Clear();
+            duraciones.Clear();
             VideoSearch buscavideos = new VideoSearch();
-            RunOnUiThread(() => Toast.MakeText(this, "Espere mientras se buscan resultados...", ToastLength.Long).Show());
+            //  RunOnUiThread(() => Toast.MakeText(this, "Espere mientras se buscan resultados...", ToastLength.Long).Show());
 
 
 
+            RunOnUiThread(() =>
+            {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                dialogoprogreso.SetCanceledOnTouchOutside(false);
+                dialogoprogreso.SetCancelable(false);
+                dialogoprogreso.SetTitle("Buscando resultados...");
+                dialogoprogreso.SetMessage("Por favor espere");
+                dialogoprogreso.Show();
+            });
+          
 
 
             index = 0;
          
             try {
-                var aa = buscavideos.SearchQuery(termino, 2);
+                var aa = buscavideos.SearchQuery(termino, 3);
               
 
-            RunOnUiThread(() => progresooo.Max = aa.Count);
+         //   RunOnUiThread(() => progresooo.Max = aa.Count);
             foreach (var ec in aa )
             {
+                   
              
                 if (parar == true)
                 {
-                
-                   Videos video = new Videos();
+                          
+             /*     Videos video = new Videos();
                     video.nombre = RemoveIllegalPathCharacters(ec.Title.Replace("&quot;", "").Replace("&amp;", ""));
                     video.url = ec.Url;
                     video.tiempo = RemoveIllegalPathCharacters(ec.Title.Replace("&quot;", "").Replace("&amp;", ""));
-                    video.imgurl = "https://i.ytimg.com/vi/" + ec.Url.Split('=')[1] + "/mqdefault.jpg";
-                   videoimagen = new Videosimage();
+                    video.imgurl = "https://i.ytimg.com/vi/" + ec.Url.Split('=')[1] + "/mqdefault.jpg";*/
+                /*   videoimagen = new Videosimage();
                     videoimagen.nombre = RemoveIllegalPathCharacters(ec.Title.Replace("&quot;", "").Replace("&amp;", ""));
-                    videoimagen.imagen = "https://i.ytimg.com/vi/" + ec.Url.Split('=')[1] + "/mqdefault.jpg"; ;
-                        nombreses.Add(RemoveIllegalPathCharacters( ec.Title.Replace("&quot;", "").Replace("&amp;", "")));
+                    videoimagen.imagen = "https://i.ytimg.com/vi/" + ec.Url.Split('=')[1] + "/mqdefault.jpg"; ;*/
+                        nombreses.Add(WebUtility.HtmlDecode( RemoveIllegalPathCharacters( ec.Title.Replace("&quot;", "").Replace("&amp;", ""))));
+                        autoreses.Add(ec.Url);
+                        duraciones.Add(ec.Duration);
                         /*
                           Byte[] biteimagen =  clienteee.DownloadData(ec.Thumbnail);
 
@@ -273,9 +334,10 @@ namespace App1
                         // biteimagen = new byte[0];
 
                         linkeses.Add(ec.Url);
-                   listaimagen.Add(videoimagen);
-                    viddeos.Add(video);
-                   imagelist.Add(video.imagen);
+                       // viddeos.Add(video);
+                        // listaimagen.Add(videoimagen);
+
+                        //    imagelist.Add(video.imagen);
 
 
 
@@ -284,9 +346,9 @@ namespace App1
 
 
 
-                 
-                    index++;
-                    RunOnUiThread(() => progresooo.Progress = index);
+
+                        index++;
+                 //   RunOnUiThread(() => progresooo.Progress = index);
              
                 }
                 //  ArrayAdapter<string> adaptadorvids = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, listaimagen);
@@ -295,8 +357,22 @@ namespace App1
 
 
             }
-             var   adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, nombreses);
-                RunOnUiThread(() => listbox.Adapter = adaptadol);
+                dialogoprogreso.Dismiss();
+
+             var   adaptadol = new adapterlistaremotobuscadores(this, nombreses,linkeses, autoreses, duraciones);
+                RunOnUiThread(() => {
+                    var parcelable = listbox.OnSaveInstanceState();
+                    listbox.Adapter = adaptadol;
+                    listbox.OnRestoreInstanceState(parcelable);
+                });
+                if (nombreses.Count == 0) {
+                    var adaptadolss = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                    RunOnUiThread(() => {
+                        var parcelable = listbox.OnSaveInstanceState();
+                        listbox.Adapter = adaptadolss;
+                        listbox.OnRestoreInstanceState(parcelable);
+                    });
+                }
                 buscando = false;
                 parar = false;
                 Thread proc = new Thread(new ThreadStart(enthread));
@@ -305,7 +381,10 @@ namespace App1
           
             }
             catch (Exception)
+
+
             {
+                dialogoprogreso.Dismiss();
                 RunOnUiThread(() => Toast.MakeText(this, "No se encontro el termino", ToastLength.Long).Show());
                 parar = false;
                 buscando = false;
@@ -315,7 +394,7 @@ namespace App1
 
         {
             procc.Abort();
-          cliet.Client.Disconnect(true);
+        
             this.Finish();
 
 
@@ -324,14 +403,7 @@ namespace App1
         public override void Finish()
         {
 
-            listaimagen = new List<Videosimage>();
-            nombreses = new List<string>();
-            viddeos = new List<Videos>();
-            linkeses = new List<string>();
-            imageneses = new List<Bitmap>();
-            imagenesesblur = new List<Bitmap>();
-            clasesettings.recogerbasura();
-            listaimagen.Clear();
+ 
           ////  cliet.Client.Disconnect(true);
             base.Finish();
             //     this.Dispose();
@@ -344,50 +416,47 @@ namespace App1
                 RunOnUiThread(() => Toast.MakeText(this, "Cargando datos desde cache", ToastLength.Long).Show());
                 if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/cachesito.gr3"))
                 {
-                    listaimagen.Clear();
+                 //   listaimagen.Clear();
                     nombreses.Clear();
                     viddeos.Clear();
                     linkeses.Clear();
-                    imageneses.Clear();
-                    imagenesesblur.Clear();
+                    autoreses.Clear();
+                    duraciones.Clear();
+                  //  imageneses.Clear();
+                   // imagenesesblur.Clear();
                     var asdsa = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/cachesito.gr3");
 
                     nombreses = asdsa.Split('²')[0].Split('¹').ToList();
                     linkeses = asdsa.Split('²')[1].Split('¹').ToList();
-                    for (int i = 0; i < nombreses.Count - 1; i++)
-                    {
-
-                        videoimagen = new Videosimage();
-                        videoimagen.nombre = RemoveIllegalPathCharacters(nombreses[i]);
-                        videoimagen.imagen = "http://i.ytimg.com/vi/" + linkeses[i].Split('=')[1] + "/mqdefault.jpg";
-                        Videos losvids = new Videos();
-
-                        losvids.imgurl = "http://i.ytimg.com/vi/" + linkeses[i].Split('=')[1] + "/mqdefault.jpg";
-                        losvids.nombre = videoimagen.nombre;
-                        losvids.url = linkeses[i];
-                        viddeos.Add(losvids);
-                        listaimagen.Add(videoimagen);
-                        using (Android.Graphics.Bitmap imagen = Android.Graphics.BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/" + listaimagen[i].imagen.Split('/')[4]))
-                        {
-                            imageneses.Add(getRoundedShape(imagen));
-                            imagenesesblur.Add(clasesettings.CreateBlurredImageofflineadapters(this, 20, Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/" + listaimagen[i].imagen.Split('/')[4]));
-                        }
-
-
-
-
-
+                    autoreses= asdsa.Split('²')[2].Split('¹').ToList();
+                    duraciones = asdsa.Split('²')[3].Split('¹').ToList();
+                    if (nombreses[0].Trim() == "" || linkeses[0].Trim()=="") {
+                        nombreses.Clear();
+                        viddeos.Clear();
+                        linkeses.Clear();
+                        autoreses.Clear();
+                        duraciones.Clear();
                     }
-                   
-                    Customadaptador1 adaltel = new Customadaptador1(this, listaimagen, true, false, imageneses, imagenesesblur);
-                    RunOnUiThread(() => listbox.Adapter = adaltel);
+                    adapterlistaremotobuscadores adaltel = new adapterlistaremotobuscadores(this, nombreses, linkeses, autoreses, duraciones);
+                    RunOnUiThread(() => {
+                        var parcelable = listbox.OnSaveInstanceState();
+                        listbox.Adapter = adaltel;
+                        listbox.OnRestoreInstanceState(parcelable);
+                    });
 
-                    if (listaimagen.Count == 0)
+                    if (nombreses.Count == 0)
                     {
-                        var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> {"No se encontraron datos en cache"});
-                        RunOnUiThread(() => listbox.Adapter = adaptadol);
-
+                        var adaptadolss = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                        RunOnUiThread(() => listbox.Adapter = adaptadolss);
                     }
+                  
+
+                    /*  if (listaimagen.Count == 0)
+                      {
+                          var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> {"No se encontraron datos en cache"});
+                          RunOnUiThread(() => listbox.Adapter = adaptadol);
+
+                      }*/
                 }
 
             }
@@ -416,67 +485,10 @@ namespace App1
             try
            {
 
-                RunOnUiThread(() => progresooo.Max = listaimagen.Count - 1);
-                RunOnUiThread(() => progresooo.Progress = 0);
-              
-               
-                for (int i = 0; i < listaimagen.Count; i++)
-                {
-
-                    if (!buscando)
-                    {
+                
 
 
-
-                        /*   new Thread(() =>
-                           {
-                           */
-
-                        using (var clientuuuu = new System.Net.WebClient()) { 
-                            clientuuuu.Credentials = new NetworkCredential();
-
-
-                            int pos = i;
-                            //   listaimagen[i].imagen.Split('/')[4]
-                            string url = listaimagen[pos].imagen;
-                            string imagename = listaimagen[pos].imagen.Split('/')[4];
-                                clientuuuu.DownloadFile(new Uri(url), Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/" + imagename);
-                            RunOnUiThread(() => progresooo.Progress++);
-
-
-                          
-                        }
-                        using (Android.Graphics.Bitmap imagen = Android.Graphics.BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/" + listaimagen[i].imagen.Split('/')[4]))
-                        {
-                            imageneses.Add(getRoundedShape(imagen));
-                            imagenesesblur.Add(clasesettings.CreateBlurredImageofflineadapters(this, 20, Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/" + listaimagen[i].imagen.Split('/')[4]));
-                        }
-
-                        // Android.Graphics.Bitmap imagen = Android.Graphics.BitmapFactory.DecodeByteArray(ss, 0, ss.Length);
-
-                        //holder.imagen.SetImageBitmap(imagen);
-
-                        // }).Start();
-                    }
-
-
-
-                  
-                       
-
-
-
-                }
-
-
-               
-                                    if (!buscando)
-                                {
-
-                                    var asdd = listbox.FirstVisiblePosition;
-                                    Customadaptador1 adaltel = new Customadaptador1(this, listaimagen, true,false,imageneses,imagenesesblur);
-                                    RunOnUiThread(() => listbox.Adapter = adaltel);
-                                    RunOnUiThread(() => listbox.SetSelection(asdd));
+                                                                         
                                     if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/cachesito.gr3")) {
                                         File.Delete(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/webbrowser/cachesito.gr3");
                                     }
@@ -484,20 +496,22 @@ namespace App1
 
                                     string todosnombres = String.Join("¹", nombreses.ToArray());
                                     string todoslinks = string.Join("¹", linkeses.ToArray());
-                                    ee.Write(todosnombres + "²" + todoslinks);
+                                    string autores = string.Join("¹", autoreses.ToArray());
+                                    string duracioness = string.Join("¹", duraciones.ToArray());
+                                    ee.Write(todosnombres + "²" + todoslinks + "²" +autores+ "²" +duracioness);
                                     ee.Close();
-                                }
+                             
 
-                clasesettings.recogerbasura();
+                                    clasesettings.recogerbasura();
             }
 
 
             catch (Exception)
             {
-                var asdd = listbox.FirstVisiblePosition;
+              /*  var asdd = listbox.FirstVisiblePosition;
                 var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, nombreses);
                 RunOnUiThread(() => listbox.Adapter = adaptadol);
-                RunOnUiThread(() => listbox.SetSelection(asdd));
+                RunOnUiThread(() => listbox.SetSelection(asdd));*/
             }
         }
 
@@ -544,22 +558,41 @@ namespace App1
         }
         public void cojerstream()
         {
-            while (cliet.Client.Connected)
+            while (!this.IsDestroyed)
             {
                 if (mainmenu_Offline.gettearinstancia() != null)
                 {
-                    if (mainmenu_Offline.gettearinstancia().label.Text != tv1.Text)
+
+                    if (mainmenu_Offline.gettearinstancia().buscando != true)
                     {
-                        RunOnUiThread(() => tv1.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                        if (mainmenu_Offline.gettearinstancia().label.Text != tv1.Text
+                            && mainmenu_Offline.gettearinstancia().label.Text.Trim() != "")
+                        {
+
+
+                            RunOnUiThread(() => tv1.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                        }
                     }
+                    else {
+                        RunOnUiThread(() => tv1.Text ="Buscando...");
+                    }
+
 
                 }
                 else
                 if (mainmenu.gettearinstancia() != null)
                 {
-                    if (mainmenu.gettearinstancia().label.Text != tv1.Text)
+
+                    if (mainmenu.gettearinstancia().buscando != true)
                     {
-                        RunOnUiThread(() => tv1.Text = mainmenu.gettearinstancia().label.Text);
+                        if (mainmenu.gettearinstancia().label.Text != tv1.Text
+                        && mainmenu.gettearinstancia().label.Text.Trim() != "")
+                        {
+                            RunOnUiThread(() => tv1.Text = mainmenu.gettearinstancia().label.Text);
+                        }
+                    }
+                    else {
+                        RunOnUiThread(() => tv1.Text = "Buscando...");
                     }
 
 
@@ -567,20 +600,45 @@ namespace App1
 
 
                 }
-                else
+               
+
+                if (tv1.Text.Trim() == "" && tv1.Text.Trim() != "No hay elementos en cola")
                 {
 
+                    RunOnUiThread(() => { tv1.Text = "No hay elementos en cola"; });
                 }
-
 
                 Thread.Sleep(1000);
             }
+        }
+        protected override void OnDestroy()
+        {
+            listaimagen = new List<Videosimage>();
+            nombreses = new List<string>();
+            viddeos = new List<Videos>();
+            linkeses = new List<string>();
+            imageneses = new List<Bitmap>();
+            imagenesesblur = new List<Bitmap>();
+           
+            listaimagen.Clear();
+            try
+            {
+                Glide.Get(this).ClearMemory();
+            }
+            catch (Exception)
+            {
+            }
+            clasesettings.recogerbasura();
+            base.OnDestroy();
         }
         public void animar(Java.Lang.Object imagen)
         {
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
         }
         public void animar2(Java.Lang.Object imagen)
         {

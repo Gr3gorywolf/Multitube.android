@@ -15,14 +15,16 @@ using Android.Graphics;
 using System.Threading;
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.Dialog.NoActionBar")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
     public class deletedialogact : Activity
     {
         public string imagem;
-        public TcpClient cliente;
+      
        public ImageView imagenview;
         public Thread proc;
         ImageView fondo;
+        LinearLayout buscar;
+        string url;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,18 +32,20 @@ namespace App1
          
           TextView texto= FindViewById<TextView>(Resource.Id.textView1);
             imagenview = FindViewById<ImageView>(Resource.Id.imageView1);
-            ImageView agregar = FindViewById<ImageView>(Resource.Id.imageView2);
-            ImageView buscar = FindViewById<ImageView>(Resource.Id.imageView3);
+           LinearLayout agregar = FindViewById<LinearLayout>(Resource.Id.imageView2);
+            buscar = FindViewById<LinearLayout>(Resource.Id.imageView3);
             ImageView volver = FindViewById<ImageView>(Resource.Id.imageView4);
             LinearLayout lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout4);
             LinearLayout lineaa = FindViewById<LinearLayout>(Resource.Id.linearlayout0);
-            ImageView descargar = FindViewById<ImageView>(Resource.Id.imageView5);
-            ImageView addlista = FindViewById<ImageView>(Resource.Id.imageView6);
+            LinearLayout descargar = FindViewById<LinearLayout>(Resource.Id.imageView5);
+            LinearLayout addlista = FindViewById<LinearLayout>(Resource.Id.imageView6);
             fondo = FindViewById<ImageView>(Resource.Id.fondo1);
-            animar2(lineaa);
+         //   animar2(lineaa);
             texto.Selected = true;
+
+            buscar.Visibility = ViewStates.Visible;
             string colol = Intent.GetStringExtra("color");
-            string url = Intent.GetStringExtra("url");
+             url = Intent.GetStringExtra("url");
             string posicion = Intent.GetStringExtra("index");
             url = "https://www.youtube.com/watch?v=" + url.Split('=')[1];
             if (colol.Trim() != "none") {
@@ -58,12 +62,12 @@ namespace App1
             imagem = Intent.GetStringExtra("imagen");
             string titulo = Intent.GetStringExtra("titulo");
             texto.Text = titulo;
-            
-           cliente = new TcpClient();
-            this.SetFinishOnTouchOutside(false);
+
+
+            this.SetFinishOnTouchOutside(true);
 
             animar2(lineall2);
-            cliente.Client.Connect(Intent.GetStringExtra("ipadress"), 1024);
+        
            proc = new Thread(new ThreadStart(ponerimagen));
             proc.Start();
             volver.Click += delegate
@@ -87,11 +91,33 @@ namespace App1
             agregar.Click += delegate
             {
                 animar(agregar);
-                cliente.Client.Send(Encoding.Default.GetBytes("eliminarelemento()"));
-                Thread.Sleep(250);
-                cliente.Client.Send(Encoding.Default.GetBytes(posicion));
-               
-          
+              
+
+
+
+
+                if (mainmenu_Offline.gettearinstancia() == null)
+                {
+                    if (mainmenu.gettearinstancia().clientela.Connected == true)
+                    {
+                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("eliminarelemento()"));
+                        Thread.Sleep(250);
+                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(posicion));
+
+
+
+                    }
+                }
+                else
+                {
+                    new Thread(() =>
+                    {
+                        mainmenu_Offline.gettearinstancia().eliminarelementodireckt(int.Parse(posicion));
+                    }).Start();
+
+                }
+
+
 
                 this.Finish();
               
@@ -111,20 +137,40 @@ namespace App1
             buscar.Click += delegate
             {
                 animar(buscar);
-                if (cliente.Connected == true) { 
-                cliente.Client.Send(Encoding.Default.GetBytes("pedirindice()"));
-                    Thread.Sleep(250);
-                    cliente.Client.Send(Encoding.Default.GetBytes(posicion));
 
 
 
-                 
-                
+
+                if (mainmenu_Offline.gettearinstancia() == null)
+                {
+                    if (mainmenu.gettearinstancia().clientela.Connected == true)
+                    {
+                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("pedirindice()"));
+                        Thread.Sleep(250);
+                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(posicion));
 
 
 
-                    this.Finish();
+                    }
                 }
+                else
+                {
+                    new Thread(() =>
+                    {
+                        mainmenu_Offline.gettearinstancia().reproddelistadireckt(int.Parse( posicion));
+                    }).Start();
+
+                }
+
+
+
+
+
+
+
+                  
+                    this.Finish();
+               
             };
              
             // Create your application here
@@ -141,11 +187,11 @@ namespace App1
         {
             try { 
             WebClient clienteweb = new WebClient();
-          byte[]losbits=  clienteweb.DownloadData(imagem);
+          byte[]losbits=  clienteweb.DownloadData("http://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
             Bitmap imagen = BitmapFactory.DecodeByteArray(losbits, 0, losbits.Length);
 
             RunOnUiThread(() =>imagenview.SetImageBitmap(clasesettings.getRoundedShape( imagen)));
-            RunOnUiThread(() => fondo.SetImageBitmap(clasesettings.CreateBlurredImageformbitmap(this,20, imagen)));
+            RunOnUiThread(() => fondo.SetImageBitmap( imagen));
             RunOnUiThread(() => animar4(imagenview));
 
             }
@@ -161,6 +207,21 @@ namespace App1
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
+        }
+
+        public void animarxd(Java.Lang.Object imagen)
+        {
+            var ax = (ImageView)imagen;
+            ax.Visibility = ViewStates.Visible;
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0f, 1f);
+            animacion.SetDuration(400);
+            animacion.Start();
+            Android.Animation.ObjectAnimator animacionx = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0f, 1f);
+            animacionx.SetDuration(400);
+            animacionx.Start();
         }
         public void animar2(Java.Lang.Object imagen)
         {
@@ -172,16 +233,20 @@ namespace App1
         }
         public override void Finish()
         {
-            cliente.Client.Disconnect(false);
+          
             base.Finish();
             clasesettings.recogerbasura();
         }
         public void animar4(Java.Lang.Object imagen)
         {
 
-            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "translationY", 1000, 0);
-            animacion.SetDuration(500);
-            animacion.Start();
+           /* Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "translationY", 1000, 0);
+            animacion.SetDuration(400);
+            animacion.Start();*/
+          //  animacion.AnimationEnd += delegate
+          //  {
+              //  animarxd(buscar);
+         //   };
 
         }
     }

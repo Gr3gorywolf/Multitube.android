@@ -15,12 +15,11 @@ using System.IO;
 using System.Threading;
 using System.Net.Http;
 using VideoLibrary;
-
-
+using Android.Graphics;
 
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity(Label = "Multitube", ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class actdownloadcenteroffline : Activity
     {
         public bool enporceso = false;
@@ -33,16 +32,19 @@ namespace App1
         public Android.Media.MediaPlayer musicaplayer = new Android.Media.MediaPlayer();
     //    public IEnumerable<VideoInfo> videoinfoss;
         public bool enmov = false;
-        public ProgressBar pv;
+      
       public  Byte[] bitess = null;
         public string colores = "";
-        public TcpClient cliente;
+    
         public TextView tv4;
         public Thread trer;
         public bool parador = true;
         public LinearLayout llayout;
         public string archivocompleto = "";
         public LinearLayout lineall2;
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+        ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         protected override void OnCreate(Bundle savedInstanceState)
         {
             SetContentView(Resource.Layout.Downloadcenteroffline);
@@ -53,11 +55,11 @@ namespace App1
             ISharedPreferencesEditor prefEditor = prefs.Edit();
 
             //////////////////////////////////TCpclientconnect/////////////
-            cliente = new TcpClient();
+         
             string ip = Intent.GetStringExtra("ip");
             linkvid = Intent.GetStringExtra("zelda");
             colores = Intent.GetStringExtra("color");
-            cliente.Client.Connect(ip, 1024);
+    
             Intent.Extras.Clear();
             //////////////////////////////////DEclaraciones////////////////
             RadioGroup radio1 = FindViewById<RadioGroup>(Resource.Id.radioGroup1);
@@ -76,15 +78,15 @@ namespace App1
            lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout2);
        llayout = FindViewById<LinearLayout>(Resource.Id.LinearLayout0);
            
-            pv = FindViewById<ProgressBar>(Resource.Id.progressBar1);
+          
             clasesettings.ponerfondoyactualizar(this);
             ///////////////////////////////////////mp3load+durationbarload//////////////////////
             tv4.Selected = true;
              trer = new Thread(new ThreadStart(cojerstream));
             trer.Start();
             
-            lineall2.SetBackgroundColor(Android.Graphics.Color.Black);
-            animar2(lineall2);
+        //    lineall2.SetBackgroundColor(Android.Graphics.Color.Black);
+          //  animar2(lineall2);
             /////////////////////////////miselaneo///////////////////////////////////////////////
         
 
@@ -97,12 +99,13 @@ namespace App1
 
 
 
-            lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+         //   lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor("#2b2e30"));
             ///////////////////////////////////events//////////////////////////////////////
             playpause.Click += delegate
             {
                 animar(playpause);
-                cliente.Client.Send(Encoding.ASCII.GetBytes("playpause()"));
+                mainmenu_Offline.gettearinstancia().play.PerformClick();
+               
             };
           
            
@@ -112,7 +115,7 @@ namespace App1
             {
                 animar(iv4);
                 trer.Abort();
-                cliente.Client.Disconnect(false);
+               
                 musicaplayer.Reset();
                 parador = false;
                 this.Finish();
@@ -177,7 +180,7 @@ namespace App1
         {
             trer.Abort();
             musicaplayer.Reset();
-            cliente.Client.Disconnect(false);
+    
             parador = false;
             this.Finish();
         }
@@ -186,12 +189,23 @@ namespace App1
             enporceso = true;
             string video2 = "";
             string title = "";
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+            dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+
+            dialogoprogreso.SetCanceledOnTouchOutside(false);
+            dialogoprogreso.SetCancelable(false);
+            dialogoprogreso.SetTitle("Analizando video...");
+            dialogoprogreso.SetMessage("Por favor espere");
+            dialogoprogreso.Show();
             using (var videito = Client.For(YouTube.Default))
             {
                 var video = videito.GetAllVideosAsync(linkvid);
                 var resultados = video.Result;
                 title = resultados.First().Title.Replace("- YouTube", "");
                 video2 = resultados.First(info => info.Resolution ==quality && info.AudioFormat== AudioFormat.Aac).GetUriAsync().Result;
+
             }
 
 
@@ -230,7 +244,7 @@ namespace App1
             string documentsPath = pathFile.AbsolutePath;
 
             string localFilename = RemoveIllegalPathCharacters(title).Trim() + ".mp4";
-            string localPath = Path.Combine(rutadedescarga, localFilename);
+            string localPath = System.IO.Path.Combine(rutadedescarga, localFilename);
             /*    Intent intento = new Intent(this, typeof(serviciodownload));
                 intento.PutExtra("path", localPath);
                 intento.PutExtra("archivo", video2);
@@ -249,20 +263,32 @@ namespace App1
             }
             RunOnUiThread(() => this.Finish());
             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
+            dialogoprogreso.Dismiss();
 
         }
         public void descmp3()
         {
             enporceso = true;
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+            dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+
+            dialogoprogreso.SetCanceledOnTouchOutside(false);
+            dialogoprogreso.SetCancelable(false);
+            dialogoprogreso.SetTitle("Analizando video...");
+            dialogoprogreso.SetMessage("Por favor espere");
+            dialogoprogreso.Show();
+
             /*
             videoinfoss = DownloadUrlResolver.GetDownloadUrls(linkvid, false);
 
             VideoInfo video2 = videoinfoss.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 0);
             */
-            var asd = clasesettings.gettearvideoid(linkvid,false);
+            var asd = clasesettings.gettearvideoid(linkvid,false,-1);
           //  Intent intento = new Intent(this, typeof(serviciodownload));
             string localFilename = RemoveIllegalPathCharacters(asd.titulo).Trim() + ".mp3";
-            string localPath = Path.Combine(rutadedescarga, localFilename);
+            string localPath =System.IO.Path.Combine(rutadedescarga, localFilename);
             /*  intento.PutExtra("path", localPath);
                intento.PutExtra("archivo", asd.downloadurl);
                intento.PutExtra("titulo", asd.titulo);
@@ -305,35 +331,46 @@ namespace App1
                 enporceso = false;
                 pv.Progress = 0;
             };*/
-
+            dialogoprogreso.Dismiss();
 
         }
         public void cojerstream()
         {
 
-            while (cliente.Client.Connected)
+            while (!this.IsDestroyed)
             {
                 if (mainmenu_Offline.gettearinstancia() != null )
                 {
-                    if (mainmenu_Offline.gettearinstancia().label.Text != tv4.Text)
+
+                    if (mainmenu_Offline.gettearinstancia().buscando != true)
                     {
-                        RunOnUiThread(() => tv4.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                        if (mainmenu_Offline.gettearinstancia().label.Text != tv4.Text 
+                            && mainmenu_Offline.gettearinstancia().label.Text.Trim() != "")
+                        {
+                            RunOnUiThread(() => tv4.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                        }
                     }
-             
+                    else {
+                        RunOnUiThread(() => tv4.Text = "Buscando...");
+                    }
+
                 }
                 else
                 if (mainmenu.gettearinstancia() != null)
                 {
-                    if (mainmenu.gettearinstancia().label.Text != tv4.Text)
+                    if (mainmenu.gettearinstancia().label.Text != tv4.Text
+                         &&  mainmenu.gettearinstancia().label.Text.Trim()!=""
+                        )
                     {
                         RunOnUiThread(() => tv4.Text = mainmenu.gettearinstancia().label.Text);
                     }
                 }
-                else
+               
+                if (tv4.Text.Trim() == "" && tv4.Text.Trim() != "No hay elementos en cola")
                 {
 
+                    RunOnUiThread(() => { tv4.Text = "No hay elementos en cola"; });
                 }
-
 
                 Thread.Sleep(1000);
             }
@@ -349,7 +386,9 @@ namespace App1
             intent00.SetType("resource/folder");
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent00, PendingIntentFlags.UpdateCurrent);
 
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
             Notification.Builder builder = new Notification.Builder(this)
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
       .SetContentTitle(titulo)
       .SetContentText(link)
       .SetSubText("Completada")
@@ -379,6 +418,9 @@ namespace App1
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
         }
         ///////////////////////////////////////////////////////////voids//////////////////////////////////////////////////////////////////////////////////////////////////////////
         public void animar2(Java.Lang.Object imagen)

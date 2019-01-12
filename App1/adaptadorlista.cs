@@ -159,7 +159,7 @@ namespace App1
                         ad.SetMessage("Esta seguro que desea remover el elemento? " + listilla[pos]);
                     }
                     ad.SetTitle("Advertencia");
-                    ad.SetIcon(Resource.Drawable.warningsignonatriangularbackground);
+                    ad.SetIcon(Resource.Drawable.alert);
                     if (listacompletai && !solomodifyelarray)
                     {
                         ad.SetPositiveButton("Si", ok2);

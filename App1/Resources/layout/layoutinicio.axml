@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/drawer_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:p1="http://schemas.android.com/apk/res/android"
+	>
+<RelativeLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+	>
+			<android.support.design.widget.AppBarLayout
+			p1:layout_width="match_parent"
+			p1:layout_height="wrap_content"
+				android:id="@+id/barlayout"
+			>
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/my_toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+			android:elevation="4dp"
+			android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			
+		>
+		
+		
+			</android.support.v7.widget.Toolbar>
+		</android.support.design.widget.AppBarLayout>
+    <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     android:layout_marginRight="6dp"
+		 android:layout_marginLeft="6dp"
+		 android:layout_marginTop="20dp"
+			android:layout_below="@+id/barlayout" 
+		>
+
+		<LinearLayout
+			android:orientation="vertical"
+			 android:layout_width="match_parent"
+    android:layout_height="match_parent"
+                                         >
+	<!--seccion 1-->
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+				>
+				<TextView
+							android:textAppearance="?android:attr/textAppearanceMedium"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							
+							android:singleLine="true"
+							android:scrollHorizontally="true"
+							android:marqueeRepeatLimit="marquee_forever"
+							android:ellipsize="marquee"
+							android:layout_marginLeft="4dp"
+		                    android:gravity="center"
+							android:layout_marginRight="4dp"
+					 android:clickable="false"
+					android:layout_centerVertical="true"
+				android:text="Mas buscados"
+					/>
+ 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listamas"
+        android:scrollbars="vertical"
+	    android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+		 app:layoutManager="android.support.v7.widget.LinearLayoutManager"	
+			/>
+</LinearLayout>
+			<!--seccion 2-->
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+				android:layout_marginTop="20dp">
+				<TextView
+							android:textAppearance="?android:attr/textAppearanceMedium"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							
+							android:singleLine="true"
+							android:scrollHorizontally="true"
+							android:marqueeRepeatLimit="marquee_forever"
+							android:ellipsize="marquee"
+							android:layout_marginLeft="4dp"
+		                    android:gravity="center"
+							android:layout_marginRight="4dp"
+					 android:clickable="false"
+					android:layout_centerVertical="true"
+				android:text="Ultimos Videos"
+					/>
+ 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listaultimos"
+        android:scrollbars="vertical"
+	    android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+		 app:layoutManager="android.support.v7.widget.LinearLayoutManager"	
+			/>
+</LinearLayout>
+		<!--seccion 3-->
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+					android:layout_marginTop="20dp">
+				<TextView
+							android:textAppearance="?android:attr/textAppearanceMedium"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							
+							android:singleLine="true"
+							android:scrollHorizontally="true"
+							android:marqueeRepeatLimit="marquee_forever"
+							android:ellipsize="marquee"
+							android:layout_marginLeft="4dp"
+		                    android:gravity="center"
+							android:layout_marginRight="4dp"
+					 android:clickable="false"
+					android:layout_centerVertical="true"
+				android:text="Videos favoritos"
+					/>
+ 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listafavoritos"
+        android:scrollbars="vertical"
+	    android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+		 app:layoutManager="android.support.v7.widget.LinearLayoutManager"	
+			/>
+</LinearLayout>
+
+
+		<!--seccion 4-->
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+				android:layout_marginTop="20dp">
+				<TextView
+							android:textAppearance="?android:attr/textAppearanceMedium"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							
+							android:singleLine="true"
+							android:scrollHorizontally="true"
+							android:marqueeRepeatLimit="marquee_forever"
+							android:ellipsize="marquee"
+							android:layout_marginLeft="4dp"
+		                    android:gravity="center"
+							android:layout_marginRight="4dp"
+					 android:clickable="false"
+					android:layout_centerVertical="true"
+				android:text="Sugerencias"
+					/>
+ 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listasugerencias"
+        android:scrollbars="vertical"
+	    android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+		 app:layoutManager="android.support.v7.widget.LinearLayoutManager"	
+			/>
+
+</LinearLayout>
+       
+		
+		</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</ScrollView>
+</RelativeLayout>
+		<android.support.design.widget.NavigationView
+		android:id="@+id/content_frame"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="start"
+		app:headerLayout="@layout/layoutheader"
+		app:menu="@drawable/elementosmenumodostreaminginicio" />
+</android.support.v4.widget.DrawerLayout>

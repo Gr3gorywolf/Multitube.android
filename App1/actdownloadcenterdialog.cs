@@ -21,7 +21,7 @@ using Plugin.DownloadManager;
 
 namespace App1
 {
-    [Activity(Label = "Descargar desde multitube" , Icon = "@drawable/icon",ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.Dialog.NoActionBar")]
+    [Activity(Label = "Descargar desde multitube" , Icon = "@drawable/icon",ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = "text/plain")]
 
     public class actdownloadcenterofflinedialog : Activity
@@ -39,7 +39,7 @@ namespace App1
         public ProgressBar pv;
       public  Byte[] bitess = null;
         public string colores = "";
-        public TcpClient cliente;
+       
         public TextView tv4;
         public Thread trer;
         public bool parador = true;
@@ -74,6 +74,7 @@ namespace App1
                     }
                     else
                     {
+                        Toast.MakeText(this, "Este enlace no proviene de youtube", ToastLength.Long).Show();
                         this.Finish();
                     }
 
@@ -82,6 +83,7 @@ namespace App1
                 }
                 else
                 {
+                    Toast.MakeText(this, "Este enlace no proviene de youtube", ToastLength.Long).Show();
                     this.Finish();
                 }
             }
@@ -97,7 +99,7 @@ namespace App1
             TextView titulo = FindViewById<TextView>(Resource.Id.textView4);
             titulo.Selected = true;
             prueba_de_lista_generica.Geteartitulo tt = new prueba_de_lista_generica.Geteartitulo();
-            this.SetFinishOnTouchOutside(false);
+            this.SetFinishOnTouchOutside(true);
      
             new Thread(() =>
             {
@@ -115,7 +117,7 @@ namespace App1
             RadioGroup radio1 = FindViewById<RadioGroup>(Resource.Id.radioGroup1);
 
             progreso = FindViewById<ProgressBar>(Resource.Id.progressBar1);
-            ImageView iv2 = FindViewById<ImageView>(Resource.Id.imageView2);
+            Button iv2 = FindViewById<Button>(Resource.Id.imageView2);
 
 
             ImageView iv4 = FindViewById<ImageView>(Resource.Id.imageView3);
@@ -129,6 +131,10 @@ namespace App1
             ImageView imagenredonda = FindViewById<ImageView>(Resource.Id.imageView4);
             lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout2);
             llayout = FindViewById<LinearLayout>(Resource.Id.LinearLayout0);
+            progreso.Visibility = ViewStates.Gone;
+          
+
+       
             new Thread(() =>
             {
                 var imagenklk = clasesettings.GetImageBitmapFromUrl("https://i.ytimg.com/vi/" + linkvid.Split('=')[1] + "/mqdefault.jpg");
@@ -140,7 +146,7 @@ namespace App1
                     imagenredonda.BringToFront();
                  
                     imagenredonda.SetImageBitmap(clasesettings.getRoundedShape(imagenklk));
-                    fondo.SetImageBitmap(clasesettings.CreateBlurredImageformbitmap(this, 20, imagenklk));
+                    fondo.SetImageBitmap(imagenklk);
                     animar4(imagenredonda);
                     
                 });
@@ -190,14 +196,14 @@ namespace App1
             if (enporceso == false &&rb4.Checked==true)
             {
                 
-                quality = 360;
+                quality =720;
                 Thread tree = new Thread(new ThreadStart(descvids));
                 tree.Start();
             }
             else
                 if (enporceso == false && rb5.Checked == true)
             {
-                quality = 720;
+                quality = 360;
                 Thread tree2 = new Thread(new ThreadStart(descvids));
                 tree2.Start();
             }
@@ -264,6 +270,7 @@ namespace App1
         }
         public void descvids()
         {
+            progreso.Visibility = ViewStates.Visible;
             enporceso = true;
             string video2 = "";
             string title = "";
@@ -335,7 +342,8 @@ namespace App1
         }
         public void descmp3()
         {
-              enporceso = true;
+            progreso.Visibility = ViewStates.Visible;
+            enporceso = true;
             /*
            videoinfoss = DownloadUrlResolver.GetDownloadUrls(linkvid, false);
 
@@ -343,7 +351,7 @@ namespace App1
            */
             RunOnUiThread(() => Toast.MakeText(this, "obteniendo informacion del video", ToastLength.Long).Show());
             RunOnUiThread(() => progreso.Progress = 25);
-            var asd = clasesettings.gettearvideoid(linkvid,false);
+            var asd = clasesettings.gettearvideoid(linkvid,false,-1);
             RunOnUiThread(() => progreso.Progress = 50);
           //  Intent intento = new Intent(this, typeof(serviciodownload));
             string localFilename = RemoveIllegalPathCharacters(asd.titulo).Trim() + ".mp3";
@@ -420,7 +428,9 @@ namespace App1
             intent00.SetType("resource/folder");
             var pendingIntent = PendingIntent.GetActivity(this, 0, intent00, PendingIntentFlags.UpdateCurrent);
 
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
             Notification.Builder builder = new Notification.Builder(this)
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
       .SetContentTitle(titulo)
       .SetContentText(link)
       .SetSubText("Completada")
@@ -453,6 +463,9 @@ namespace App1
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
         }
         
         ///////////////////////////////////////////////////////////voids//////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.Dialog.NoActionBar")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
     public class actividadagregarlistahecha : Activity
     {
         public string nombrevideo = "";
@@ -32,8 +32,9 @@ namespace App1
             ImageView cerrar = FindViewById<ImageView>(Resource.Id.imageView1);
             LinearLayout linea = FindViewById<LinearLayout>(Resource.Id.root);
             LinearLayout linea1 = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
-          //  linea.SetBackgroundColor(Android.Graphics.Color.DarkGray);
-         //   linea1.SetBackgroundColor(Android.Graphics.Color.Black);
+            Button nueva = FindViewById<Button>(Resource.Id.imageView3);
+            //  linea.SetBackgroundColor(Android.Graphics.Color.DarkGray);
+            //   linea1.SetBackgroundColor(Android.Graphics.Color.Black);
             nombrevideo = Intent.GetStringExtra("nombrevid");
             nombrevideo = RemoveIllegalPathCharacters(nombrevideo);
             nombrevideo = nombrevideo.Replace('$', ' ').Replace(';',' ');
@@ -41,9 +42,9 @@ namespace App1
            linkvideo = RemoveIllegalPathCharacters(linkvideo);
             linkvideo = linkvideo.Replace('$', ' ').Replace(';', ' ');
             fondo = FindViewById<ImageView>(Resource.Id.fondo1);
-            this.SetFinishOnTouchOutside(false);
-            var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-            RunOnUiThread(() => listbox.Adapter = adaptadolo);
+            this.SetFinishOnTouchOutside(true);
+        /*    var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+            RunOnUiThread(() => listbox.Adapter = adaptadolo);*/
             llenarlista();
 
             new Thread(() =>
@@ -52,7 +53,7 @@ namespace App1
                 {
 
 
-                    var imagen = clasesettings.CreateBlurredImageonline(this, 20, linkvideo);
+                    var imagen = clasesettings.GetImageBitmapFromUrl("http://i.ytimg.com/vi/" + linkvideo.Split('=')[1] + "/mqdefault.jpg");
                     RunOnUiThread(() =>
                     {
 
@@ -69,7 +70,7 @@ namespace App1
             {
 
 
-
+                if (elementos.Count > 0) { 
                 posicion = adsf.Position;
                 AlertDialog.Builder ad = new AlertDialog.Builder(this);
                 ad.SetCancelable(false);
@@ -80,14 +81,104 @@ namespace App1
                 ad.SetNegativeButton("No", alertano);
                 ad.Create();
                 ad.Show();
+                }
             };
 
-        //    linea1.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+            //    linea1.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+            nueva.Click += delegate
+            {
+
+
+
+
+
+
+                EditText texto = new EditText(this);
+                texto.Hint = "Nombre de la lista";
+
+                new AlertDialog.Builder(this)
+                   .SetTitle("Introduzca el nombre de la nueva lista de reproduccion")
+                   .SetView(texto)
+                   .SetCancelable(false)
+                   .SetNegativeButton("Cancelar", (ax, ax100) => { })
+                   .SetPositiveButton("Crear", (xd, xdd) => {
+
+                       if (texto.Text.Length < 3)
+                       {
+                           Toast.MakeText(this, "El nombre debe tener almenos 3 caracteres", ToastLength.Long).Show();
+                       }
+                       else
+                       {
+                           var saas = Directory.GetFiles(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist");
+                           if (!saas.Contains(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + RemoveIllegalPathCharacters(texto.Text)))
+                           {
+                               crearlista(texto.Text);
+                               llenarlista();
+                               if (menulistaoffline.gettearinstancia() != null)
+                               {
+                                   menulistaoffline.gettearinstancia().llenarlista();
+                               }
+                           }
+                           else
+                           {
+                               AlertDialog.Builder ad = new AlertDialog.Builder(this);
+                               ad.SetTitle("Advertencia");
+                               ad.SetMessage("El elemento " + texto.Text + " ya existe desea reemplazarlo??");
+                               ad.SetCancelable(false);
+                               ad.SetIcon(Resource.Drawable.warningsignonatriangularbackground);
+                               ad.SetPositiveButton("Si", (axx, axxx) => {
+                                   crearlista(texto.Text);
+                                   llenarlista();
+                                   if (menulistaoffline.gettearinstancia() != null)
+                                   {
+                                       menulistaoffline.gettearinstancia().llenarlista();
+                                   }
+
+                                   new Thread(() =>
+                                   {
+
+                                       mainmenu_Offline.gettearinstancia().llenarplaylist();
+                                   }).Start();
+                               });
+                               ad.SetNegativeButton("No", (ux, uxdd) => {
+                                   Toast.MakeText(this, "Operacion cancelada", ToastLength.Long).Show();
+                               });
+                               ad.Create();
+                               ad.Show();
+                           }
+
+
+
+
+                       }
+
+
+
+
+                   })
+                   .Create().Show();
+
+
+
+
+
+
+            };
             cerrar.Click += delegate
             {
                 this.Finish();
             };
             // Create your application here
+        }
+        public void crearlista(string playlistname)
+        {
+            StreamWriter escritor;
+            escritor = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + RemoveIllegalPathCharacters(playlistname));
+            escritor.Write("  $  ");
+            escritor.Close();
+        
+            Toast.MakeText(this, "Lista guardada satisfactoriamente", ToastLength.Long).Show();
+            clasesettings.recogerbasura();
         }
         private static string RemoveIllegalPathCharacters(string path)
         {
@@ -140,14 +231,34 @@ namespace App1
             sd.Write(nombreentero + ";$" + linkentero+";");
             sd.Close();
             Toast.MakeText(this, "Elemento agregado exitosamente", ToastLength.Long).Show();
-                this.Finish();
+              
+                if (menulistaoffline.gettearinstancia() != null) {
+                    menulistaoffline.gettearinstancia().llenarlista();
+                }
                 clasesettings.recogerbasura();
+                if (mainmenu_Offline.gettearinstancia() != null) { 
+                new Thread(() =>
+                {
+
+                    mainmenu_Offline.gettearinstancia().llenarplaylist();
+                }).Start();
+                }
+                this.Finish();
+
+
+
             }
             else
             {
-                this.Finish();
-                clasesettings.recogerbasura();
                 Toast.MakeText(this, "El elemento ya existe en la lista", ToastLength.Long).Show();
+                if (menulistaoffline.gettearinstancia() != null)
+                {
+                    menulistaoffline.gettearinstancia().llenarlista();
+                }
+                clasesettings.recogerbasura();
+               
+                this.Finish();
+
             }
 
         }
@@ -171,16 +282,46 @@ namespace App1
             try
             {
                 string[] items = Directory.GetFiles(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/");
+                List<string> imagenames = new List<string>();
                 elementoscompletos = items.ToList();
 
                 for (int i = 0; i < items.Length; i++)
 
                 {
+
+
                    elementos.Add(Path.GetFileNameWithoutExtension(items[i]));
-                  
+                    var textofile = File.ReadAllText(items[i]).Trim();
+                    if (textofile.Trim().Length > 4)
+                    {
+                        imagenames.Add(textofile.Split('$')[1].Split(';')[0]);
+                    }
+                    else {
+                        imagenames.Add("");
+                    }
+                    textofile = "";      
                 }
-                ArrayAdapter adaptador = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, elementos);
-                RunOnUiThread(() => listbox.Adapter = adaptador);
+             
+                if (elementos.Count == 0)
+                {
+                    var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                    RunOnUiThread(() =>
+                    {
+                        var parcelable = listbox.OnSaveInstanceState();
+                        listbox.Adapter = adaptadol;
+                        listbox.OnRestoreInstanceState(parcelable);
+                    }
+                        );
+                }
+                else {
+                    adapterlistaremoto adaptador = new adapterlistaremoto(this, elementos.ToList(), imagenames);
+                    RunOnUiThread(() => {
+                        var parcelable = listbox.OnSaveInstanceState();
+                        listbox.Adapter = adaptador;
+                        listbox.OnRestoreInstanceState(parcelable);
+                    });
+                }
+                
             }
             catch (Exception)
             {

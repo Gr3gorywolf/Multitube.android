@@ -102,6 +102,12 @@ namespace App1
         public Context conteto;
         public string ipadress;
         public int clientesconectados = 0;
+        public string verifiedmp3 = "none";
+        public string verifiedmp4 = "none";
+        public string pathsito;
+        public int puelto;
+        public int mp4lenght = 0;
+         public int mp3lenght = 0;
         public int Port
         {
             get { return _port; }
@@ -116,6 +122,8 @@ namespace App1
         public SimpleHTTPServer(string path, int port, string ipadre, Context contexto)
 
         {
+            pathsito = path;
+            puelto = port;
             conteto = contexto;
             ipadress = ipadre;
             this.Initialize(path, port);
@@ -146,24 +154,41 @@ namespace App1
 
         private void Listen()
         {
+
+
+
+
+
+
+
+
+
+            refreshregistry();
+
             _listener = new HttpListener();
             _listener.Prefixes.Add("http://"+ipadress+":" + _port.ToString() + "/");
+            _listener.UnsafeConnectionNtlmAuthentication = false;
+            _listener.IgnoreWriteExceptions = true;
+            _listener.AuthenticationSchemes = AuthenticationSchemes.None;
             _listener.Start();
             while (true)
             {
-             try
-                {
-                    HttpListenerContext context = _listener.GetContext();
-                  
-                        Process(context);
+
+                clasesettings.recogerbasura();
+                HttpListenerContext context = _listener.GetContext();
+                    new Thread(() =>
+                    {
+
+                        
+                            Process(context);
+                 
+                    }).Start();
+                       
+                
 
 
 
-               }
-                 catch (Exception)
-                  {
-
-                  }
+              
             }
         }
 
@@ -176,229 +201,323 @@ namespace App1
 
 
 
-
-
             ///////////////////////////////////////////////quiere interactuar conmigo
+            ///   context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+
+
+          
+       
+            context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            context.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+            context.Response.AddHeader("Access-Control-Allow-Methods", "*");
+            context.Response.AddHeader("Access-Control-Allow-Headers", "*");
             if (context.Request.Url.ToString().Contains("&&querry&&"))
-            {
-
-                if (context.Request.Url.ToString().Contains("meconecte"))
                 {
-                  
-                    Notification.Builder nBuilder = new Notification.Builder(conteto);
-                    nBuilder.SetContentTitle("Nuevo dispositivo conectado");
-                    nBuilder.SetContentText("Un nuevo dispositivo está stremeando su media");
-                    nBuilder.SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification));
 
-
-                    nBuilder.SetSmallIcon(Resource.Drawable.antena);
-
-                    Notification notification = nBuilder.Build();
-                    NotificationManager notificationManager =
-              (NotificationManager)conteto.GetSystemService(Context.NotificationService);
-                    notificationManager.Notify(5126768, notification);
-
-
-                }
-               
-
-
-
-
-
-
-
-
-
-            }
-            else {
-
-          
-
-            bool esindice = false;
-            string filename = context.Request.Url.AbsolutePath;
-            Console.WriteLine(filename);
-            filename = filename.Substring(1);
-            filename = System.Net.WebUtility.UrlDecode(filename);
-            
-            if (string.IsNullOrEmpty(filename))
-            {
-                foreach (string indexFile in _indexFiles)
-                {
-                    if (File.Exists(Path.Combine(_rootDirectory+"/.gr3cache", indexFile)))
+                    if (context.Request.Url.ToString().Contains("meconecte"))
                     {
-                        filename = indexFile;
-                        esindice = true;
-                        break;
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                        Notification.Builder nBuilder = new Notification.Builder(conteto);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                        nBuilder.SetContentTitle("Nuevo dispositivo conectado");
+                        nBuilder.SetContentText("Un nuevo dispositivo está stremeando su media");
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                        nBuilder.SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification));
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+
+
+                        nBuilder.SetSmallIcon(Resource.Drawable.antena);
+
+                        Notification notification = nBuilder.Build();
+                        NotificationManager notificationManager =
+                  (NotificationManager)conteto.GetSystemService(Context.NotificationService);
+                        notificationManager.Notify(5126768, notification);
+
+
                     }
+
+
+
+
+
+
+
+
+
+
                 }
-            }
-            var nomesinpath = filename;
-            if (!esindice) {
-
-                if (!filename.Contains(".mp3") && !filename.Contains(".mp4"))
+                else
                 {
-                    filename = Path.Combine(_rootDirectory, filename);
-                }
-               
-             
-             
-            }
-            else {
 
 
 
+                    bool esindice = false;
+                    string filename = context.Request.Url.AbsolutePath;
+                    Console.WriteLine(filename);
+                    filename = filename.Substring(1);
+                    filename = System.Net.WebUtility.UrlDecode(filename);
 
-               
-                filename = Path.Combine(_rootDirectory + "/.gr3cache", filename);
-
-            }
-          
-
-            if (File.Exists(filename))
-            {
-            new Thread(() =>
-            {
-               try
-                {
-                    using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    if (string.IsNullOrEmpty(filename))
                     {
-                        //Adding permanent http response headers
-                      
-                        string mime;
-                        string mimo = "";
-                        if (filename.EndsWith("mp3"))
+                        foreach (string indexFile in _indexFiles)
                         {
-                            mimo = "audio/*";
-                        }
-                        else
-                         if (filename.EndsWith("mp4"))
-                        {
-                            mimo = "video/mp4";
-                        }
-
-
-
-
-
-
-
-                        if (!filename.Contains("downloaded.gr3d"))
-                        {
-               
-
-                            context.Response.ContentType = _mimeTypeMappings.TryGetValue(Path.GetExtension(filename), out mime) ? mime : mimo;
-                            context.Response.ContentLength64 = stream.Length;
-
-
-                            context.Response.KeepAlive = true;
-                    
-                            context.Response.StatusCode = (int)HttpStatusCode.OK;
-                            context.Response.AddHeader("Accept-Ranges","bytes");
-                            context.Response.AddHeader("Date", DateTime.Now.ToString("r"));
-                            context.Response.AddHeader("Last-Modified", System.IO.File.GetLastWriteTime(filename).ToString("r"));
-                            context.Response.AddHeader("Content-Range",string.Format("bytes {0}-{1}/{2}", 0,Convert.ToInt32( stream.Length) - 1, Convert.ToInt32(stream.Length)));
-                            context.Response.ContentLength64 = stream.Length;
-                        
-                              stream.CopyTo(context.Response.OutputStream);
-                            stream.Flush();
-
-                              context.Response.OutputStream.Flush();
-                            context.Response.OutputStream.Close();
-
-                            /*  context.Response.OutputStream.Write(byteses,0,byteses.Length);
-
-
-                              byteses = new byte[0];*/
-
-
-                        }
-
-
-                        else {
-
-                            var reader = new StreamReader(stream);
-                            var segmentosfull = "";
-                            var teto = reader.ReadToEnd();
-                            foreach (string bloques in teto.Split('¤'))
+                            if (File.Exists(Path.Combine(_rootDirectory + "/.gr3cache", indexFile)))
                             {
-                                if (bloques != ""  &&  bloques != null)
-                                {
-                                    if (File.Exists(bloques.Split('²')[2]))
-                                    {
-                                        segmentosfull += bloques + '¤';
+                                filename = indexFile;
+                                esindice = true;
+                                break;
+                            }
+                        }
+                    }
+                    var nomesinpath = filename;
+                    if (!esindice)
+                    {
 
-                                    }
+                        if (!filename.Contains(".mp3") && !filename.Contains(".mp4"))
+                        {
+                            filename = Path.Combine(_rootDirectory, filename);
+                        }
 
-                                }
+
+
+                    }
+                    else
+                    {
+
+
+
+
+
+                        filename = Path.Combine(_rootDirectory + "/.gr3cache", filename);
+
+                    }
+
+
+                    if (File.Exists(filename))
+                    {
+                 
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    //Adding permanent http response headers
+
+                    string mime;
+                            string mimo = "";
+                            if (filename.EndsWith("mp3"))
+                            {
+                                mimo = "audio/*";
+                            }
+                            else
+                             if (filename.EndsWith("mp4"))
+                            {
+                                mimo = "video/mp4";
+                            }
+
+
+
+
+
+
+
+                            if (!filename.Contains("downloaded.gr3d"))
+                            {
+
+
+
+
+
+                       
+
+                        using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            {
+
+
+
+
+
+                                context.Response.ContentType = _mimeTypeMappings.TryGetValue(Path.GetExtension(filename), out mime) ? mime : mimo;
+                                context.Response.ContentLength64 = stream.Length;
+
+                           
+                                //context.Response.KeepAlive = true;
+                                
+                            
+                                context.Response.AddHeader("Accept-Ranges", "bytes");
+                                context.Response.AddHeader("Date", DateTime.Now.ToString("r"));
+                                context.Response.AddHeader("Last-Modified", System.IO.File.GetLastWriteTime(filename).ToString("r"));
+                                context.Response.AddHeader("Content-Range", string.Format("bytes {0}-{1}/{2}", 0, Convert.ToInt32(stream.Length) - 1, Convert.ToInt32(stream.Length)));
+                                context.Response.ContentLength64 = stream.Length;
+
+                             stream.CopyTo(context.Response.OutputStream);
+                       
+
+                                stream.Flush();
+
+                              
+
+
+
+
+
+                                /*  context.Response.OutputStream.Write(byteses,0,byteses.Length);
+
+
+                                  byteses = new byte[0];*/
 
 
                             }
-                        reader.DiscardBufferedData();
-                        reader.Dispose();
-
-                        var bytesitosdestring = System.Text.Encoding.UTF8.GetBytes(segmentosfull);
-                        using (MemoryStream streamm = new MemoryStream(bytesitosdestring, 0, bytesitosdestring.Length)) {
+                            //    
+                     
+                            }
 
 
-                            context.Response.ContentType = _mimeTypeMappings.TryGetValue(Path.GetExtension(filename), out mime) ? mime : mimo;
-                            context.Response.ContentLength64 = streamm.Length;
-                            context.Response.SendChunked = true;
+                            else
+                            {
+
+ 
+                                refreshregistry();
+                                byte[] bytesitosdestring;
+                                if (filename.EndsWith("2"))
+                                    bytesitosdestring = System.Text.Encoding.UTF8.GetBytes(verifiedmp4);
+                                else
+                                    bytesitosdestring = System.Text.Encoding.UTF8.GetBytes(verifiedmp3);
+
+                 
+
+                        using (MemoryStream streamm = new MemoryStream(bytesitosdestring, 0, bytesitosdestring.Length))
+                                {
 
 
-                            context.Response.StatusCode = (int)HttpStatusCode.OK;
+                                    context.Response.ContentType = _mimeTypeMappings.TryGetValue(filename.Split('.')[1], out mime) ? mime : mimo;
+                                    context.Response.ContentLength64 = streamm.Length;
+                                    context.Response.SendChunked = true;
+
+                   
+
 
                             context.Response.AddHeader("Date", DateTime.Now.ToString("r"));
-                            context.Response.AddHeader("Last-Modified", System.IO.File.GetLastWriteTime(filename).ToString("r"));
+                                    context.Response.AddHeader("Last-Modified", System.IO.File.GetLastWriteTime(filename).ToString("r"));
 
-                            streamm.CopyTo(context.Response.OutputStream);
-                            streamm.Flush();
-                            context.Response.OutputStream.Flush();
-                            context.Response.OutputStream.Close();
+                                    streamm.CopyTo(context.Response.OutputStream);
+                                    streamm.Flush();
+                                   
+                                   
+                                }
+                                clasesettings.recogerbasura();
+                         
+                               
+
+                            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    context.Response.OutputStream.Flush();
+                    context.Response.OutputStream.Close();
+                    context.Response.Close();
+
+
+
+
+
+                }
+                    else
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    }
+
+                }
+          
+ }
+
+        public void refreshregistry() {
+            
+            string teto = "";
+            string teto2 = "";
+
+            if (File.Exists(_rootDirectory + "/.gr3cache/downloaded.gr3d"))
+            {
+                teto = File.ReadAllText(_rootDirectory + "/.gr3cache/downloaded.gr3d");
+
+
+
+
+
+
+                if (mp3lenght != teto.Length)
+                {
+                    verifiedmp3 = "";
+                    foreach (string bloques in teto.Split('¤'))
+                    {
+                        if (bloques != "" && bloques != null)
+                        {
+                            if (File.Exists(bloques.Split('²')[2]))
+                            {
+                                verifiedmp3 += bloques + '¤';
+
+                            }
 
                         }
 
-                        clasesettings.recogerbasura();
 
                     }
-
-
-
-
-
-
-
-
-
-
-                   
-                      
-                   // stream.Close();
-                    }
-
-              }
-                catch (Exception)
-                {
-                    // context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    mp3lenght = teto.Length;
                 }
-
-            }).Start();
-
-
-
-
-
-
-
             }
-            else
+            else {
+                var ax = File.CreateText(clasesettings.rutacache + "/downloaded.gr3d");
+                ax.Write("");
+                ax.Close();
+                verifiedmp3 = "none";
+            }
+
+            if (File.Exists(_rootDirectory + "/.gr3cache/downloaded.gr3d2"))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-            }
 
+                teto2 = File.ReadAllText(_rootDirectory + "/.gr3cache/downloaded.gr3d2");
+
+
+                if (mp4lenght != teto2.Length)
+                {
+                    verifiedmp4 = "";
+                    foreach (string bloques in teto2.Split('¤'))
+                    {
+                        if (bloques != "" && bloques != null)
+                        {
+                            if (File.Exists(bloques.Split('²')[2]))
+                            {
+                                verifiedmp4 += bloques + '¤';
+
+                            }
+
+                        }
+
+
+                    }
+                    mp4lenght = teto2.Length;
+                
+                }
+            }
+            else {
+                var ax = File.CreateText(clasesettings.rutacache + "/downloaded.gr3d2");
+                ax.Write("");
+                ax.Close();
+                verifiedmp4 = "none";
+               
             }
         }
-
         private void Initialize(string path, int port)
         {
             this._rootDirectory = path;

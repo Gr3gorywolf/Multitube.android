@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Newtonsoft.Json;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -11,9 +11,11 @@ using Android.Views;
 using Android.Widget;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
+
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class Reproducirlistaact : Activity
     {
         public bool parador;
@@ -28,14 +30,25 @@ namespace App1
         public Thread teee;
         bool detenedor = true;
         public List<string> listastring = new List<string>();
+        public List<playlist> listaslocales = new List<playlist>();
+        public List<playlist> listasremotas = new List<playlist>();
+        Android.Support.Design.Widget.TabLayout tl;
+      public  int playlistidx = 0;
+        //fromlocal es el remoto de aqui y el local de el server
+        string query = "Fromremote";
+      static  Reproducirlistaact inst;
+        public static Reproducirlistaact gettearinstancia() {
+            return inst;
+
+        }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Reproducirlista);
+            inst = this;
             //////////////////////////////declaraciones//////////////////////////////////
-            clientee = new TcpClient();
-            string ipa = Intent.GetStringExtra("ip").Trim();
-            clientee.Client.Connect(ipa, 1024);
+           
             parador = true;
             playpause = FindViewById<ImageView>(Resource.Id.imageView2);
             lista = FindViewById<ListView>(Resource.Id.listView1);
@@ -43,47 +56,166 @@ namespace App1
             textbox = FindViewById<TextView>(Resource.Id.textView1);
             background = FindViewById<LinearLayout>(Resource.Id.LinearLayout0);
             barra = FindViewById<LinearLayout>(Resource.Id.linearLayout2);
+            tl = FindViewById<Android.Support.Design.Widget.TabLayout>(Resource.Id.tabs);
+
+            tl.AddTab(tl.NewTab().SetText("Local"));
+            tl.AddTab(tl.NewTab().SetText("Remoto"));
             //////////////////////////////////////////////////////////////////////////////
             /////////////////////////////miselaneo+conexion//////////////////////////////
-          
 
-            barra.SetBackgroundColor(Android.Graphics.Color.Black);
-            animar2(barra);
-         
-            Thread teee = new Thread(new ThreadStart(cojerstream));
-            teee.Start();
+
+            //  barra.SetBackgroundColor(Android.Graphics.Color.Black);
+            
+
+            new Thread(() => cojerstream()).Start();
+            new Thread(() => llenarlistas()).Start();
             textbox.Selected = true;
-            var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
-            RunOnUiThread(() => lista.Adapter = adaptadolo);
+          /*  var adaptadolo = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+            RunOnUiThread(() => lista.Adapter = adaptadolo);*/
             //////////////////////////////////////////////////////////////////////////////
             ////////////////////////////Eventos//////////////////////////////////////////
-            barra.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
-           
+           // barra.SetBackgroundColor(Android.Graphics.Color.ParseColor("#2b2e30"));
+
             playpause.Click += delegate
             {
-                animar(playpause);
-                clientee.Client.Send(Encoding.Default.GetBytes("playpause()"));
+           
+              mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("playpause()"));
             };
             volverhome.Click += delegate
             {
-                animar(volverhome);
-                clientee.Client.Disconnect(false);
-                teee.Abort();
+       
+     
                 Finish();
                 clasesettings.recogerbasura();
             };
+            tl.TabSelected += (aa, sss) =>
+            {
+                new Thread(() =>
+                {
+
+                    if (sss.Tab.Text == "Local")
+                    {
+
+
+
+                        query = "Fromremote";
+
+
+
+                        if (listaslocales.Count > 0)
+                        {
+                            var adap = new adapterlistaremoto(this, listaslocales.Select(asd => asd.nombre).ToList(), listaslocales.Select(asd => asd.portrait).ToList());
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adap;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+                        }
+                        else
+                        {
+                            var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adaptadol;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+
+                        }
+
+
+
+
+
+                    }
+                    else {
+
+
+
+
+                        query = "Fromlocal";
+                        if (listasremotas.Count > 0)
+                        {
+                            var adap = new adapterlistaremoto(this, listasremotas.Select(asd => asd.nombre).ToList(), listasremotas.Select(asd => asd.portrait).ToList());
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adap;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+                        }
+                        else
+                        {
+                            var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adaptadol;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+
+                        }
+
+
+
+
+
+
+
+                    }
+
+
+                }).Start();
+            };
+
             lista.ItemClick += (sender, args)=>
             {
-                AlertDialog.Builder ad = new AlertDialog.Builder(this);
+
+             
+                    playlistidx = args.Position;
+             
+                Intent intento = new Intent(this, typeof(dialogolistasact));
+                if (query == "Fromremote" && listaslocales.Count>0)
+                {
+                    intento.PutExtra("nombrelista", listaslocales[playlistidx].nombre);
+                    intento.PutExtra("portada", listaslocales[playlistidx].portrait);
+                    intento.PutExtra("querry", query);
+
+                    StartActivity(intento);
+                }
+                else
+                
+                {
+                    if (listasremotas.Count > 0) {  
+                    intento.PutExtra("nombrelista", listasremotas[playlistidx].nombre);
+                    intento.PutExtra("portada", listasremotas[playlistidx].portrait);
+                    intento.PutExtra("querry", query);
+                    StartActivity(intento);
+                    }
+                    /*    mainmenu.gettearinstancia()
+                       .clientelalistas
+                      .Client
+                      .Send(Encoding
+                      .UTF8
+                       .GetBytes("Sendplaylist__==__==__" + JsonConvert.SerializeObject(listasremotas[playlistidx])));*/
+                }
+              
+
+             /*   AlertDialog.Builder ad = new AlertDialog.Builder(this);
                 ad.SetCancelable(false);
                 ad.SetTitle("Advertencia");
-                ad.SetMessage("Desea reproducir la lista de reproduccion " + listastring[args.Position] + " en el dispositivo servidor??");
+                ad.SetMessage("Desea reproducir esta lista de reproduccio en el dispositivo servidor??");
                  ad.SetIcon(Resource.Drawable.warningsignonatriangularbackground);
                 posicion = args.Position;
                 ad.SetPositiveButton("Si", ok);
                 ad.SetNegativeButton("No", no);
                 ad.Create();
-                ad.Show();
+                ad.Show();*/
+
+
+
+            
             };
 
 
@@ -98,131 +230,190 @@ namespace App1
         }
         void ok(object sender, EventArgs e)
         {
-            if (lista.Count > 0)
+            if (query == "Fromremote")
             {
-                clientee.Client.Send(Encoding.Default.GetBytes("pedirlista()"));
-                Thread.Sleep(100);
 
-                clientee.Client.Send(Encoding.Default.GetBytes(posicion.ToString()));
-                clientee.Client.Disconnect(false);
-                teee.Abort();
+                if (listaslocales.Count > 0)
+                {
 
 
-                Finish();
-                clasesettings.recogerbasura();
+                    var listilla = new List<playlistelements>();
+                    var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + listaslocales[playlistidx].nombre);
+                    var nombreses = texto.Split('$')[0].Split(';').ToList();
+                    var links= texto.Split('$')[1].Split(';').ToList();
+             
+                    var listaelementos = new List<playlistelements>();
+                    for (int i = 0; i < nombreses.Count; i++) {
+
+                        if (nombreses[i].Trim() != "" || links[i].Trim() != "") {
+                        var elemento = new playlistelements()
+                        {
+                            nombre = nombreses[i],
+                            link = links[i]
+                        };
+                        listaelementos.Add(elemento);
+                        }
+                    }
+                    listaslocales[playlistidx].elementos = listaelementos;
+                    mainmenu.gettearinstancia()
+                         .clientelalistas
+                         .Client
+                         .Send(Encoding.UTF8.GetBytes(query + "__==__==__" + JsonConvert.SerializeObject(listaslocales[playlistidx])));
+                }
+                else
+                {
+                    Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
+                }
             }
-            else
-            {
-                Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
+            else {
+
+                if (listasremotas.Count > 0)
+                {
+                    mainmenu.gettearinstancia()
+                        .clientelalistas
+                        .Client
+                        .Send(Encoding.UTF8.GetBytes(query + "__==__==__" + JsonConvert.SerializeObject(listasremotas[playlistidx])));
+                }
+                else
+                {
+                    Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
+                }
+
             }
         }
         public override void OnBackPressed()
         {
-            clientee.Client.Disconnect(false);
-            teee.Abort();
+           
+          
             Finish();
             clasesettings.recogerbasura();
         }
         public void cojerstream()
         {
 
-            List<string> lista2 = new List<string>();
-            string[] listica = null;
           
-            byte[] bites = new byte[120000];
-            string capturado = "";
+          
 
-            bool enviomensaje = false;
-            int o;
-
-
-            while (clientee.Connected == true && detenedor )
+            while ( detenedor )
             {
-                var stream = clientee.GetStream();
-                if (!enviomensaje)
-                {
-                    enviomensaje = true;
-                    clientee.Client.Send(Encoding.Default.GetBytes("actualizarlalista()"));
-                }
-
-
-
-                while (stream.DataAvailable)
-                {
-
-
-
-
-                    o = stream.Read(bites, 0, bites.Length);
-
-
-                    capturado += Encoding.ASCII.GetString(bites, 0, o);
-                 
-                }
-
-
-
-
-                if (capturado.Trim().Length > 5) 
-                {
-
                 
 
+                if (mainmenu.gettearinstancia() != null)
+                {
 
-
-                 
-               
-                    listica = capturado.Split(';');
-
-                    if (capturado.Trim() != "" && listica[0].Trim() == "caratula()><" && listica[0].Trim() != "listar()><")
+                    if (mainmenu.gettearinstancia().buscando == false)
                     {
-                        capturado = "";
-                        if (mainmenu_Offline.gettearinstancia() != null)
-                        {
-                            RunOnUiThread(() => textbox.Text = mainmenu_Offline.gettearinstancia().label.Text);
-                        }
-                        else
-                 if (mainmenu.gettearinstancia() != null)
+                        if (mainmenu.gettearinstancia().label.Text != textbox.Text
+                         && mainmenu.gettearinstancia().label.Text.Trim() != "")
                         {
                             RunOnUiThread(() => textbox.Text = mainmenu.gettearinstancia().label.Text);
                         }
-                        else
-                        {
-
-                        }
-
                     }
+                    else {
 
-                    else
-                      if (capturado.Trim() != "" && listica[0].Trim() == "listar()><")
-                    {
-                        listastring.Clear();
-                        capturado = "";
-                        for(int i = 1; i < listica.Length; i++)
-                        {
-                            listastring.Add(listica[i]);
-
-                        }
-                        ArrayAdapter<string> adaptador = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, listastring);
-                       RunOnUiThread(()=> lista.Adapter = adaptador);
+                        RunOnUiThread(() => textbox.Text = "Buscando...");
                     }
-
-                    lista2.Clear();
-                    listica.ToList().Clear();
-                    bites = new byte[120000];
-                    capturado = "";
-                    o = 0;
                 }
-             
-                Thread.Sleep(100);
+                else
+               if (mainmenu.gettearinstancia() != null)
+                {
+                    if (mainmenu.gettearinstancia().buscando == false)
+                    {
+                        if (mainmenu.gettearinstancia().label.Text.Trim() != ""
+                        && textbox.Text != mainmenu.gettearinstancia().label.Text)
+                        {
+                            RunOnUiThread(() => textbox.Text = mainmenu.gettearinstancia().label.Text);
+                        }
+                    }else
+                        RunOnUiThread(() => textbox.Text = "Buscando...");
+
+                }
+
+
+                if (textbox.Text.Trim() == "" && textbox.Text.Trim() != "No hay elementos en cola")
+                {
+
+                    RunOnUiThread(() => { textbox.Text = "No hay elementos en cola"; });
+                }
+                Thread.Sleep(500);
             }
             
+        }
+
+        public void llenarlistas() {
+
+
+            var jsonremoto = mainmenu.gettearinstancia().jsonlistasremotas;
+            if (jsonremoto.Trim().Length > 0)
+                listasremotas = JsonConvert.DeserializeObject<List<playlist>>(jsonremoto);
+
+
+
+
+            if (System.IO.Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/"))
+            {
+                string[] items = Directory.GetFiles(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/");
+              
+                foreach (var elementos in items)
+                {
+                    var elementolista = new playlist();
+                    elementolista.nombre = System.IO.Path.GetFileNameWithoutExtension(elementos);
+                    var text = File.ReadAllText(elementos).Trim();
+                    try
+                    {
+                        elementolista.portrait = text.Split('$')[1].Split(';')[0];
+                    }
+                    catch (Exception)
+                    {
+                        elementolista.portrait = "";
+                    }
+                    elementolista.elementos = new List<playlistelements>();
+                    listaslocales.Add(elementolista);
+
+                }
+
+            }
+
+          
+                if (listaslocales.Count > 0)
+                {
+                    var adap = new adapterlistaremoto(this, listaslocales.Select(asd => asd.nombre).ToList(), listaslocales.Select(asd => asd.portrait).ToList());
+                RunOnUiThread(() => {
+                    var parcelable = lista.OnSaveInstanceState();
+                    lista.Adapter = adap;
+                    lista.OnRestoreInstanceState(parcelable);
+                });
+            }
+                else {
+                    var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                    RunOnUiThread(() => {
+                        var parcelable = lista.OnSaveInstanceState();
+                        lista.Adapter = adaptadol;
+                        lista.OnRestoreInstanceState(parcelable);
+                    });
+
+                }
+
+   
+
+
+        }
+
+        protected override void OnDestroy()
+        {
+
+          
+            detenedor = false;
+            base.OnDestroy();
         }
         public void animar(Java.Lang.Object imagen)
         {
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
         }
         public void animar2(Java.Lang.Object imagen)
         {

@@ -22,75 +22,74 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayout1">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:id="@+id/linearLayout4"
-                android:gravity="left"
-                android:alpha="0.7">
-                <ImageView
-                    android:src="@drawable/home"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/imageView3" />
-                <Space
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:id="@+id/space3" />
-                <ImageView
-                    android:src="@drawable/play"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/imageView4"
-                    android:layout_gravity="center" />
-                <TextView
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/textView1"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
-                    android:scrollHorizontally="true" />
-            </LinearLayout>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:minWidth="25px"
+				android:minHeight="25px"
+				android:layout_width="match_parent"
+				android:layout_height="?attr/actionBarSize"
+				android:id="@+id/linearLayout4"
+				android:gravity="left"
+				android:alpha="1"
+				android:elevation="8dp"
+				android:background="?attr/colorPrimary">
+				<ImageView
+					android:src="@drawable/home"
+					android:layout_width="40dp"
+					android:layout_height="40dp"
+					android:id="@+id/imageView3"
+					android:layout_marginLeft="5dp"
+					android:layout_gravity="center" />
+				<Space
+					android:layout_width="20dp"
+					android:layout_height="match_parent"
+					android:id="@+id/space3" />
+				<ImageView
+					android:src="@drawable/play"
+					android:layout_width="30dp"
+					android:layout_height="30dp"
+					android:id="@+id/imageView4"
+					android:layout_gravity="center" />
+				<TextView
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:id="@+id/textView1"
+					android:gravity="center"
+					android:marqueeRepeatLimit="marquee_forever"
+					android:ellipsize="marquee"
+					android:singleLine="true"
+					android:scrollHorizontally="true" />
+			</LinearLayout>
         </LinearLayout>
         <Space
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:id="@+id/space2" />
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:id="@+id/linearLayout2"
             android:gravity="center">
-            <ImageView
-                android:src="@drawable/microphone"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:id="@+id/imageView2" />
             <EditText
                 android:layout_height="match_parent"
                 android:id="@+id/editText1"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:hint="Nombre del video"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="10dp"
+                android:imeOptions="actionSearch" />
             <ImageView
-                android:src="@drawable/search"
-                android:layout_width="45dp"
-                android:layout_height="48dp"
-                android:id="@+id/imageView1" />
-        </LinearLayout>
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:id="@+id/progresss"
-            android:progressTint="#ffff0000"
-            style="?android:attr/progressBarStyleHorizontal" />
+                android:src="@drawable/microphone"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageView2"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp" />
+        </RelativeLayout>
         <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"

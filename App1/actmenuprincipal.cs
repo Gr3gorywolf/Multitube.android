@@ -16,9 +16,11 @@ using System.Net;
 using System.IO;
 using Android.Content.PM;
 
+
 namespace App1
 {
-    [Activity(Label = "Multitube", MainLauncher = true, Icon = "@drawable/icon" ,ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+ 
+    [Activity(Label = "Multitube", MainLauncher = true, Icon = "@drawable/icon" ,ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class actmenuprincipal : Activity
     {
         ImageView fondito;
@@ -52,13 +54,13 @@ namespace App1
             var botoninfo = FindViewById<LinearLayout>(Resource.Id.linearLayout6);
             tv3 = FindViewById<TextView>(Resource.Id.textView3);
             //bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondo1));
-            bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondosparaminiaturasdeyoutubeminimalist1920x1080wallpaper203803));
+           // bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondosparaminiaturasdeyoutubeminimalist1920x1080wallpaper203803));
             tv3.Selected = true;
             // tv3.Selected = true;
-            tv3.Text = "Reproductor de youtube / Servidor remoto";
+   
             // bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondo3));
             //  bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondo4));
-            RunOnUiThread(() => fondito.SetImageBitmap(bitmapeses[0]));
+          //  RunOnUiThread(() => fondito.SetImageBitmap(bitmapeses[0]));
           
             ////////////////mimicv2//////////////////////
             clasesettings.guardarsetting("comando", "");
@@ -77,12 +79,13 @@ namespace App1
             clasesettings.guardarsetting("progresovideoactual", "");
             clasesettings.guardarsetting("tapnumber", "");
 
-
-            animar4(botoncontrolremoto);
-            animar4(botonserver);
-            animar4(botonplayer);
-            animar4(botonsettings);
-            animar4(botoninfo);
+         
+            animar4(botoncontrolremoto,500);
+            animar4(botonserver, 1000);
+            animar4(botonplayer, 1500);
+            animar4(botonsettings, 2000);
+            animar4(botoninfo, 2500);
+            animar4(FindViewById<ImageView>(Resource.Id.imageView1), 250);
             prefEditor = prefs.Edit();
 
 
@@ -103,15 +106,13 @@ namespace App1
             }
 
 
-            if (clasesettings.probarsetting("abrirserver")) {
-                if (clasesettings.gettearvalor("abrirserver") == "si") {
-                    StartService(new Intent(this, typeof(serviciostreaming)));
-                }
-             
+
+
+
+            if (!clasesettings.probarsetting("color"))
+            {
+                clasesettings.guardarsetting("color", "black");
             }
-           
-
-
             if (!clasesettings.probarsetting("mediacache"))
             {
                 clasesettings.guardarsetting("mediacache", "");
@@ -121,21 +122,25 @@ namespace App1
             {
                 clasesettings.guardarsetting("ordenalfabeto", "si");
             }
-
-
+            if (!clasesettings.probarsetting("video"))
+            {
+                clasesettings.guardarsetting("video", "-1");
+            }
+          
             botoninfo.Click += delegate
             {
-                var intento = new Intent(this, typeof(actbio));
 
-                animar20(botoninfo, intento);
 
+                //  var intento = new Intent(this, typeof(actbio));
+                var intento = new Intent(this, typeof(actividadinicio));
+                animar20(botoninfo, intento);            
                 clasesettings.recogerbasura();
 
             };
             botonplayer.Click += delegate
             {
 
-                if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d2")|| File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d"))
+                if (clasesettings.tieneelementos())
                 {
                     var intento = new Intent(this, typeof(playeroffline));
                     animar3(botonserver);
@@ -269,19 +274,19 @@ namespace App1
 
 
        
-        public void animar4(Java.Lang.Object imagen)
+        public void animar4(Java.Lang.Object imagen,int duracion)
         {
 
-            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "translationY", 1000, 0);
-            animacion.SetDuration(1000);
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "alpha", 0, 1);
+            animacion.SetDuration(duracion);
             animacion.Start();
 
         }
         public void animar3(Java.Lang.Object imagen)
         {
 
-            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "translationY", 1000);
-            animacion.SetDuration(1000);                  
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "alpha", 1,0);
+            animacion.SetDuration(500);                  
             animacion.Start();
            
         }
@@ -296,8 +301,8 @@ namespace App1
         public void animar2(Java.Lang.Object imagen,Intent intento)
         {
 
-            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "translationX",1000);
-            animacion.SetDuration(1000);
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "alpha",1,1);
+            animacion.SetDuration(500);
            
          
             animacion.Start();
@@ -357,6 +362,44 @@ namespace App1
                 return originalBitmap;
             }
         }
+
+
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        {
+            bool acepted = true;
+            foreach (var permi in grantResults)
+            {
+                if (permi == Permission.Denied)
+                {
+                    acepted = false;
+                }
+             
+            }
+            if (acepted) {
+
+                if (clasesettings.probarsetting("abrirserver"))
+                {
+                    if (clasesettings.gettearvalor("abrirserver") == "si")
+                    {
+
+                        if (serviciostreaming.gettearinstancia() != null)
+                        {
+                            StopService(new Intent(this, typeof(serviciostreaming)));
+                            StartService(new Intent(this, typeof(serviciostreaming)));
+                        }
+                        else {
+                            StartService(new Intent(this, typeof(serviciostreaming)));
+                        }
+                      
+                    }
+                }
+            }
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+
 
     }
 }

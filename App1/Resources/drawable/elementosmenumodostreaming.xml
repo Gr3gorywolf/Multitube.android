@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<menu    xmlns:android="http://schemas.android.com/apk/res/android"  >
+  <group android:checkableBehavior="single">
+
+
+
+    <item
+      
+  android:id="@+id/home"
+    android:icon="@drawable/casa"
+  android:title="Inicio"
+     
+      >
+    </item>
+
+    <item
+   
+    android:id="@+id/download"
+      android:icon="@drawable/downloadbutton"
+    android:title="Descargar"
+    ></item>
+    <item
+      
+        android:id="@+id/navegador"
+          android:icon="@drawable/youtubelogo"
+        android:title="Navegador personalizado"
+     
+      >
+    </item>
+
+    <item
+     
+       android:id="@+id/listas"
+       android:icon="@drawable/playlistcop"
+      android:title="Listas de reproduccion"
+      >
+    </item>
+
+    <item
+     
+     android:id="@+id/conectar"
+     android:icon="@drawable/conectar"
+    android:title="Conectar clientes"
+      >
+    </item>
+
+
+
+
+
+
+
+  </group>
+</menu>

@@ -13,6 +13,9 @@ using System.IO;
 using Android.Graphics;
 using System.Net;
 using System.Threading;
+using Android.Glide.Request;
+using Android.Glide;
+
 namespace App1
 {
     class adapterlistaoffline : BaseAdapter
@@ -47,6 +50,18 @@ namespace App1
             todoslosnombres = todosnombres;
             diccionario = dicci;
             patheses = pathesess;
+
+            try
+            {
+                Glide.Get(context).SetMemoryCategory(MemoryCategory.Low);
+               
+                Glide.Get(context).ClearMemory();
+            }
+            catch (Exception)
+            {
+            }
+
+
         }
 
 
@@ -64,7 +79,7 @@ namespace App1
         {
             var view = convertView;
             adapterlistaofflineViewHolder holder = null;
-
+            int indexdefinitivo = todoslosnombres.IndexOf(nombres[position]);
             if (view != null)
                 holder = view.Tag as adapterlistaofflineViewHolder;
 
@@ -94,36 +109,41 @@ namespace App1
 
                 };
 
+                Glide.With(context)
+                         .Load(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + links[indexdefinitivo].Split('=')[1])
+                         .Apply(RequestOptions.CircleCropTransform().SkipMemoryCache(true).Override(125, 125).Placeholder(Resource.Drawable.image))
+                         .Into(holder.portrait);
+                holder.portrait.SetTag(Resource.Id.imageView1, position);
             }
             holder.Title.Text = nombres[position];
             try
             {
-            
-                    holder.portrait.SetImageBitmap(playeroffline.gettearinstancia().imageneses.First(info => info.GenerationId == diccionario[nombres[position]]));
-                  
 
-               
-                      
-                 }
+
+                if (links[(int)holder.portrait.GetTag(Resource.Id.imageView1)] != links[indexdefinitivo]) { 
+                Glide.With(context)
+                           .Load(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + links[indexdefinitivo].Split('=')[1])
+                           .Apply(RequestOptions.CircleCropTransform().SkipMemoryCache(true).Override(125, 125).Placeholder(Resource.Drawable.image))
+                           .Into(holder.portrait);
+
+                }
+
+            }
                 catch (Exception e)
             {
-                var eo = e;
-                
-                    holder.portrait.SetImageResource(Resource.Drawable.musicalnote);
-                   
-               
+                var eo = e;     
                 eo = null;
             }
-          holder.animar3(holder.portrait);
+          holder.animar3(view);
             holder.portrait.SetTag(Resource.Id.imageView1, position);
-
+            
 
             //fill in your items
             //holder.Title.Text = "new text here";
 
 
 
-           /// clasesettings.recogerbasura();
+            /// clasesettings.recogerbasura();
             return view;
         }
 
@@ -146,14 +166,14 @@ namespace App1
         public void animar3(View imagen)
         {
             imagen.SetLayerType(LayerType.Hardware, null);
-            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "translationX", 1000, 0);
-            animacion.SetDuration(250);
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "alpha", 0f, 1f);
+            animacion.SetDuration(220);
             animacion.Start();
             animacion.AnimationEnd += delegate
             {
                 imagen.SetLayerType(LayerType.None, null);
             };
-           
+         
         }
         //Your adapter views to re-use
         //public TextView Title { get; set; }

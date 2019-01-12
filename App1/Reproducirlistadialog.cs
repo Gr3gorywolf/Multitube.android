@@ -14,18 +14,18 @@ using System.Net.Sockets;
 using System.Threading;
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.Dialog.NoActionBar")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
     public class Reproducirlistadialog : Activity
     {
         public bool detenedor = true;
 
         ImageView botonborrar;
-        ImageView botonreproducir;
+        Button botonreproducir;
         ImageView botonatras;
         LinearLayout llayout;
         LinearLayout llayout2;
         string nombrelista;
-        TcpClient cliente;
+     
         public bool enedicion = false;
         ListView listbox;
         ImageView fondo;
@@ -36,7 +36,7 @@ namespace App1
         void ok(object sender, EventArgs e)
         {
             File.Delete(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + nombrelista);
-            cliente.Client.Send(Encoding.Default.GetBytes("actualizarplaylist()"));
+          
             Toast.MakeText(this, "Lista eliminada satisfactoriamente", ToastLength.Long).Show();
             cerraractividad();
            
@@ -47,26 +47,28 @@ namespace App1
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-       
+      
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.loadplaylistoffline);
             string ipadre = Intent.GetStringExtra("ip");
-           cliente = new TcpClient(ipadre, 1024);
+           
         
             llayout = FindViewById<LinearLayout>(Resource.Id.linearlayout0);
             llayout2 = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             botonatras = FindViewById<ImageView>(Resource.Id.imageView1);
-           botonreproducir = FindViewById<ImageView>(Resource.Id.imageView3);
+           botonreproducir = FindViewById<Button>(Resource.Id.imageView3);
             listbox = FindViewById<ListView>(Resource.Id.listView1);
            botonborrar = FindViewById<ImageView>(Resource.Id.imageView2);
             fondo = FindViewById<ImageView>(Resource.Id.fondo1);
             animar2(llayout2);
             nombrelista = Intent.GetStringExtra("nombrelista");
+
+
           //  llayout.SetBackgroundColor(Android.Graphics.Color.DarkGray);
-           llayout2.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+         //  llayout2.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
             animar2(llayout2);
             // Create your application here
-            this.SetFinishOnTouchOutside(false);
+            this.SetFinishOnTouchOutside(true);
             string listaenlinea = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + nombrelista);
             new Thread(() =>
             {
@@ -85,7 +87,7 @@ namespace App1
             }
             int indez = 0;
 
-           botonborrar.SetBackgroundResource(Resource.Drawable.closecircularbuttonofacross);
+           botonborrar.SetBackgroundResource(Resource.Drawable.playlistedit);
             foreach (string it in partes.ToArray())
             {
 
@@ -105,17 +107,21 @@ namespace App1
             }
 
             var lista = partes.ToList();
-        
 
-          ArrayAdapter adaptador = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, lista);
-           listbox.Adapter = adaptador;
+
+            adapterlistaremotoconeliminar adalteeel = new adapterlistaremotoconeliminar(this, partes.ToList(), links.ToList(), nombrelista, false, false);
+
+            var parcelable = listbox.OnSaveInstanceState();
+            listbox.Adapter = adalteeel;
+            listbox.OnRestoreInstanceState(parcelable);
+          
             new Thread(() =>
             {
                 try
                 {
 
               
-                var imagen = clasesettings.CreateBlurredImageonline(this,20, links[0]);
+                var imagen = clasesettings.GetImageBitmapFromUrl("http://i.ytimg.com/vi/" +links[0].Split('=')[1] + "/mqdefault.jpg");
                 RunOnUiThread(() =>
                 {
 
@@ -139,15 +145,16 @@ namespace App1
        
             listbox.ItemClick += (aa, aaa) =>
             {
+                if (links.Count > 0) {
+                    Intent intento = new Intent(this, typeof(customdialogact));
+                    intento.PutExtra("color", "DarkGray");
+                    intento.PutExtra("url", links[aaa.Position]);
+                    intento.PutExtra("titulo", partes[aaa.Position]);
+                    intento.PutExtra("ipadress", "localhost");
+                    intento.PutExtra("imagen", @"https://i.ytimg.com/vi/" + links[aaa.Position].Split('=')[1] + "/hqdefault.jpg");
+                    StartActivity(intento);
+                }
 
-                Intent intento = new Intent(this, typeof(customdialogact));
-                intento.PutExtra("color", "DarkGray");
-                intento.PutExtra("url", links[aaa.Position]);
-                intento.PutExtra("titulo", partes[aaa.Position]);
-                intento.PutExtra("ipadress", "localhost");
-                intento.PutExtra("imagen", @"https://i.ytimg.com/vi/" + links[aaa.Position].Split('=')[1] + "/hqdefault.jpg");
-                StartActivity(intento);    
-              
             };
 
             botonatras.Click += delegate
@@ -159,14 +166,13 @@ namespace App1
             };
             botonreproducir.Click += delegate
             {
-                animar(botonreproducir);
-                cliente.Client.Send(Encoding.Default.GetBytes("pedirlista()"));
-                Thread.Sleep(250);
-                string indice = Intent.GetStringExtra("index");
-                cliente.Client.Send(Encoding.Default.GetBytes(indice));
-                
-                cerraractividad();
                
+                var indice = int.Parse(Intent.GetStringExtra("index"));
+                new Thread(() =>
+                {
+                    mainmenu_Offline.gettearinstancia().reproducirlalistalocal(nombrelista);
+                }).Start();
+                cerraractividad();
 
             };
             botonborrar.Click += delegate
@@ -179,18 +185,22 @@ namespace App1
                 {
                     animar(botonborrar);
                     enedicion = true;
-                    botonborrar.SetBackgroundResource(Resource.Drawable.menucircularbutton);
-                    adaptadorlista adalteeel = new adaptadorlista(this, partes.ToList(), links.ToList(), nombrelista, false,false);
-                    
-                    listbox.Adapter = adalteeel;
+                    botonborrar.SetBackgroundResource(Resource.Drawable.playlistcheck);
+                    adapterlistaremotoconeliminar adalteeel33 = new adapterlistaremotoconeliminar(this, partes.ToList(), links.ToList(), nombrelista, false,false);
+                    var parcelablex = listbox.OnSaveInstanceState();
+                    listbox.Adapter = adalteeel33;
+                    listbox.OnRestoreInstanceState(parcelablex);
                 }
                 else
                 {
                     animar(botonborrar);
                     enedicion = false;
-                    botonborrar.SetBackgroundResource(Resource.Drawable.closecircularbuttonofacross);
-                    ArrayAdapter adaptadordf = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, partes.ToList());
-                    listbox.Adapter = adaptadordf;
+                    botonborrar.SetBackgroundResource(Resource.Drawable.playlistedit);
+                    adapterlistaremotoconeliminar adalteeel2 = new adapterlistaremotoconeliminar(this, partes.ToList(), links.ToList(), nombrelista, false, false);
+
+                    var parcelablexx = listbox.OnSaveInstanceState();
+                    listbox.Adapter = adalteeel2;
+                    listbox.OnRestoreInstanceState(parcelablexx);
                 }
 
 
@@ -206,6 +216,8 @@ namespace App1
             Intent internado = new Intent(this, typeof(Reproducirlistadialog));
                 internado.PutExtra("ip","localhost");
                 internado.PutExtra("nombrelista", nombrelista);
+            internado.PutExtra("index", Intent.GetStringExtra("index"));
+          
                 StartActivity(internado);
           
         }
@@ -227,7 +239,7 @@ namespace App1
                     clasesettings.guardarsetting("refrescarlistadatos", "");
                     refrescar();
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(150);
             }
         }
         public void cerraractividad()
@@ -241,6 +253,9 @@ namespace App1
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(300);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
         }
         public void animar2(Java.Lang.Object imagen)
         {
@@ -250,12 +265,18 @@ namespace App1
             animacion.Start();
 
         }
-        public override void Finish()
+        protected override void OnDestroy()
         {
             detenedor = false;
-            cliente.Client.Disconnect(false);
-            base.Finish();
+ 
             clasesettings.recogerbasura();
+            base.OnDestroy();
+        }
+        public override void Finish()
+        {
+    
+            base.Finish();
+            
         }
 
 

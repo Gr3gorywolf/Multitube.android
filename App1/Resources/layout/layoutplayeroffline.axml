@@ -1,230 +1,424 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:p1="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:p1="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    p1:id="@+id/drawer_layout"
     p1:layout_width="match_parent"
     p1:layout_height="match_parent"
-    p1:id="@+id/relativeLayout1"
-    p1:background="@android:color/black">
-    <ImageView
-        p1:layout_height="fill_parent"
-        p1:layout_width="fill_parent"
-        p1:id="@+id/imageView45"
-        p1:adjustViewBounds="true"
-        p1:scaleType="fitXY"
-        p1:background="@android:color/black"
-        p1:alpha="0.5" />
-    <SurfaceView
-        p1:layout_alignParentTop="true"
-        p1:layout_alignParentBottom="true"
-        p1:layout_alignParentLeft="true"
-        p1:layout_alignParentRight="true"
-        p1:layout_width="fill_parent"
-        p1:layout_height="fill_parent"
-        p1:id="@+id/videoView1" />
-    <LinearLayout
-        p1:orientation="horizontal"
-        p1:layout_width="match_parent"
-        p1:layout_height="100dp"
-        p1:id="@+id/linearLayout1"
-        p1:layout_alignParentBottom="true"
-        p1:background="@android:color/black"
-        p1:alpha="0.5">
-        <LinearLayout
-            p1:orientation="vertical"
-            p1:layout_width="match_parent"
-            p1:layout_height="match_parent"
-            p1:id="@+id/linearLayout5">
-            <LinearLayout
-                p1:orientation="horizontal"
-                p1:layout_width="match_parent"
-                p1:layout_height="50dp"
-                p1:id="@+id/linearLayout21">
-                <ImageView
-                    p1:layout_width="80dp"
-                    p1:layout_height="match_parent"
-                    p1:id="@+id/imageView9"
-                    p1:layout_gravity="center" />
-                <LinearLayout
-                    p1:orientation="vertical"
-                    p1:layout_width="match_parent"
-                    p1:layout_height="match_parent"
-                    p1:id="@+id/linearLayout22">
-                    <TextView
-                        p1:textAppearance="?android:attr/textAppearanceSmall"
-                        p1:layout_width="match_parent"
-                        p1:layout_height="wrap_content"
-                        p1:id="@+id/textView1"
-                        p1:singleLine="true"
-                        p1:scrollHorizontally="true"
-                        p1:marqueeRepeatLimit="marquee_forever"
-                        p1:ellipsize="marquee" />
-                    <SeekBar
-                        p1:layout_width="match_parent"
-                        p1:layout_height="wrap_content"
-                        p1:id="@+id/seekBar1" />
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                p1:orientation="horizontal"
-                p1:layout_width="match_parent"
-                p1:layout_height="50dp"
-                p1:id="@+id/linearLayout6"
-                p1:gravity="center">
-                <ImageView
-                    p1:src="@drawable/fastfowardarrowscopia"
-                    p1:layout_width="40dp"
-                    p1:layout_height="40dp"
-                    p1:id="@+id/imageView11" />
-                <ImageView
-                    p1:src="@drawable/previous"
-                    p1:layout_width="40dp"
-                    p1:layout_height="40dp"
-                    p1:id="@+id/imageView10"
-                    p1:layout_marginLeft="10dp" />
-                <ImageView
-                    p1:layout_width="45dp"
-                    p1:layout_height="45dp"
-                    p1:id="@+id/imageView12"
-                    p1:layout_marginLeft="10dp" />
-                <ImageView
-                    p1:src="@drawable/skip"
-                    p1:layout_width="40dp"
-                    p1:layout_height="40dp"
-                    p1:id="@+id/imageView13"
-                    p1:layout_marginLeft="10dp" />
-                <ImageView
-                    p1:src="@drawable/fastfowardarrows"
-                    p1:layout_width="40dp"
-                    p1:layout_height="40dp"
-                    p1:id="@+id/imageView14"
-                    p1:layout_marginLeft="10dp" />
-                <ImageView
-                    p1:layout_width="40dp"
-                    p1:layout_height="40dp"
-                    p1:id="@+id/imageView47"
-                    p1:layout_marginLeft="10dp" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        p1:orientation="vertical"
+
+    
+	>
+
+		<cheesebaron.slidinguppanel.SlidingUpPanelLayout
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+	app:collapsedHeight="68dp"
+    app:shadowHeight="4dp"
+			>
+	<RelativeLayout
+		p1:id="@+id/relativeLayout1"
+		p1:layout_width="match_parent"
+		p1:layout_height="match_parent"
+		p1:background="?attr/colorPrimaryDark">
+		<android.support.design.widget.AppBarLayout
+			p1:layout_width="match_parent"
+			p1:layout_height="wrap_content">
+			<android.support.v7.widget.Toolbar
+				p1:id="@+id/my_toolbar"
+				p1:layout_width="match_parent"
+				p1:layout_height="?attr/actionBarSize"
+				p1:background="?attr/colorPrimary"
+				p1:elevation="4dp"
+				p1:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+				app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+				<android.support.v7.widget.SearchView
+					p1:id="@+id/searchView"
+					p1:layout_width="wrap_content"
+					p1:layout_height="wrap_content"
+					p1:iconifiedByDefault="true"
+					p1:queryHint="Buscar"
+					p1:layout_gravity="right"
+					p1:layout_centerHorizontal="true" />
+			</android.support.v7.widget.Toolbar>
+ 
+		</android.support.design.widget.AppBarLayout>
+		<ImageView
+			p1:layout_height="fill_parent"
+			p1:layout_width="fill_parent"
+			p1:id="@+id/imageView45"
+			p1:adjustViewBounds="true"
+			p1:scaleType="fitXY"
+			p1:background="@android:color/black"
+			p1:alpha="0.5"
+			p1:visibility="gone" />
+		<SurfaceView
+			p1:layout_alignParentTop="true"
+			p1:layout_alignParentBottom="true"
+			p1:layout_alignParentLeft="true"
+			p1:layout_alignParentRight="true"
+			p1:layout_width="fill_parent"
+			p1:layout_height="fill_parent"
+			p1:id="@+id/videoView1" 
+		
+			/>
+
+			<!--old layout-->
+		
+		<LinearLayout
+			p1:orientation="horizontal"
+			p1:layout_width="match_parent"
+			p1:layout_height="100dp"
+			p1:id="@+id/linearLayout1"
+			p1:layout_alignParentBottom="true"
+			p1:background="?attr/colorPrimary"
+			p1:alpha="0">
+			<LinearLayout
+				p1:orientation="vertical"
+				p1:layout_width="match_parent"
+				p1:layout_height="match_parent"
+				p1:id="@+id/linearLayout5">
+				<LinearLayout
+					p1:orientation="horizontal"
+					p1:layout_width="match_parent"
+					p1:layout_height="50dp"
+					p1:id="@+id/linearLayout21">
+					<ImageView
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"				
+						p1:layout_gravity="center"
+						p1:layout_marginTop="6dp"
+						p1:layout_marginBottom="4dp"
+						p1:layout_marginLeft="6dp"
+					
+						/>
+					<LinearLayout
+						p1:orientation="vertical"
+						p1:layout_width="match_parent"
+						p1:layout_height="match_parent"
+						p1:id="@+id/linearLayout22">
+						<TextView
+							p1:textAppearance="?android:attr/textAppearanceSmall"
+							p1:layout_width="match_parent"
+							p1:layout_height="wrap_content"
+						
+							p1:singleLine="true"
+							p1:scrollHorizontally="true"
+							p1:marqueeRepeatLimit="marquee_forever"
+							p1:ellipsize="marquee"
+							p1:layout_marginLeft="4dp"
+							p1:layout_marginTop="6dp"
+							p1:layout_marginRight="44dp" 
+							
+								/>
+						
+					</LinearLayout>
+				</LinearLayout>
+			
+			</LinearLayout>
+		</LinearLayout>
+			
+		<LinearLayout
+			p1:orientation="vertical"
+			p1:layout_height="match_parent"
+			p1:id="@+id/linearLayout7"
+			p1:background="@android:color/black"
+			p1:alpha="1"
+			p1:layout_width="300dp"
+			p1:visibility="gone">
+			<LinearLayout
+				p1:orientation="horizontal"
+				p1:layout_width="match_parent"
+				p1:layout_height="45dp"
+				p1:id="@+id/linearLayout9">
+				<ImageView
+					p1:src="@drawable/rightarroww"
+					p1:layout_width="35dp"
+					p1:layout_height="35dp"
+					p1:id="@+id/imageView16"
+					p1:layout_marginLeft="10dp"
+					p1:layout_gravity="center" />
+				<TextView
+					p1:textAppearance="?android:attr/textAppearanceMedium"
+					p1:layout_width="wrap_content"
+					p1:layout_height="match_parent"
+					p1:id="@+id/textView3"
+					p1:gravity="center"
+					p1:layout_marginLeft="2dp"
+					p1:text="Cerrar menú" />
+			</LinearLayout>
+			<RelativeLayout
+				p1:id="@+id/relativeLayout2"
+				p1:layout_width="match_parent"
+				p1:layout_height="wrap_content">
+				<ImageView
+					p1:src="@drawable/deletebutton"
+					p1:layout_width="25dp"
+					p1:layout_height="25dp"
+					p1:id="@+id/imageView46"
+					p1:layout_marginLeft="275dp"
+					p1:layout_marginTop="5dp" />
+				<EditText
+					p1:inputType="text"
+					p1:id="@+id/editText1"
+					p1:layout_width="match_parent"
+					p1:layout_height="wrap_content"
+					p1:layout_marginLeft="5dp"
+					p1:hint="Filtrar por:"
+					p1:layout_marginRight="25dp"
+					p1:singleLine="true"
+					p1:textColor="@android:color/background_light"
+					p1:textColorHint="@android:color/darker_gray"
+					p1:textColorHighlight="@android:color/background_light" />
+			</RelativeLayout>
+			<LinearLayout
+				p1:orientation="horizontal"
+				p1:minWidth="25px"
+				p1:minHeight="25px"
+				p1:id="@+id/linearLayout4"
+				p1:gravity="left"
+				p1:layout_width="match_parent"
+				p1:layout_height="wrap_content">
+				<ImageView
+					p1:layout_width="35dp"
+					p1:layout_height="35dp"
+					p1:id="@+id/imageView8"
+					p1:layout_marginLeft="10dp"
+					p1:layout_gravity="center" />
+				<TextView
+					p1:text="Videos"
+					p1:textAppearance="?android:attr/textAppearanceMedium"
+					p1:layout_width="wrap_content"
+					p1:layout_height="match_parent"
+					p1:id="@+id/textView2"
+					p1:gravity="center"
+					p1:layout_marginLeft="2dp" />
+			</LinearLayout>
+			<LinearLayout
+				p1:orientation="horizontal"
+				p1:minWidth="25px"
+				p1:minHeight="25px"
+				p1:id="@+id/linearLayout20"
+				p1:gravity="left"
+				p1:layout_width="match_parent"
+				p1:layout_height="wrap_content">
+				<ImageView
+					p1:layout_width="35dp"
+					p1:layout_height="35dp"
+					p1:id="@+id/imageView22"
+					p1:layout_marginLeft="10dp"
+					p1:src="@drawable/sync" />
+				<TextView
+					p1:text="sync"
+					p1:textAppearance="?android:attr/textAppearanceMedium"
+					p1:layout_width="wrap_content"
+					p1:layout_height="match_parent"
+					p1:id="@+id/textView27"
+					p1:gravity="center"
+					p1:layout_marginLeft="2dp" />
+			</LinearLayout>
+		</LinearLayout>
+		<LinearLayout
+			p1:orientation="horizontal"
+			p1:minWidth="25px"
+			p1:minHeight="25px"
+			p1:layout_width="match_parent"
+			p1:layout_height="45dp"
+			p1:id="@+id/linearLayout8"
+			p1:background="@android:color/black"
+			p1:alpha="0.5"
+			p1:visibility="gone">
+			<ImageView
+				p1:src="@drawable/menu"
+				p1:layout_width="35dp"
+				p1:layout_height="35dp"
+				p1:id="@+id/imageView15"
+				p1:layout_marginLeft="10dp"
+				p1:layout_gravity="center" />
+		</LinearLayout>
+		<ListView
+			p1:minWidth="25px"
+			p1:minHeight="25px"
+			p1:id="@+id/listView1"
+			p1:layout_width="match_parent"
+			p1:layout_height="match_parent"
+			p1:layout_marginTop="?attr/actionBarSize"
+			 p1:layout_marginBottom="68dp"
+			android:background="?attr/colorPrimaryDark"
+			/>
+
+
+	
+
+
+    
+
+		
+	</RelativeLayout>
+		
+		
+			<!--parte de el menu slideable-->
+			<!--contenedor principal-->
+         <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+	    android:background="?attr/colorPrimary"
+	
+				android:clickable="true"
+					 android:focusable="false"
+				android:id="@+id/scrollable"
+				>   
+
+					<!--solapita-->
+					<LinearLayout
+					p1:orientation="horizontal"
+					p1:layout_width="match_parent"
+					p1:layout_height="68dp"
+							android:id="@+id/solapita"
+					 android:background="?attr/colorPrimary"
+				  android:elevation="4dp"
+						
+					>
+					<ImageView
+						p1:layout_width="64dp"
+						p1:layout_height="64dp"
+						p1:id="@+id/imageView9"
+						p1:layout_gravity="center"
+						p1:layout_marginTop="4dp"
+						p1:layout_marginBottom="4dp"
+						p1:layout_marginLeft="4dp"
+						p1:layout_marginRight="4dp"
+							 android:clickable="true"
+                    android:focusable="true"
+					 
+					/>
+				    <RelativeLayout
+					 android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+					 android:clickable="false"
+				
+				
+					
+				>
+				<TextView
+							p1:textAppearance="?android:attr/textAppearanceSmall"
+							p1:layout_width="match_parent"
+							p1:layout_height="wrap_content"
+							p1:id="@+id/textView1"
+							p1:singleLine="true"
+							p1:scrollHorizontally="true"
+							p1:marqueeRepeatLimit="marquee_forever"
+							p1:ellipsize="marquee"
+							p1:layout_marginLeft="4dp"
+							
+							p1:layout_marginRight="50dp"
+					 android:clickable="false"
+					 p1:layout_centerVertical="true"
+					/>
+						<ImageView
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"
+						p1:id="@+id/btnaccion"
+						
+					
+					 p1:layout_centerVertical="true"
+						p1:layout_marginRight="5dp"
+							 android:clickable="true"
+                    android:focusable="true"
+					  p1:layout_alignParentRight="true"
+					/>
+
+				</RelativeLayout>
+					
+
+				</LinearLayout>
+			<ImageView
+						
+						p1:layout_width="match_parent"
+						p1:layout_height="match_parent"
+						p1:id="@+id/bgimg"
+				p1:layout_above="@+id/linearLayout6"
+			 p1:layout_marginTop="68dp"
+		 p1:scaleType="centerCrop"
+				android:background="?attr/colorPrimaryDark"
+			/>
+
+			
+			<LinearLayout
+					p1:orientation="vertical"
+					p1:layout_width="match_parent"
+					p1:layout_height="wrap_content"
+					p1:id="@+id/linearLayout6"		
+					 android:background="?attr/colorPrimary"
+				 android:elevation="4dp"
+					p1:layout_alignParentBottom="true">
+			<SeekBar
+				   p1:layout_width="match_parent"
+				   p1:layout_height="wrap_content"
+				   p1:id="@+id/seekBar1"
+				   p1:backgroundTint="@android:color/holo_red_dark"
+				   p1:layout_marginTop="7dp"
+				   p1:layout_marginBottom="4dp"
+			
+			
+				/>
+				<LinearLayout
+					p1:orientation="horizontal"
+					p1:layout_width="match_parent"
+					p1:layout_height="50dp"
+					p1:id="@+id/linearLayout6"
+					p1:gravity="center">
+					<ImageView
+						p1:src="@drawable/fastfowardarrowscopia"
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"
+						p1:id="@+id/imageView11" />
+					<ImageView
+						p1:src="@drawable/previous"
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"
+						p1:id="@+id/imageView10"
+						p1:layout_marginLeft="7dp" />
+					<ImageView
+						p1:layout_width="45dp"
+						p1:layout_height="45dp"
+						p1:id="@+id/imageView12"
+						p1:layout_marginLeft="7dp" />
+					<ImageView
+						p1:src="@drawable/skip"
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"
+						p1:id="@+id/imageView13"
+						p1:layout_marginLeft="7dp" />
+					<ImageView
+						p1:src="@drawable/fastfowardarrows"
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"
+						p1:id="@+id/imageView14"
+						p1:layout_marginLeft="7dp" />
+					<ImageView
+						p1:layout_width="40dp"
+						p1:layout_height="40dp"
+						p1:id="@+id/imageView47"
+						p1:layout_marginLeft="7dp" />
+				</LinearLayout>
+
+					</LinearLayout>
+
+
+
+
+         </RelativeLayout>
+
+
+
+		</cheesebaron.slidinguppanel.SlidingUpPanelLayout>
+    <android.support.design.widget.NavigationView
+        p1:id="@+id/content_frame"
+        p1:layout_width="wrap_content"
         p1:layout_height="match_parent"
-        p1:id="@+id/linearLayout7"
-        p1:background="@android:color/black"
-        p1:alpha="1"
-        p1:layout_width="300dp">
-        <LinearLayout
-            p1:orientation="horizontal"
-            p1:layout_width="match_parent"
-            p1:layout_height="45dp"
-            p1:id="@+id/linearLayout9">
-            <ImageView
-                p1:src="@drawable/rightarroww"
-                p1:layout_width="35dp"
-                p1:layout_height="35dp"
-                p1:id="@+id/imageView16"
-                p1:layout_marginLeft="10dp"
-                p1:layout_gravity="center" />
-            <TextView
-                p1:textAppearance="?android:attr/textAppearanceMedium"
-                p1:layout_width="wrap_content"
-                p1:layout_height="match_parent"
-                p1:id="@+id/textView3"
-                p1:gravity="center"
-                p1:layout_marginLeft="2dp"
-                p1:text="Cerrar menú" />
-        </LinearLayout>
-        <RelativeLayout
-            p1:id="@+id/relativeLayout2"
-            p1:layout_width="match_parent"
-            p1:layout_height="wrap_content">
-            <ImageView
-                p1:src="@drawable/deletebutton"
-                p1:layout_width="25dp"
-                p1:layout_height="25dp"
-                p1:id="@+id/imageView46"
-                p1:layout_marginLeft="275dp"
-                p1:layout_marginTop="5dp" />
-            <EditText
-                p1:inputType="text"
-                p1:id="@+id/editText1"
-                p1:layout_width="match_parent"
-                p1:layout_height="wrap_content"
-                p1:layout_marginLeft="5dp"
-                p1:hint="Filtrar por:"
-                p1:layout_marginRight="25dp"
-                p1:singleLine="true" />
-        </RelativeLayout>
-        <LinearLayout
-            p1:orientation="horizontal"
-            p1:minWidth="25px"
-            p1:minHeight="25px"
-            p1:id="@+id/linearLayout4"
-            p1:gravity="left"
-            p1:layout_width="match_parent"
-            p1:layout_height="wrap_content">
-            <ImageView
-                p1:layout_width="35dp"
-                p1:layout_height="35dp"
-                p1:id="@+id/imageView8"
-                p1:layout_marginLeft="10dp"
-                p1:layout_gravity="center" />
-            <TextView
-                p1:text="Videos"
-                p1:textAppearance="?android:attr/textAppearanceMedium"
-                p1:layout_width="wrap_content"
-                p1:layout_height="match_parent"
-                p1:id="@+id/textView2"
-                p1:gravity="center"
-                p1:layout_marginLeft="2dp" />
-        </LinearLayout>
-        <LinearLayout
-            p1:orientation="horizontal"
-            p1:minWidth="25px"
-            p1:minHeight="25px"
-            p1:id="@+id/linearLayout20"
-            p1:gravity="left"
-            p1:layout_width="match_parent"
-            p1:layout_height="wrap_content">
-            <ImageView
-                p1:layout_width="35dp"
-                p1:layout_height="35dp"
-                p1:id="@+id/imageView22"
-                p1:layout_marginLeft="10dp"
-                p1:src="@drawable/sync" />
-            <TextView
-                p1:text="sync"
-                p1:textAppearance="?android:attr/textAppearanceMedium"
-                p1:layout_width="wrap_content"
-                p1:layout_height="match_parent"
-                p1:id="@+id/textView27"
-                p1:gravity="center"
-                p1:layout_marginLeft="2dp" />
-        </LinearLayout>
-    </LinearLayout>
-<!--drawer experimental -->
-    <LinearLayout
-        p1:orientation="horizontal"
-        p1:minWidth="25px"
-        p1:minHeight="25px"
-        p1:layout_width="match_parent"
-        p1:layout_height="45dp"
-        p1:id="@+id/linearLayout8"
-        p1:background="@android:color/black"
-        p1:alpha="0.5">
-        <ImageView
-            p1:src="@drawable/menu"
-            p1:layout_width="35dp"
-            p1:layout_height="35dp"
-            p1:id="@+id/imageView15"
-            p1:layout_marginLeft="10dp"
-            p1:layout_gravity="center" />
-    </LinearLayout>
-    <ListView
-        p1:minWidth="25px"
-        p1:minHeight="25px"
-        p1:id="@+id/listView1"
-        p1:layout_width="match_parent"
-        p1:layout_height="match_parent"
-        p1:layout_marginTop="45dp"
-        p1:layout_above="@+id/linearLayout1" />
-</RelativeLayout>
+        p1:layout_gravity="start"
+		app:headerLayout="@layout/layoutheader"
+        app:menu="@drawable/elementosmenuplayeroffline" />
+</android.support.v4.widget.DrawerLayout>

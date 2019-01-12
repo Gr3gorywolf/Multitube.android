@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<menu    xmlns:android="http://schemas.android.com/apk/res/android"  >
+  <group android:checkableBehavior="single">
+    <item
+   
+    android:id="@+id/audios"
+      android:icon="@drawable/music"
+    android:title="Audios"
+    ></item>
+    <item
+      
+        android:id="@+id/videos"
+          android:icon="@drawable/video"
+        android:title="Videos"
+     
+      >
+    </item>
+
+    <item
+     
+       android:id="@+id/Syncklk"
+       android:icon="@drawable/sync"
+      android:title="Sync"
+      >
+    </item>
+
+  </group>
+</menu>

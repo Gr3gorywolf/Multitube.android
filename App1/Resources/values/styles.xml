@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <style name="Theme.DesignDemo" parent="Base.Theme.DesignDemo">
+   <item name="android:windowFullscreen">true</item>
+  
+  </style>
+  <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.NoActionBar">
+    <item name="colorPrimary">#303335</item>
+    <item name="colorPrimaryDark">#242628</item>
+    <item name="colorAccent">#d41c17</item>
+    <item name="android:textColor">#FFFFFF</item>
+</style>
+
+  <style name="Theme.UserDialog" parent="Base.Theme.DesignDemodialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+
+        <item name="android:windowNoTitle">true</item>
+    
+     
+ </style>
+<style name="Base.Theme.DesignDemodialog" parent="Theme.AppCompat.NoActionBar">
+    <item name="colorPrimary">#434e56</item>
+    <item name="colorPrimaryDark">#323538</item>
+    <item name="colorAccent">#ce2c2b</item>
+    <item name="android:textColor">#FFFFFF</item>
+  
+    </style>
+
+</resources>

@@ -1,105 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
-    android:background="@android:color/black">
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:id="@+id/fondo1"
-        android:scaleType="fitXY"
-        android:alpha="0.5"
-        android:background="@android:color/black" />
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearlayout0">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:id="@+id/linearLayout4"
-            android:gravity="right"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/linearLayout5"
-                android:gravity="left"
-                android:layout_gravity="left"
-                android:layout_marginLeft="32dp">
-                <ImageView
-                    android:src="@drawable/downloadbutton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/imageView5"
-                    android:layout_marginTop="5dp" />
-                <ImageView
-                    android:src="@drawable/addlist"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/imageView6"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp" />
-            </LinearLayout>
-            <ImageView
-                android:src="@drawable/closebutton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/imageView4"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp" />
-        </LinearLayout>
-        <TextView
-            android:text="Large Text"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/textView1"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:scrollHorizontally="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever" />
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/imageView1"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/linearLayout3"
-            android:gravity="center"
-            android:layout_marginBottom="5dp">
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/space2" />
-            <ImageView
-                android:src="@drawable/plus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/imageView2"
-                android:layout_gravity="center" />
-            <Space
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:id="@+id/space1" />
-            <ImageView
-                android:src="@drawable/playbutton2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/imageView3"
-                android:layout_gravity="center" />
-        </LinearLayout>
-    </LinearLayout>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="300dp"
+	android:layout_height="250dp"
+	android:background="?attr/colorPrimaryDark">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:layout_margin="7dp"
+		android:background="@android:color/background_dark" >
+	</LinearLayout>
+	<ImageView
+		android:layout_width="300dp"
+		android:layout_height="match_parent"
+		android:id="@+id/fondo1"
+		android:scaleType="centerCrop"
+		android:alpha="0.25"
+		android:background="#ff000000"
+		android:layout_marginTop="7dp"
+		android:layout_marginRight="7dp"
+		android:layout_marginBottom="7dp"
+		android:layout_marginLeft="7dp" />
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="300dp"
+		android:layout_height="wrap_content"
+		android:id="@+id/linearlayout0">
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="45dp"
+			android:id="@+id/linearLayout4"
+			android:gravity="right"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:visibility="gone">
+			<LinearLayout
+				android:orientation="horizontal"
+				android:minWidth="25px"
+				android:minHeight="25px"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:id="@+id/linearLayout5"
+				android:gravity="left"
+				android:layout_gravity="left"
+				android:layout_marginLeft="32dp"
+				android:visibility="gone" >
+			</LinearLayout>
+			<ImageView
+				android:src="@drawable/closebutton"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				android:id="@+id/imageView4"
+				android:layout_marginTop="5dp"
+				android:layout_marginRight="5dp" />
+		</LinearLayout>
+		<TextView
+			android:text="Large Text"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:id="@+id/textView1"
+			android:gravity="center"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:singleLine="true"
+			android:scrollHorizontally="true"
+			android:ellipsize="marquee"
+			android:marqueeRepeatLimit="marquee_forever"
+			android:layout_marginTop="10dp"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp" />
+		<RelativeLayout
+			android:layout_width="150dp"
+			android:layout_height="150dp"
+			android:layout_gravity="center"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginBottom="5dp"
+			android:visibility="gone"
+			>
+			<ImageView
+				android:layout_width="150dp"
+				android:layout_height="150dp"
+				android:id="@+id/imageView1"
+				android:layout_centerInParent="false"
+				android:visibility="gone" />
+		</RelativeLayout>
+		
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/linearLayout3"
+			android:gravity="center"
+			android:layout_marginBottom="12dp"
+			android:layout_marginTop="15dp">
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="120dp"
+				android:id="@+id/imageView3"
+				android:layout_height="wrap_content">
+				<ImageView
+					android:src="@drawable/superplayblanco"
+					android:layout_width="60dp"
+					android:layout_height="60dp"
+					android:layout_gravity="center"
+					android:layout_centerInParent="true"
+			 />
+				<TextView
+					android:text="Reproducir"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:gravity="center"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="true"   />
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="120dp"
+				android:layout_height="wrap_content"
+				android:id="@+id/imageView2"
+         
+           >
+				<ImageView
+					android:src="@drawable/plus"
+					android:layout_width="60dp"
+					android:layout_height="60dp"
+					android:layout_gravity="center"
+			/>
+				<TextView
+					android:text="Añadir a la cola"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:gravity="center"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="true"
+					android:id="@+id/textView3" 
+            />
+			</LinearLayout>
+		</LinearLayout>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/linearLayout3"
+			android:gravity="center"
+			android:layout_marginBottom="5dp">
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="120dp"
+				android:layout_height="wrap_content"
+				android:id="@+id/imageView5"
+				>
+				<ImageView
+					android:src="@drawable/downloadbutton"
+					android:layout_width="60dp"
+					android:layout_height="60dp"
+					android:layout_marginTop="5dp"
+					android:layout_gravity="center" />
+				<TextView
+					android:text="Descargar"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:gravity="center"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="true"/>
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="120dp"
+				android:layout_height="wrap_content"
+				android:id="@+id/imageView6"
+				>
+				<ImageView
+					android:src="@drawable/addlist"
+					android:layout_width="60dp"
+					android:layout_height="60dp"
+					android:layout_marginLeft="10dp"
+					android:layout_marginTop="5dp"
+					android:layout_gravity="center" />
+				<TextView
+					android:text="Añadir a lista"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:gravity="center"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:singleLine="true"/>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+	<ProgressBar
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/progressBar1"
+		android:layout_centerInParent="true"
+		android:indeterminate="true" />
 </RelativeLayout>

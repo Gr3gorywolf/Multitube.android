@@ -12,9 +12,13 @@
         android:layout_gravity="center"
         android:layout_marginLeft="3dp" />
     <TextView
+	 android:layout_marginLeft="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/textView1"
-        android:gravity="center" />
+        android:gravity="center"
+	    android:singleLine="true"
+    
+	/>
 </LinearLayout>

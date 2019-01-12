@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/LinearLayout0">
+        android:id="@+id/linearlayout0">
         <LinearLayout
             android:orientation="vertical"
             android:minWidth="25px"
@@ -22,51 +22,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayout1">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:id="@+id/linearLayout2"
-                android:gravity="left"
-                android:alpha="0.7">
-                <ImageView
-                    android:src="@drawable/home"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/imageView3" />
-                <Space
-                    android:layout_width="20dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/space4" />
-                <ImageView
-                    android:src="@drawable/play"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/imageView7"
-                    android:layout_gravity="center" />
-                <TextView
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/textView6"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
-                    android:scrollHorizontally="true" />
-            </LinearLayout>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="?attr/actionBarSize"
+				android:id="@+id/linearLayout2"
+				android:gravity="left"
+				android:alpha="1"
+				android:elevation="8dp"
+				android:background="?attr/colorPrimary">
+				<ImageView
+					android:src="@drawable/home"
+					android:layout_width="40dp"
+					android:layout_height="40dp"
+					android:id="@+id/imageView3"
+					android:layout_marginLeft="5dp"
+					android:layout_gravity="center" />
+				<Space
+					android:layout_width="20dp"
+					android:layout_height="30dp"
+					android:id="@+id/space4" />
+				<ImageView
+					android:src="@drawable/play"
+					android:layout_width="30dp"
+					android:layout_height="30dp"
+					android:id="@+id/imageView7"
+					android:layout_gravity="center" />
+				<TextView
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:id="@+id/textView6"
+					android:gravity="center"
+					android:marqueeRepeatLimit="marquee_forever"
+					android:ellipsize="marquee"
+					android:singleLine="true"
+					android:scrollHorizontally="true" />
+			</LinearLayout>
             <TextView
                 android:text="Descargar en la pc"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp" />
         </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/linearLayout3">
+            android:id="@+id/linearLayout3"
+            android:layout_marginLeft="5dp">
             <RadioGroup
                 android:minWidth="25px"
                 android:minHeight="25px"
@@ -90,27 +96,28 @@
                     android:text="Mp3"
                     android:id="@+id/radioButton3" />
             </RadioGroup>
-            <Space
-                android:layout_width="120px"
-                android:layout_height="match_parent"
-                android:id="@+id/space1" />
             <ImageView
                 android:src="@drawable/downloadbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/imageView1" />
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:id="@+id/imageView1"
+                android:layout_marginLeft="120dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp" />
         </LinearLayout>
         <TextView
             android:text="Descargar  en el telefono"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:id="@+id/textView2"
+            android:layout_marginLeft="5dp" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/linearLayout4">
+            android:id="@+id/linearLayout4"
+            android:layout_marginLeft="5dp">
             <RadioGroup
                 android:minWidth="25px"
                 android:minHeight="25px"
@@ -134,33 +141,28 @@
                     android:text="Mp3"
                     android:id="@+id/radioButton6" />
             </RadioGroup>
-            <Space
-                android:layout_width="120px"
-                android:layout_height="match_parent"
-                android:id="@+id/space2" />
             <ImageView
                 android:src="@drawable/downloadbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/imageView2" />
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:id="@+id/imageView2"
+                android:layout_marginLeft="120dp"
+                android:layout_marginTop="10dp" />
         </LinearLayout>
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:id="@+id/progressBar1" />
-        <TextView
-            android:text="Reproducir audio"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout124"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp">
         <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"
             android:minHeight="25px"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:id="@+id/linearLayout5">
             <ImageView
                 android:src="@drawable/fastfowardarrowscopia"
@@ -188,12 +190,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView5"
-            android:gravity="center" />
-        <TextView
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" />
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:scrollHorizontally="true" />
     </LinearLayout>
 </RelativeLayout>

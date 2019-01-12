@@ -18,40 +18,43 @@
         android:minHeight="25px"
         android:gravity="top"
         android:id="@+id/rooteeooo">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:id="@+id/linearLayout1"
-            android:gravity="left"
-            android:layout_gravity="center"
-            android:alpha="0.7">
-            <ImageView
-                android:src="@drawable/home"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/imageView2" />
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:id="@+id/space1" />
-            <ImageView
-                android:src="@drawable/play"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/imageView3"
-                android:layout_gravity="center" />
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/textView3"
-                android:gravity="center"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:scrollHorizontally="true" />
-        </LinearLayout>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:id="@+id/linearLayout1"
+			android:gravity="left"
+			android:layout_gravity="center"
+			android:alpha="1"
+			android:elevation="8dp"
+			android:background="?attr/colorPrimary">
+			<ImageView
+				android:src="@drawable/home"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:id="@+id/imageView2"
+				android:layout_gravity="center" />
+			<Space
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:id="@+id/space1" />
+			<ImageView
+				android:src="@drawable/play"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				android:id="@+id/imageView3"
+				android:layout_gravity="center" />
+			<TextView
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:id="@+id/textView3"
+				android:gravity="center"
+				android:ellipsize="marquee"
+				android:marqueeRepeatLimit="marquee_forever"
+				android:singleLine="true"
+				android:scrollHorizontally="true" />
+		</LinearLayout>
         <TextView
             android:text="Presione para escanear codigo de sincronizacion"
             android:textAppearance="?android:attr/textAppearanceMedium"

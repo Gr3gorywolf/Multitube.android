@@ -30,7 +30,7 @@
         android:layout_height="90dp"
         android:id="@+id/linearLayout1"
         android:layout_above="@id/videoView1"
-        android:background="@android:color/black"
+        android:background="#323538"
         android:alpha="0.7">
         <SeekBar
             android:layout_width="match_parent"
@@ -89,7 +89,7 @@
         android:layout_above="@id/linearLayout1"
         android:id="@+id/listView1"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@android:color/black"
+        android:background="#323538"
         android:layout_alignRight="@id/videoView1"
         android:alpha="0.7"
         android:layout_marginTop="40dp" />
@@ -101,7 +101,7 @@
         android:layout_above="@id/linearLayout1"
         android:id="@+id/listView5"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@android:color/black"
+        android:background="#323538"
         android:layout_alignRight="@id/videoView1"
         android:alpha="0.7"
         android:layout_marginTop="40dp" />
@@ -110,10 +110,10 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/laprra"
-        android:background="@android:color/black"
+        android:background="#323538"
         android:alpha="0.7">
         <ImageView
-            android:src="@drawable/menucircularbutton"
+            android:src="@drawable/hambur"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:id="@+id/imageView12"
@@ -146,7 +146,7 @@
         android:layout_height="match_parent"
         android:id="@+id/linearLayout6"
         android:layout_marginBottom="90dp"
-        android:background="@android:color/black"
+        android:background="#323538"
         android:layout_alignRight="@id/videoView1"
         android:alpha="0.7"
         android:layout_marginTop="40dp">
@@ -158,25 +158,12 @@
             android:minWidth="25px"
             android:minHeight="25px">
             <EditText
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/edittext1"
-                android:singleLine="true" />
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/imageView10"
-                android:src="@drawable/search"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="5dp" />
+                android:id="@+id/editText1"
+                android:singleLine="true"
+                android:hint="Termino a buscar" />
         </LinearLayout>
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar2"
-            android:progressTint="#ffff0000" />
         <ListView
             android:minWidth="25px"
             android:minHeight="25px"
@@ -191,11 +178,11 @@
         android:layout_below="@id/laprra"
         android:id="@+id/linearLayout8"
         android:layout_marginBottom="90dp"
-        android:background="@android:color/black"
+        android:background="#323538"
         android:gravity="top"
         android:alpha="0.7">
         <ImageView
-            android:src="@drawable/list"
+            android:src="@drawable/playlistcop"
             android:id="@+id/imageView7"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -214,9 +201,10 @@
             android:layout_height="30dp"
             android:id="@+id/imageView13"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:visibility="gone" />
         <ImageView
-            android:src="@drawable/songplaylist"
+            android:src="@drawable/playlistplay"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:id="@+id/imageView20"
@@ -233,7 +221,8 @@
         android:layout_marginTop="40dp"
         android:background="@android:color/black"
         android:alpha="0.7"
-        android:layout_alignRight="@id/videoView1">
+        android:layout_alignRight="@id/videoView1"
+        android:visibility="gone">
         <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"

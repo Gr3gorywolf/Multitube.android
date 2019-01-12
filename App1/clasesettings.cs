@@ -15,21 +15,103 @@ using Android.Renderscripts;
 using System.Net;
 using Android.Net.Wifi;
 using Android.Net;
+using System.IO;
+using Android.Glide;
+using Android.Glide.Request;
+using Android.Support.V7.Palette;
+using System.Drawing;
+using Android.Support.V7.Graphics;
+using System.IO.Compression;
+using Newtonsoft.Json;
 
 namespace App1
 {
+
+    class medialement {
+        public string nombre { get; set; }
+        public string path { get; set; }
+        public string link { get; set; }
+
+    }
     class tituloydownloadurl
     {
       public  string titulo { get; set; }
        public string downloadurl { get; set; }
     //    public string titulo { get; set; }
     }
+    public class playlistelements {
+       public string nombre { get; set; }
+       public string link { get; set; }  
+    }
 
-    class clasesettings
+
+    public class playlist {
+       public string nombre { get; set; }
+        public string portrait {
+            get;set;
+        }
+        public List<playlistelements> elementos { get; set; }
+    }
+
+    public class Jsoninicio {
+    
+        public List<playlistelements> ultimos_videos { get; set; }
+        public List<playlistelements> suggestions { get; set; }
+        public List<playlistelements> favoritos { get; set; }
+    }
+
+
+    public class modelips
+    {
+        public string ipactual { get; set; }
+        public Dictionary<string, string> ips { get; set; }
+        public modelips(string ipact, Dictionary<string, string> ipss)
+        {
+            this.ipactual = ipact;
+            this.ips = ipss;
+        }
+        
+    }
+  class clasesettings
     {
 
 
         public static Activity context = null;
+
+        public static string rutacache = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache";
+
+
+        public static void guardarips(modelips model) {
+
+            var jsons = JsonConvert.SerializeObject(model);
+            var axc = File.CreateText(rutacache + "/ips.json");
+            axc.Write(jsons);
+            axc.Close();
+        }
+
+
+        public static modelips gettearips() {
+          return  JsonConvert.DeserializeObject<modelips>(File.ReadAllText(rutacache + "/ips.json"));
+        }
+
+        public static string settearipsp()
+        {
+            string ipa = "";
+            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+            foreach (IPAddress ip in localIPs)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    ipa = ip.ToString();
+
+                }
+            }
+            return ipa;
+
+        }
+
+
+       
 
         public static void preguntarsimenuosalir(Context ctx)
         {
@@ -38,7 +120,7 @@ namespace App1
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             ad.SetCancelable(false);
             ad.SetTitle("Advertencia");
-            ad.SetIcon(Resource.Drawable.warningsignonatriangularbackground);
+            ad.SetIcon(Resource.Drawable.alert);
             ad.SetMessage("Que desea hacer");
             ad.SetNegativeButton("Ir al menu principal", si);
             ad.SetNeutralButton("Salir de la aplicacion", no);
@@ -50,11 +132,77 @@ namespace App1
 
         }
 
+
+
+
+
+        public static List<medialement> obtenermedia(string path) {
+
+            List<medialement> intmedia = new List<medialement>();
+            if (File.Exists(path)) { 
+                foreach (var parts in File.ReadAllText(path).Split('¤'))
+                {
+                    if (parts.Trim().Length > 0) {
+                        intmedia.Add(new medialement()
+                        {
+                            nombre = parts.Split('²')[0],
+                            link = parts.Split('²')[1],
+                            path = parts.Split('²')[2]
+                        });
+
+                    } 
+
+                   
+                }
+                return intmedia;
+            }
+            else
+                return new List<medialement>();
+
+
+
+
+
+        }
+
+
+
+
+
+
+        public static bool tieneelementos() {
+            var elementlist = obtenermedia(rutacache + "/downloaded.gr3d")
+                .Concat(obtenermedia(rutacache + "/downloaded.gr3d2")).ToList();
+            var counter = 0;
+            foreach (var elem in elementlist) {
+                if (File.Exists(elem.path))
+                    counter++;
+            }
+            if (counter > 0)
+                return true;
+            else
+                return false;
+
+        }
+
+
+
+        public static string gettearid() {
+            if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/uid")) {
+                return File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/uid").Trim();
+            }
+            else {
+                return null;
+                }
+            
+
+        }
         public static void si(object sender, EventArgs e)
         {
+            context.StartActivity(new Intent(context, typeof(actmenuprincipal)));
             recogerbasura();
             context.Finish();
-            context.StartActivity(new Intent(context,typeof(actmenuprincipal)));
+           
 
         }
         public static void no(object sender, EventArgs e)
@@ -69,6 +217,55 @@ namespace App1
         {
           
         }
+
+
+
+        public static void updatejavelyn(string version)
+        {
+            var cliente = new WebClient();
+            var archivo = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/version.gr3v");
+            archivo.Write(version);
+            archivo.Close();
+            cliente.DownloadFile(new System.Uri("https://gr3gorywolf.github.io/Multitubeweb/update.zip"), Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/update.zip");
+
+            ZipArchive ar = new ZipArchive(File.Open(Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/update.zip", FileMode.Open, FileAccess.Read, FileShare.Read));
+            var extpath = Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/";
+
+            foreach (var entry in ar.Entries)
+            {
+
+                if (entry.FullName.EndsWith("/"))
+                {
+                    if (!Directory.Exists(extpath + entry.FullName))
+                        Directory.CreateDirectory(extpath + entry.FullName);
+                }
+                else
+                {
+                    using (var xd = File.Create(extpath + entry.FullName))
+                    {
+                        entry.Open().CopyTo(xd);
+                        xd.Close();
+                    }
+                }
+            }
+            File.Delete(extpath + "update.zip");
+
+
+
+
+
+
+
+
+
+
+        }
+        public static int  gettearcolorprominente(Bitmap bmp)
+        {
+            var p = Palette.From(bmp).Generate();
+            return p.MutedSwatch.Rgb;
+        }
+
         public static void ponerfondoyactualizar(Activity instancia)
         {
 
@@ -87,6 +284,7 @@ namespace App1
             {
                 var prro = new Thread(() =>
                   {
+                    
                       iractualizandofondo("online", instancia);
                   });
                 prro.IsBackground = true;
@@ -101,50 +299,55 @@ namespace App1
             ImageView fondin = instancia.FindViewById<ImageView>(Resource.Id.fondo1);
             if (onlineoofline == "online")
             {
-                while (instancia!=null)
-                {
+             /*   while (instancia!=null)
+                {*/
                     instancia.RunOnUiThread(() =>
                     {
-                        if (mainmenu.gettearinstancia().fondoblurreado != null)
-                        {
-                        
-                          
-                            fondin.SetImageBitmap(mainmenu.gettearinstancia().fondoblurreado);
-                        }
+                      //  if (mainmenu.gettearinstancia().fondoblurreado != null)
+                      //  {
+
+
+                            // fondin.SetBackgroundColor(new Android.Graphics.Color(gettearcolorprominente(mainmenu.gettearinstancia().fondoblurreado)));
+                            fondin.SetBackgroundColor(Android.Graphics.Color.ParseColor("#464b4f"));
+
+                    //    }
                        
 
                     });
-                    if (instancia.IsFinishing)
+                recogerbasura();
+              /*      if (instancia.IsFinishing)
                     {
                         break;
                     }
-                    Thread.Sleep(5000);
+                   // Thread.Sleep(5000);
                     recogerbasura();
 
-                }
+                }*/
                
             }
             else
             {
 
-                while (instancia!=null)
-                {
+            //    while (instancia!=null)
+              //  {
+                    
                     instancia.RunOnUiThread(() =>
                     {
-                        if (mainmenu_Offline.gettearinstancia().fondoblurreado != null)
-                        {
-                          
-                            fondin.SetImageBitmap(mainmenu_Offline.gettearinstancia().fondoblurreado);
-                        }
+                      //  if (mainmenu_Offline.gettearinstancia().fondoblurreado != null)
+                      //  {
+
+                            // fondin.SetBackgroundColor(new Android.Graphics.Color(gettearcolorprominente(mainmenu_Offline.gettearinstancia().fondoblurreado)));
+                            fondin.SetBackgroundColor(Android.Graphics.Color.ParseColor("#464b4f"));
+                     //   }
                        
                     });
-                    Thread.Sleep(5000);
+                //    Thread.Sleep(5000);
                     recogerbasura();
-                    if (instancia.IsFinishing)
+                  /*  if (instancia.IsFinishing)
                     {
                         break;
                     }
-                }
+                }*/
             
             }
         }
@@ -334,7 +537,7 @@ namespace App1
 
 
 
-        public static Bitmap GetImageBitmapFromUrl(string url)
+        public static Bitmap GetImageBitmapFromUrl( string url)
         {
 
             Bitmap imageBitmap = null;
@@ -357,6 +560,10 @@ namespace App1
 
             }
             catch (Exception) { }
+
+
+        
+
             return imageBitmap;
         }
 
@@ -432,16 +639,11 @@ namespace App1
         {
             try
             {
-                var prro = gettearvalor(nombrekey);
-                if (prro.Trim() != "")
-                {
-                    prro = null;
+               string prro = gettearvalor(nombrekey);
+                if (prro != null && prro.Length >= 0)
                     return true;
-                }else
-                {
-                    prro = null;
-                    return true;
-                }
+                else
+                    return false;
               
             }
             catch(Exception)
@@ -517,8 +719,45 @@ namespace App1
             intento.PutExtra("prro", bdl);
             contexto.SendBroadcast(intento);
         }
+        public static void animarfab(Java.Lang.Object imagen)
+        {
 
-        public static tituloydownloadurl gettearvideoid(string elink,bool videoabierto)
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0f, 1f);
+            animacion.SetDuration(510);
+            animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0f, 1f);
+            animacion2.SetDuration(510);
+            animacion2.Start();
+
+        }
+
+        public static void mostrarnotificacion(Activity contexto, string titulo, string mensaje,string link, int codigo) {
+
+            contexto.RunOnUiThread(() =>
+            {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                var nBuilder = new Notification.Builder(contexto);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+
+
+                nBuilder.SetLargeIcon(clasesettings.GetImageBitmapFromUrl("http://i.ytimg.com/vi/" + link.Split('=')[1] + "/mqdefault.jpg"));
+                nBuilder.SetContentTitle(titulo);
+                nBuilder.SetContentText(mensaje);
+                nBuilder.SetColor(Android.Graphics.Color.ParseColor("#ce2c2b"));
+                nBuilder.SetSmallIcon(Resource.Drawable.list);
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                nBuilder.SetSound( Android.Media.RingtoneManager.GetDefaultUri(Android.Media.RingtoneType.Notification));
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                Notification notification = nBuilder.Build();
+                NotificationManager notificationManager =
+                  (NotificationManager)contexto.GetSystemService(Context.NotificationService);
+                notificationManager.Notify(5126768, notification);
+            });
+
+
+        }
+
+        public static tituloydownloadurl gettearvideoid(string elink,bool videoabierto,int calidad)
         {
             string video2 = "";
             string title = "";
@@ -529,7 +768,28 @@ namespace App1
                 title = resultados.First().Title.Replace("- YouTube", "");
                 if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
                 {
-                    video2 = resultados.First(info => info.Resolution == -1 && info.AudioFormat == AudioFormat.Aac).GetUriAsync().Result;
+                    
+                   
+                   var results= resultados.Where(info => info.Resolution == calidad && info.AudioFormat == AudioFormat.Aac);
+
+                    if(results.Count()==0)
+                    while (results.Count() == 0) { 
+                    if (calidad==360 && results.Count()==0) {
+                        results= resultados.Where(info => info.Resolution == 240 && info.AudioFormat == AudioFormat.Aac);
+                    } 
+                    else                    
+                    if (calidad == 720 && results.Count() == 0)
+                    {
+                       results = resultados.Where(info => info.Resolution == 360 && info.AudioFormat == AudioFormat.Aac);
+                    }
+                    if (calidad == 240 && results.Count() == 0) {
+                       results = resultados.Where(info => info.Resolution == -1 && info.AudioFormat == AudioFormat.Aac);
+                    }
+
+                    }
+                    video2 = results.First().GetUriAsync().Result;
+
+
                 }
                 else
                 {

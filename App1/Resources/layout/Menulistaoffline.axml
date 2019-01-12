@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/imageView7"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|right"
+        android:src="@drawable/closecircularbuttonofacross"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="#ce2c2b"
+        android:hapticFeedbackEnabled="true"
+        android:visibility="gone" />
+	<android.support.design.widget.FloatingActionButton
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/imageView6"
+		android:foregroundGravity="right"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true"
+		android:layout_marginRight="15dp"
+		android:layout_marginBottom="15dp"
+		android:src="@drawable/plussm"
+		app:fabSize="normal"
+		android:scaleType="center" 
+	/>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,57 +42,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/linearlayout0">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:id="@+id/linearLayout1"
-            android:alpha="0.7">
-            <ImageView
-                android:src="@drawable/home"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:id="@+id/imageView4" />
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:id="@+id/space1" />
-            <ImageView
-                android:src="@drawable/play"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/imageView5"
-                android:layout_gravity="center" />
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/textView1"
-                android:gravity="center"
-                android:singleLine="true"
-                android:scrollHorizontally="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:id="@+id/linearLayout3"
-            android:minWidth="25px"
-            android:minHeight="25px"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:id="@+id/imageView7"
-                android:layout_marginRight="10dp" />
-            <ImageView
-                android:src="@drawable/plus"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:id="@+id/imageView6" />
-        </LinearLayout>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:id="@+id/linearLayout1"
+			android:alpha="1"
+			android:elevation="8dp"
+			android:background="?attr/colorPrimary">
+			<ImageView
+				android:src="@drawable/home"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:id="@+id/imageView4"
+				android:layout_gravity="center" />
+			<Space
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:id="@+id/space1" />
+			<ImageView
+				android:src="@drawable/play"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				android:id="@+id/imageView5"
+				android:layout_gravity="center" />
+			<TextView
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:id="@+id/textView1"
+				android:gravity="center"
+				android:singleLine="true"
+				android:scrollHorizontally="true"
+				android:ellipsize="marquee"
+				android:marqueeRepeatLimit="marquee_forever" />
+		</LinearLayout>
         <ListView
             android:minWidth="25px"
             android:minHeight="25px"

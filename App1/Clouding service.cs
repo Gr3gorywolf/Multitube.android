@@ -56,15 +56,29 @@ namespace App1
 
                 musicaplayer = Android.Media.MediaPlayer.Create(this, Android.Net.Uri.Parse(downloadurl));
 
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
                 musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
-            musicaplayer.SetWakeMode(this, WakeLockFlags.Partial);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                musicaplayer.SetWakeMode(this, WakeLockFlags.Partial);
             musicaplayer.Start();
-            var focusResult = audioManager.RequestAudioFocus(this, Stream.Music, AudioFocus.Gain);
-            if (focusResult != AudioFocusRequest.Granted)
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                var focusResult = audioManager.RequestAudioFocus(this, Stream.Music, AudioFocus.Gain);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+               musicaplayer.SetVideoScalingMode(VideoScalingMode.ScaleToFitWithCropping);
+               
+                if (focusResult != AudioFocusRequest.Granted)
             {
                 //could not get audio focus
                 Console.WriteLine("Could not get audio focus");
             }
+                if (mainmenu_Offline.gettearinstancia().videoon) {
+                    mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                    {
+                       musicaplayer.SetDisplay(null);
+                       musicaplayer.SetDisplay(mainmenu_Offline.gettearinstancia().holder);
+                    });
+                    
+                }
             musicaplayer.Completion += delegate
             {
                 if ((musicaplayer.Duration > 5 && musicaplayer.CurrentPosition > 5) && clasesettings.gettearvalor("acaboelplayer").Trim() == "")
@@ -73,6 +87,8 @@ namespace App1
                     mainmenu_Offline.gettearinstancia().siguiente();
                 }
             };
+                
+
             mostrarnotificacion();
 
             }
@@ -144,17 +160,60 @@ namespace App1
             contentView.SetOnClickPendingIntent(Resource.Id.imageView6, listapending[3]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView5, listapending[4]);
             contentView.SetOnClickPendingIntent(Resource.Id.imageView1, listapending[5]);
-            listapending.Clear();
-            var   nBuilder = new Notification.Builder(this);
 
-            nBuilder.SetContent(contentView);
+            Notification.Action accion1 = new Notification.Action(Resource.Drawable.playpause, "Playpause", listapending[0]);
+            Notification.Action accion2 = new Notification.Action(Resource.Drawable.skipnext, "Siguiente", listapending[1]);
+            Notification.Action accion3 = new Notification.Action(Resource.Drawable.skipprevious, "Anterior", listapending[2]);
+            Notification.Action accion4 = new Notification.Action(Resource.Drawable.skipforward, "adelantar", listapending[3]);
+            Notification.Action accion5 = new Notification.Action(Resource.Drawable.skipbackward, "atrazar", listapending[4]);
+
+            Notification.MediaStyle estilo = new Notification.MediaStyle();
+            if (mainmenu_Offline.gettearinstancia() != null)
+            {
+                estilo.SetMediaSession(mainmenu_Offline.gettearinstancia().mSession.SessionToken);
+
+                estilo.SetShowActionsInCompactView(1, 2, 3);
+
+            }
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+            var nBuilder = new Notification.Builder(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+            if (Build.VERSION.SdkInt < BuildVersionCodes.Lollipop)
+            {
+                try
+                {
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                    nBuilder.SetContent(contentView);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                }
+                catch (Exception) {
+
+                }
+                
+            }
+            else {
+
+
+                nBuilder.SetStyle(estilo);
+                nBuilder.SetLargeIcon(clasesettings.GetImageBitmapFromUrl("http://i.ytimg.com/vi/"+linkactual.Split('=')[1]+"/mqdefault.jpg"));
+                nBuilder.SetContentTitle(tituloactual);
+                nBuilder.SetContentText(linkactual);
+                nBuilder.AddAction(accion5);
+                nBuilder.AddAction(accion3);
+                nBuilder.AddAction(accion1);
+                nBuilder.AddAction(accion2);
+                nBuilder.AddAction(accion4);
+                nBuilder.SetContentIntent(listapending[5]);
+                nBuilder.SetColor(Android.Graphics.Color.ParseColor("#ce2c2b"));
+            }
             nBuilder.SetOngoing(true);
            
             nBuilder.SetSmallIcon(Resource.Drawable.play);
        
             Notification notification = nBuilder.Build();
             StartForeground(19248736, notification);
-       
+            listapending.Clear();
         }
 
 

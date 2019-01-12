@@ -15,7 +15,7 @@ using Android.Media;
 using Android.Renderscripts;
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.Dialog.NoActionBar")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
     public class actividadadinfooffline : Activity
     {
         MediaPlayer musicaplayer = new MediaPlayer();
@@ -25,53 +25,32 @@ namespace App1
         public bool playerseteado = false;
         public bool estabareproduciendo = false;
         ImageView fondo;
-        TextView link;
+       LinearLayout link;
+        string linkvid = "";
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.layoutinfooffline);
             //////////////////////////////////////mapeo
             var nombre = FindViewById<TextView>(Resource.Id.textView3);
-           link = FindViewById<TextView>(Resource.Id.textView4);
+           link = FindViewById<LinearLayout>(Resource.Id.boton2);
             var foto = FindViewById<ImageView>(Resource.Id.imageView2);
             fondo = FindViewById<ImageView>(Resource.Id.imageView10);
             var cerrar = FindViewById<ImageView>(Resource.Id.imageView1);
             playpause = FindViewById<ImageView>(Resource.Id.imageView3);
             barra= FindViewById<SeekBar>(Resource.Id.seekBar1);
-            var botoncarpeta = FindViewById<ImageView>(Resource.Id.imageView4);
-            var reproducirext = FindViewById<ImageView>(Resource.Id.imageView11);
+            var botoncarpeta = FindViewById<LinearLayout>(Resource.Id.boton1);
+          //  var reproducirext = FindViewById<ImageView>(Resource.Id.imageView11);
 
             ///////////////////////////////////////////////////////
-            this.SetFinishOnTouchOutside(false);
+            this.SetFinishOnTouchOutside(true);
             nombre.Text = Intent.GetStringExtra("nombre");
-            link.Text = Intent.GetStringExtra("link");
+          linkvid = Intent.GetStringExtra("link");
             nombre.Selected = true;
             link.Selected = true;
 
-            if (playeroffline.gettearinstancia() != null)
-            {
 
-
-                reproducirext.Visibility = ViewStates.Gone;
-            }
-
-
-            reproducirext.Click += delegate
-            {
-                if (mainmenu_Offline.gettearinstancia() != null)
-                {
-
-
-                    //  playeroffline.gettearinstancia().Finish();
-                    // mainmenu_Offline.gettearinstancia().Finish();
-                    StartActivity(typeof(playeroffline));
-                    clasesettings.guardarsetting("mediacache", Intent.GetStringExtra("path"));
-                    this.Finish();
-
-
-
-                }
-            };
+            
                 if (Clouding_service.gettearinstancia() != null)
                 {
                     estabareproduciendo = Clouding_service.gettearinstancia().musicaplayer.IsPlaying;
@@ -94,7 +73,7 @@ namespace App1
 
 
                 playpause.SetBackgroundResource(Resource.Drawable.playbutton2);
-                using (var imagen = BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + link.Text.Split('=')[1]))
+                using (var imagen = BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + linkvid.Split('=')[1]))
                 {
                     foto.SetImageBitmap(getRoundedShape(imagen));
                 }
@@ -113,7 +92,14 @@ namespace App1
                          musicaplayer.SeekTo(asda.Progress);
                      }
                  };
+            link.Click += delegate
+            {
+             
+                var uri = Android.Net.Uri.Parse(linkvid);
+                var intent = new Intent(Intent.ActionView, uri);
+                StartActivity(intent);
 
+            };
                 botoncarpeta.Click += delegate
                 {
                     string path = Intent.GetStringExtra("path");
@@ -224,7 +210,7 @@ namespace App1
                     if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
                     {
 
-                        fondo.SetImageBitmap(CreateBlurredImage(20, link.Text));
+                        fondo.SetImageBitmap(CreateBlurredImage(20, linkvid));
                     }
 
 
@@ -283,31 +269,9 @@ namespace App1
             // Load a clean bitmap and work from that.
             Bitmap originalBitmap = BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + link.Split('=')[1]);
 
-            // Create another bitmap that will hold the results of the filter.
-            Bitmap blurredBitmap;
-            blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
+        
 
-            // Create the Renderscript instance that will do the work.
-            RenderScript rs = RenderScript.Create(this);
-
-            // Allocate memory for Renderscript to work with
-            Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
-            Allocation output = Allocation.CreateTyped(rs, input.Type);
-
-            // Load up an instance of the specific script that we want to use.
-            ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
-            script.SetInput(input);
-
-            // Set the blur radius
-            script.SetRadius(radius);
-
-            // Start the ScriptIntrinisicBlur
-            script.ForEach(output);
-
-            // Copy the output to the blurred bitmap
-            output.CopyTo(blurredBitmap);
-
-            return blurredBitmap;
+            return originalBitmap;
         }
 
         public void reproducir(string downloadurl)
@@ -317,7 +281,9 @@ namespace App1
 
             musicaplayer = Android.Media.MediaPlayer.Create(this, Android.Net.Uri.Parse(downloadurl));
 
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
             musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
             musicaplayer.Start();
             ///  musicaplayer.Start();
             ///  

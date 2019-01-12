@@ -19,7 +19,7 @@ using System.Threading;
 
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class actividadsincronizacion : Activity
     {
         string ipadres = "";
@@ -65,10 +65,10 @@ namespace App1
             cliente2 = new TcpClient();
             clientelocal = new TcpClient();
             clientelocal.Client.Connect(Intent.GetStringExtra("ipadre"), 1024);
-            ll.SetBackgroundColor(Android.Graphics.Color.Black);
-            animar2(ll);
+        //    ll.SetBackgroundColor(Android.Graphics.Color.Black);
+           // animar2(ll);
             clasesettings.ponerfondoyactualizar(this);
-            ll.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+        //    ll.SetBackgroundColor(Android.Graphics.Color.ParseColor("#2b2e30"));
             servidor = new TcpListener(IPAddress.Any, 1060);
             botonabrirqr.SetBackgroundResource(Resource.Drawable.synchalf);
           vero = new Thread(new ThreadStart(cojerstreamlocal));
@@ -151,6 +151,9 @@ namespace App1
             Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
             animacion.SetDuration(700);
             animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
 
         }
         public override void Finish()
@@ -201,19 +204,7 @@ namespace App1
                 {  
                   listica = lalistacompletita.Split(';');
                     if (listica[0]== "caratula()><"){
-                        if (mainmenu_Offline.gettearinstancia() != null)
-                        {
-                            RunOnUiThread(() => tvnombrecancion.Text = mainmenu_Offline.gettearinstancia().label.Text);
-                        }
-                        else
-                  if (mainmenu.gettearinstancia() != null)
-                        {
-                            RunOnUiThread(() => tvnombrecancion.Text = mainmenu.gettearinstancia().label.Text);
-                        }
-                        else
-                        {
-
-                        }
+                    
                         lalistacompletita = "";
                     }
                     else
@@ -239,7 +230,45 @@ namespace App1
                     o = 0;
              
                 }
-                Thread.Sleep(10);
+
+
+                if (mainmenu_Offline.gettearinstancia() != null)
+                {
+                    if (mainmenu_Offline.gettearinstancia().buscando == false)
+                    {
+                        if (mainmenu_Offline.gettearinstancia().label.Text.Trim() != ""
+                        && tvnombrecancion.Text != mainmenu_Offline.gettearinstancia().label.Text)
+                            RunOnUiThread(() => tvnombrecancion.Text = mainmenu_Offline.gettearinstancia().label.Text);
+
+
+                    }
+                    else
+                        RunOnUiThread(() => tvnombrecancion.Text = "Buscando...");
+                }
+                else
+              if (mainmenu.gettearinstancia() != null)
+                {
+                    if (mainmenu.gettearinstancia().buscando == false)
+                    {
+                        if (mainmenu.gettearinstancia().label.Text.Trim() != ""
+                       && tvnombrecancion.Text != mainmenu.gettearinstancia().label.Text)
+                            RunOnUiThread(() => tvnombrecancion.Text = mainmenu.gettearinstancia().label.Text);
+
+                    }
+                    else {
+                        RunOnUiThread(() => tvnombrecancion.Text = "Buscando...");
+                    }
+                }
+
+
+                if (tvnombrecancion.Text.Trim() == "" && tvnombrecancion.Text.Trim() != "No hay elementos en cola")
+                {
+
+                    RunOnUiThread(() => { tvnombrecancion.Text = "No hay elementos en cola"; });
+                }
+
+
+                Thread.Sleep(200);
             }
 
 
@@ -298,7 +327,7 @@ namespace App1
                     RunOnUiThread(() => Toast.MakeText(this, e.Message+e.HResult+e.Source, ToastLength.Long).Show());
 
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(200);
             }
 
         }

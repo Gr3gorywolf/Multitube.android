@@ -16,215 +16,213 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Net.NetworkInformation;
+using Newtonsoft.Json;
+using Android.Support.Design.Widget;
+using Android.Support.V7.App;
 
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
-    public class actconectarservidor : Activity
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+    public class actconectarservidor : Android.Support.V7.App.AppCompatActivity
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
     {
-        ISharedPreferences prefs = Application.Context.GetSharedPreferences("Settings", FileCreationMode.Private);
-        ISharedPreferencesEditor prefEditor;
+      
+        public List<string> todasip = new List<string>();
         public List<string> misips = new List<string>();
-        LinearLayout botonscan;
-             LinearLayout botoniralultimo;
+        public modelips mode;
+       FloatingActionButton  botonscan;
+   
         string ultimaipescaneada = "";
         ListView listaelementos;
-        TextView textoservers;
+ 
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+        public ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+        public int scanedips = 0;
+        public int forscan = 0;
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
 
             base.OnCreate(savedInstanceState);
-            SetContentView(  Resource.Layout.conectaralservidor);
-            botoniralultimo = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
-            botonscan = FindViewById<LinearLayout>(Resource.Id.linearLayout2);
+            SetContentView(Resource.Layout.conectaralservidor);
+            
+            botonscan = FindViewById<FloatingActionButton>(Resource.Id.linearLayout2);
             listaelementos = FindViewById<ListView>(Resource.Id.listView1);
-             textoservers = FindViewById<TextView>(Resource.Id.textView3);
-            ImageView fondo = FindViewById<ImageView>(Resource.Id.fondo1);
-            botoniralultimo.Visibility = ViewStates.Gone;
-            listaelementos.Visibility = ViewStates.Gone;
-            textoservers.Visibility = ViewStates.Gone;
-            fondo.SetImageBitmap(CreateBlurredImageoffline(this, 20, 45434));
-            //////////////////////////////////miselaneo
-            prefEditor = prefs.Edit();
-            if (!clasesettings.probarsetting("ips"))
-            {
-                clasesettings.guardarsetting("ips", "");
+            var action = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.my_toolbar);
+        
+            SetSupportActionBar(action);
 
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            //SupportActionBar.SetBackgroundDrawable(new ColorDrawable(Color.ParseColor("#2b2e30")));
+
+            if (Directory.Exists(clasesettings.rutacache))
+                Directory.CreateDirectory(clasesettings.rutacache);
+
+
+
+            clasesettings.animarfab(botonscan);
+
+
+
+            //////////////////////////////////miselaneo
+            ///
+
+
+            if (File.Exists(clasesettings.rutacache + "/ips.json"))
+            {
+
+
+
+
+
+
+
+
+                var ipheader = clasesettings.settearipsp().Split('.')[0];
+
+                mode = JsonConvert.DeserializeObject<modelips>(File.ReadAllText(clasesettings.rutacache + "/ips.json"));
+                if (estaon(mode.ipactual))
+                {
+                    ultimaipescaneada = mode.ipactual;
+                   
+                }
+                todasip = mode.ips.Keys.ToList();
+                misips = mode.ips.Keys.ToList().Where(aax => aax.StartsWith(ipheader)).ToList();
+                forscan = misips.Count;
+                foreach (string prro in misips)
+                {
+                    new Thread(() =>
+                    {
+                        estaon2(prro);
+                    }).Start();
+                }
+
+                var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+                RunOnUiThread(() =>
+                {
+                    var parcelable = listaelementos.OnSaveInstanceState();
+                    listaelementos.Adapter = adaptadol;
+                    listaelementos.OnRestoreInstanceState(parcelable);
+                });
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                dialogoprogreso.SetCanceledOnTouchOutside(false);
+                dialogoprogreso.SetCancelable(false);
+                dialogoprogreso.SetTitle("Cargando lista de servidores...");
+                dialogoprogreso.SetMessage("Por favor espere");
+                dialogoprogreso.Show();
+                new Thread(() => { remover(); }).Start();
 
             }
-            if (clasesettings.probarsetting("ipanterior"))
-            {
+            else {
+
+                mode = new modelips("", new Dictionary<string, string>());
+            }
+         
                 /*  textboxl.Text = prefs.GetString("ipanterior", null);
                   Thread proc = new Thread(new ThreadStart(tryear2));
                   proc.Start();*/
-                if (estaon(clasesettings.gettearvalor("ipanterior")))
-                {
-                    ultimaipescaneada = clasesettings.gettearvalor("ipanterior");
-                    botoniralultimo.Visibility = ViewStates.Visible;
-
-                    if (clasesettings.gettearvalor("ips").Trim().Length > 1)
-                    {
-                        try
-                        {
-                            misips = clasesettings.gettearvalor("ips").Trim().Split('>').ToList();
-                            if (misips[misips.Count - 1].Trim() == "")
-                            {
-                                misips.RemoveAt(misips.Count - 1);
-                            }
-                            foreach (string prro in misips)
-                            {
-                                new Thread(() =>
-                                {
-                                    estaon2(prro);
-                                }).Start();
-                            }
 
 
-
-
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-
-                    }
-
-                    var dialogoprogreso = new ProgressDialog(this);
-                    dialogoprogreso.SetCanceledOnTouchOutside(false);
-                    dialogoprogreso.SetCancelable(false);
-                    dialogoprogreso.SetTitle("Cargando lista de servidores...");
-                    dialogoprogreso.SetMessage("Por favor espere");
-                    dialogoprogreso.Show();
-                    Android.OS.Handler mHandler = new Android.OS.Handler();
-                    mHandler.PostDelayed(new Action(() => { dialogoprogreso.Dismiss(); }), 3000);
-
-
-                }else
-                {
-                    if (clasesettings.gettearvalor("ips").Trim().Length > 1)
-                    {
-                        try
-                        {
-                            misips = clasesettings.gettearvalor("ips").Trim().Split('>').ToList();
-                            if (misips[misips.Count - 1].Trim() == "")
-                            {
-                                misips.RemoveAt(misips.Count - 1);
-                            }
-                            foreach (string prro in misips)
-                            {
-                                new Thread(() =>
-                                {
-                                    estaon2(prro);
-                                }).Start();
-                            }
-
-
-
-
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-
-                    }
-
-                 /*   var dialogoprogreso = new ProgressDialog(this);
-                    dialogoprogreso.SetCanceledOnTouchOutside(false);
-                    dialogoprogreso.SetCancelable(false);
-                    dialogoprogreso.SetTitle("Cargando lista de servidores...");
-                    dialogoprogreso.SetMessage("Por favor espere");
-                    dialogoprogreso.Show();
-                    Android.OS.Handler mHandler = new Android.OS.Handler();
-                    mHandler.PostDelayed(new Action(() => { dialogoprogreso.Dismiss(); }), 3000);*/
-                }
-
-            }
-           
               
+           
             
-            animar4(botoniralultimo);
-            animar4(botonscan);
-            animar4(textoservers);
-            animar4(listaelementos);
-            listaelementos.ItemClick += (aaa, aasd) =>
-            {
-               
-                if (estaon(misips[aasd.Position]))
+           
+                listaelementos.ItemClick += (aaa, aasd) =>
                 {
-                    clasesettings.guardarsetting("ipanterior", misips[aasd.Position]);
+                    if (misips.Count > 0)
+                    {
+                        if (estaon(misips[aasd.Position]))
+                        {
+
+
+                            //SetActionBar(null);
+                            mode.ipactual = misips[aasd.Position];
+                            clasesettings.guardarips(mode);
+
+                            Intent activity2 = new Intent(this, typeof(mainmenu));
+
+                            activity2.PutExtra("MyData", misips[aasd.Position]);
+                            StartActivity(activity2);
+                            this.Finish();
+                       
+                        
+                          
+                           
+                        }
+                    }
+                };
+
+
+
+            /*    botoniralultimo.Click += delegate
+                {
                     Intent activity2 = new Intent(this, typeof(mainmenu));
 
-                    activity2.PutExtra("MyData", misips[aasd.Position]);
-                    RunOnUiThread(() => botoniralultimo.Visibility = ViewStates.Visible);
-                    animar3(botoniralultimo);
+                    activity2.PutExtra("MyData", ultimaipescaneada);
+                   RunOnUiThread(() => botoniralultimo.Visibility = ViewStates.Visible);
+                   RunOnUiThread(() => this.Finish());
+                   RunOnUiThread(() => StartActivity(activity2));
+                 
+                    animar2(botoniralultimo, activity2);
                     animar3(botonscan);
-                    animar2(listaelementos, activity2);
-                    animar2(textoservers, activity2);
-                }
-            };
+                    animar3(listaelementos);
+                    animar3(textoservers);
+                };*/
 
-            
-            string klk = "";
-            botoniralultimo.Click += delegate
-            {
-                Intent activity2 = new Intent(this, typeof(mainmenu));
-
-                activity2.PutExtra("MyData",ultimaipescaneada);
-             /*   RunOnUiThread(() => botoniralultimo.Visibility = ViewStates.Visible);
-                RunOnUiThread(() => this.Finish());
-                RunOnUiThread(() => StartActivity(activity2));
-                */
-                animar2(botoniralultimo,activity2);
-                animar3(botonscan);
-                animar3(listaelementos);
-                animar3(textoservers);
-            };
-            if (!prefs.Contains("rutadedescarga"))
-            {
-                if (Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads"))
-                {
-                    klk = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads";
-                    prefEditor.PutString("rutadescarga", klk);
-                    prefEditor.Commit();
-                }
-                else
-                {
-                    Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads");
-                    klk = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads";
-                    prefEditor.PutString("rutadescarga", klk);
-                    prefEditor.Commit();
-                }
-            }
-
-            botonscan.Click += async (aaaa, aaa) =>
-           {
-               ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
-               var scanner = new ZXing.Mobile.MobileBarcodeScanner();
-
-               var resultado = await scanner.Scan();
-               if (resultado != null)
+                botonscan.Click +=  (aaaa, aaa) =>
                {
 
-                   ultimaipescaneada = resultado.Text.Trim();
-                     //textboxl.Text = resultado.Text.Trim();
-                     Thread proc = new Thread(new ThreadStart(tryear));
-                   proc.Start();
-               }
-           };
-           
 
-            if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist"))
+                   new Android.App.AlertDialog.Builder(this)
+                   .SetTitle("Agregar nuevo dispositivo")
+                   .SetMessage("Para agregar un se debe escanear un codigo el cual puede ser encontrado en el menu de conectar a clientes>boton de agregado (si es un host android) o abrir gestor de clientes(si el host es windows,mac,linux) luego presione escanear")
+                   .SetPositiveButton("Escanear", (aa, cdsf)  => 
+                   {
+
+                       escaneareir();
+
+
+                   })
+                   .SetNegativeButton("Cancelar", (asd, ffe) => { }).Create().Show();
+
+
+                  
+               };
+
+
+                if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist"))
+                {
+                    Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist");
+                }
+
+                //////////////////////////////////////
+
+
+                // Create your application here
+         
+        }
+
+        public async void escaneareir() {
+
+            ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
+            var scanner = new ZXing.Mobile.MobileBarcodeScanner();
+
+            var resultado =await scanner.Scan();
+            if (resultado != null)
             {
-                Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist");
+
+                ultimaipescaneada = resultado.Text.Trim();
+                //textboxl.Text = resultado.Text.Trim();
+                Thread proc = new Thread(new ThreadStart(tryear));
+                proc.Start();
             }
 
-                 //////////////////////////////////////
-
-
-            // Create your application here
         }
+
         public override void OnBackPressed()
         {
             StartActivity(typeof(actmenuprincipal));
@@ -233,7 +231,7 @@ namespace App1
         }
         public override void Finish()
         {
-         
+
             base.Finish();
         }
         public void animar3(Java.Lang.Object imagen)
@@ -275,7 +273,7 @@ namespace App1
             try
             {
                 using (TcpClient cliente = new TcpClient())
-            {
+                {
 
 
 
@@ -285,20 +283,21 @@ namespace App1
                     result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
                     if (cliente.Client.Connected)
                     {
-                        cliente.Client.Disconnect(true);
+                        cliente.Client.Shutdown(SocketShutdown.Both);
+                        cliente.Client.Close();
                         return true;
-                       
+
                     }
                     else
                     {
                         return false;
                     }
-                  
-                  
-                
+
+
+
 
                 }
-               
+
             }
 
             catch (Exception)
@@ -317,47 +316,27 @@ namespace App1
 
                     //  cliente.Client.ConnectAsync(ipadre, 1024);
                     //   cliente.Client.Connect(ipadre, 1024);
-                  
-                 var result=   cliente.Client.BeginConnect(ipadre, 1024, null, null);
-                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(3));
+
+                    var result = cliente.Client.BeginConnect(ipadre, 1024, null, null);
+                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                    
                     if (cliente.Client.Connected)
                     {
-                        cliente.Client.Disconnect(true);
-                        RunOnUiThread(() =>
-                        {
-                            if (ipadre.Trim() == ultimaipescaneada.Trim())
-                            {
-                                misips.Remove(ipadre);
-                            }
+                       
+                        cliente.Client.Shutdown(SocketShutdown.Both);
+                        cliente.Client.Close();
+                     
 
-                            var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string>(misips));
-                            listaelementos.Adapter = adaptadol;
-                            if (misips.Count >= 1)
-                            {
+                    
 
-                                listaelementos.Visibility = ViewStates.Visible;
-                                textoservers.Visibility = ViewStates.Visible;
-                            }
-                        });
-                      
                     }
                     else
                     {
-                        RunOnUiThread(() =>
-                        {
-                            misips.Remove(ipadre);
-                        var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string>(misips));
-                        listaelementos.Adapter = adaptadol;
-                        if (misips.Count >= 1)
-                        {
-
-                            listaelementos.Visibility = ViewStates.Visible;
-                            textoservers.Visibility = ViewStates.Visible;
-                        }
-                        });
-                    }
-                  
+                        misips.Remove(ipadre);
                    
+                    }
+
+                    scanedips++;
 
                 }
 
@@ -365,17 +344,76 @@ namespace App1
 
             catch (Exception)
             {
-               
+                scanedips++;
             }
         }
 
+
+        public void remover() {
+
+            while (scanedips != forscan) { }
+            RunOnUiThread(() => dialogoprogreso.Dismiss());
+
+            List<string> presentacion = new List<string>();
+            List<string> dummylist = new List<string>();
+            foreach (var ax in misips) {
+
+                try
+                {
+                    if (mode.ips[ax] == "")
+                    {
+                        presentacion.Add(ax);
+
+                    }
+                    else
+                    {
+                        presentacion.Add(mode.ips[ax]);
+                    }
+                    dummylist.Add("=dummyxcfdfd");
+                }
+                catch (Exception) { };
+               
+            }
+
+            RunOnUiThread(() =>
+            {
+
+                var adal = new adapterlistaremoto(this, presentacion, dummylist, null, Resource.Drawable.accesspoint);
+              
+
+                RunOnUiThread(() => {
+                    var parcelable = listaelementos.OnSaveInstanceState();
+                    listaelementos.Adapter = adal;
+                    listaelementos.OnRestoreInstanceState(parcelable);
+                });
+                if (misips.Count == 0)
+                {
+                    var adaptadolss = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay dispositivos disponibles para conectar.." });
+                    RunOnUiThread(() => {
+                        var parcelable = listaelementos.OnSaveInstanceState();
+
+                        listaelementos.Adapter = adaptadolss;
+                        listaelementos.OnRestoreInstanceState(parcelable);
+                    });
+                }
+                if (misips.Count >= 1)
+                {
+                    RunOnUiThread(() =>
+                    {
+                        listaelementos.Visibility = ViewStates.Visible;
+                       
+                    });
+                }
+            });
+
+        }
 
 
         public void tryear()
         {
             try
             {
-               
+
                 using (TcpClient cliente = new TcpClient()) {
                     string pasasion;
                     /*   cliente.Client.Connect(ultimaipescaneada, 1024);
@@ -383,29 +421,37 @@ namespace App1
                     if (estaon(ultimaipescaneada))
                     {
 
-                 
-                pasasion = ultimaipescaneada;
 
-                Intent activity2 = new Intent(this, typeof(mainmenu));
+                        pasasion = ultimaipescaneada;
 
-                activity2.PutExtra("MyData", pasasion);
-                RunOnUiThread(() => botoniralultimo.Visibility = ViewStates.Visible);
-                    /*     RunOnUiThread(() => this.Finish());
-                      RunOnUiThread(() => StartActivity(activity2));*/
-                    RunOnUiThread(() =>
-                    {
-                        animar3(botoniralultimo);
-                        animar2(botonscan, activity2);
-                        animar3(listaelementos);
-                        animar3(textoservers);
-                    });
+                        
+                        /*     RunOnUiThread(() => this.Finish());
+                          RunOnUiThread(() => StartActivity(activity2));*/
+                     
 
+                        
+                        mode.ipactual = ultimaipescaneada;
+                       if(!todasip.Contains(ultimaipescaneada))
+                          todasip.Add(ultimaipescaneada);
+
+                        if (!mode.ips.ContainsKey(ultimaipescaneada))
+                            mode.ips.Add(ultimaipescaneada, "");
 
 
+                        clasesettings.guardarips(mode);
+                        Intent activity2 = new Intent(this, typeof(mainmenu));
 
-                    prefEditor.PutString("ipanterior", ultimaipescaneada);
-                prefEditor.Commit();
-                    }else
+                        activity2.PutExtra("MyData", pasasion);
+                    
+                        RunOnUiThread(() =>
+                        {
+
+                            StartActivity(activity2);
+                           
+                        });
+
+                    }
+                    else
                     {
                         ultimaipescaneada = "";
                         //   RunOnUiThread(() => botonscan.Visibility = ViewStates.Gone);
@@ -416,6 +462,8 @@ namespace App1
             }
             catch (SocketException)
             {
+
+
                 ultimaipescaneada = "";
                 //   RunOnUiThread(() => botonscan.Visibility = ViewStates.Gone);
                 RunOnUiThread(() => Toast.MakeText(this, "Error de conexion", ToastLength.Short).Show());
@@ -465,5 +513,23 @@ namespace App1
                 return originalBitmap;
             }
         }
+
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    StartActivity(typeof(actmenuprincipal));
+                    this.Finish();
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
     }
+
+  
+
+ 
+
 }

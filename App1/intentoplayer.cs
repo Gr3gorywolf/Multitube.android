@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -12,7 +11,7 @@ using Android.Widget;
 
 namespace App1
 {
-    [Activity(Label = "intentoplayer", Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
+    [Activity(Label = "intentoplayer", Theme = "@style/Theme.DesignDemo")]
     public class intentoplayer : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)

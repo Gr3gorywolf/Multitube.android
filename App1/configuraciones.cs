@@ -19,18 +19,27 @@ using System.Threading;
 //using Cheesebaron.MvxPlugins.Settings.Droid;
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@android:style/Theme.Holo.NoActionBar.Fullscreen")]
-    public class configuraciones : Activity
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
+
+    public class configuraciones : Android.Support.V7.App.AppCompatActivity
+
     {
-        ImageView botonseleccionarcarpeta;
+        Button botonseleccionarcarpeta;
         TextView localizacion;
-        ImageView botonguardar;
+        public Spinner calidades;
+        // ImageView botonguardar;
+        int calidad = -1;
         string color = "";
         public bool pathvalido = true;
         string klk;
         public string ordenalfabeto ="si";
         public string abrirserver = "no";
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+        
+
+
         public bool CheckInternetConnection()
         {
             string CheckUrl = "https://gr3gorywolf.github.io/Multitubeweb/";
@@ -39,7 +48,7 @@ namespace App1
             {
                 HttpWebRequest iNetRequest = (HttpWebRequest)WebRequest.Create(CheckUrl);
 
-                iNetRequest.Timeout = 2500;
+                iNetRequest.Timeout = 35000;
 
                 WebResponse iNetResponse = iNetRequest.GetResponse();
 
@@ -65,61 +74,58 @@ namespace App1
 
             ISharedPreferences prefs = Application.Context.GetSharedPreferences("Settings", FileCreationMode.Private);
             ISharedPreferencesEditor prefEditor = prefs.Edit();
-            botonseleccionarcarpeta = FindViewById<ImageView>(Resource.Id.imageView1);
+            botonseleccionarcarpeta = FindViewById<Button>(Resource.Id.imageView1);
             localizacion = FindViewById<TextView>(Resource.Id.textView3);
-            botonguardar = FindViewById<ImageView>(Resource.Id.imageView2);
+         //   botonguardar = FindViewById<ImageView>(Resource.Id.imageView2);
             var colormuestra = FindViewById<ImageView>(Resource.Id.imageView3);
             colormuestra.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
             color = clasesettings.gettearvalor("color");
+          
             var ll1 = FindViewById<LinearLayout>(Resource.Id.linearLayout3);
             var ll2 = FindViewById<LinearLayout>(Resource.Id.linearLayout4);
             var ll3 = FindViewById<LinearLayout>(Resource.Id.linearLayout5);
             var ll4 = FindViewById<LinearLayout>(Resource.Id.linearLayout7);
             var ll5 = FindViewById<LinearLayout>(Resource.Id.linearLayout23);
             var fondo = FindViewById<ImageView>(Resource.Id.fondo1);
-            var toggle1 = FindViewById<ToggleButton>(Resource.Id.toggleButton1);
-            var toggle2 = FindViewById<ToggleButton>(Resource.Id.toggleButton2);
+            var toggle1 = FindViewById<Android.Support.V7.Widget.SwitchCompat>(Resource.Id.toggleButton1);
+            var toggle2 = FindViewById<Android.Support.V7.Widget.SwitchCompat>(Resource.Id.toggleButton2);
             var botonclearcache = FindViewById<LinearLayout>(Resource.Id.linearLayout8);
+            calidades = FindViewById<Spinner>(Resource.Id.spinner1);
+            var action = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.my_toolbar);
             //////////////////////////////////////coloreselector mappings
-            var color1 = FindViewById<ImageView>(Resource.Id.imageView4);
-            var color2 = FindViewById<ImageView>(Resource.Id.imageView5);
-            var color3= FindViewById<ImageView>(Resource.Id.imageView6);
-            var color4 = FindViewById<ImageView>(Resource.Id.imageView7);
-            var color5 = FindViewById<ImageView>(Resource.Id.imageView8);
-            var color6 = FindViewById<ImageView>(Resource.Id.imageView9);
-            var color7 = FindViewById<ImageView>(Resource.Id.imageView10);
-            var color8 = FindViewById<ImageView>(Resource.Id.imageView11);
-            var color9 = FindViewById<ImageView>(Resource.Id.imageView12);
-            var color10 = FindViewById<ImageView>(Resource.Id.imageView13);
-            var color11 = FindViewById<ImageView>(Resource.Id.imageView14);
-            var color12 = FindViewById<ImageView>(Resource.Id.imageView15);
-            var color13 = FindViewById<ImageView>(Resource.Id.imageView16);
-            var color14 = FindViewById<ImageView>(Resource.Id.imageView17);
-            var color15 = FindViewById<ImageView>(Resource.Id.imageView18);
-            var color16 = FindViewById<ImageView>(Resource.Id.imageView19);
-            color1.Click += delegate { color = "#F44336"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color2.Click += delegate { color = "#E91E63"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color3.Click += delegate { color = "#9C27B0"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color4.Click += delegate { color = "#673AB7"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color5.Click += delegate { color = "#3F51B5"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color6.Click += delegate { color = "#2196F3"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color7.Click += delegate { color = "#03A9F4"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color8.Click += delegate { color = "#00BCD4"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color9.Click += delegate { color = "#009688"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color10.Click += delegate { color = "#FFC107"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color11.Click += delegate { color = "#8BC34A"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color12.Click += delegate { color = "#FF9800"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color13.Click += delegate { color = "#795548"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color14.Click += delegate { color = "#FFEB3B"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color15.Click += delegate { color = "#FF9800"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
-            color16.Click += delegate { color = "#000000"; colormuestra.SetBackgroundColor(Color.ParseColor(color)); };
+        
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
             dialogoprogreso = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
             ///////////////////////////////////////////////////////////
 
+            ////////////////////////////////////////////////////////////////
+            ///
 
+
+            SetSupportActionBar(action);
+            SupportActionBar.Title = "Preferencias";
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+
+            var adapter =new  ArrayAdapter(this, Android.Resource.Layout.SimpleSpinnerItem);
+            adapter.AddAll(new string[] { "Audio", "360p", "720p" }.ToList());
+            adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            calidades.Adapter = adapter;
 
             color = clasesettings.gettearvalor("color");
-
+            calidad =int.Parse( clasesettings.gettearvalor("video"));
+            switch (calidad) {
+                case -1:
+                    calidades.SetSelection(0);
+                    break;
+                case 360:
+                    calidades.SetSelection(1);
+                    break;
+                case 720:
+                    calidades.SetSelection(2);
+                    break;
+            }
+           
             if (clasesettings.probarsetting("abrirserver")) {
                 abrirserver = clasesettings.gettearvalor("abrirserver");
                
@@ -170,16 +176,25 @@ namespace App1
             }
 
             localizacion.Text = klk;
-            animar4(ll1);
-            animar4(ll2);
-            animar4(ll3);
-            animar4(ll4);
-            animar4(ll5);
-            animar4(botonclearcache);
+         
             fondo.SetImageBitmap(CreateBlurredImageoffline(this, 20, 0));
             ////////////////////////////////clicks////////////////////////////
 
+            calidades.ItemSelected += (axx, ssd) => {
+                switch (ssd.Position) {
+                    case 0:
+                        calidad = -1;
+                        break;
+                    case 1:
+                        calidad = 360;
+                        break;
+                    case 2:
+                        calidad = 720;
+                        break;
 
+                }
+             
+            };
             toggle2.Click += delegate
             {
                 if (toggle2.Checked)
@@ -187,7 +202,7 @@ namespace App1
 
                     new Thread(() =>
                     {
-                        if ((File.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/downloaded.gr3d") || File.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/downloaded.gr3d2")))
+                        if (clasesettings.tieneelementos())
                         {
 
 
@@ -196,26 +211,71 @@ namespace App1
                             if (File.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/version.gr3v"))
                             {
                                 abrirserver = "si";
-                                if (serviciostreaming.gettearinstancia() == null)
-                                {
+                              
                                     StartService(new Intent(this, typeof(serviciostreaming)));
-                                }
+                              
                             }
                             else
 
                             {
+
+
+                                AlertDialog dialogo = null;
+                                RunOnUiThread(() => {
+
+                                    var progresox = new ProgressBar(this);
+                                    progresox.Indeterminate = true;
+
+                                    dialogo = new AlertDialog.Builder(this)
+                                    .SetTitle("Buscando actualizaciones")
+                                    .SetMessage("Por favor espere...")
+                                    .SetCancelable(false)
+                                    .SetView(progresox)
+                                    .Show();
+
+                                });
                                 if (CheckInternetConnection())
                                 {
                                     abrirserver = "si";
-                                    if (serviciostreaming.gettearinstancia() == null)
+                                    AlertDialog alerta = null;
+                                  RunOnUiThread(() =>
                                     {
-                                        StartService(new Intent(this, typeof(serviciostreaming)));
-                                    }
+                                        dialogo.Dismiss();
+                                        var progreso = new ProgressBar(this);
+                                        progreso.Indeterminate = true;
+
+                                        alerta = new AlertDialog.Builder(this)
+                                        .SetTitle("Descargando archivos necesarios")
+                                        .SetMessage("Por favor espere...")
+                                        .SetCancelable(false)
+                                        .SetView(progreso)
+                                        .Show();
+                                    });
+                                    new Thread(() =>
+                                    {
+
+                                        WebClient cliente = new WebClient();
+                                        var version = cliente.DownloadString("https://gr3gorywolf.github.io/Multitubeweb/version.gr3v");
+                                        using (var file = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/version.gr3v")) { 
+                                            file.Write(version);
+                                        file.Close();
+                                        }
+                                        clasesettings.updatejavelyn(version);
+                                        RunOnUiThread(() =>
+                                        {
+                                            alerta.Dismiss();
+                                            StartService(new Intent(this, typeof(serviciostreaming)));
+                                        });
+                                      
+                                    }).Start();
+                           
+                                  
                                 }
                                 else
                                 {
                                     RunOnUiThread(() =>
                                     {
+                                        dialogo.Dismiss();
                                         Toast.MakeText(this, "Debe tener una conexion a internet para abrir el servicio por primera vez", ToastLength.Long).Show();
                                         toggle2.Checked = false;
                                     });
@@ -260,7 +320,7 @@ namespace App1
                 AlertDialog.Builder ad = new AlertDialog.Builder(this);
                 ad.SetCancelable(false);
                 ad.SetTitle("Advertencia");
-                ad.SetIcon(Resource.Drawable.warningsignonatriangularbackground);
+                ad.SetIcon(Resource.Drawable.alert);
                 ad.SetMessage("Limpiar el cache puede provocar cierta realentizacion a la hora de entrar al reproductor offline y tambien volvera a descargar los datos por lo cual necesitara internet ¿¿quiere borrar cache??");
                 ad.SetNegativeButton("No", no);
                 ad.SetPositiveButton("Si",si);
@@ -273,12 +333,12 @@ namespace App1
                 if (toggle1.Checked == true)
                 {
                     ordenalfabeto = "si";
-                    Toast.MakeText(this, "Los elementos se organizaran alfabeticamente",ToastLength.Long);
+                    Toast.MakeText(this, "Los elementos se organizaran alfabeticamente",ToastLength.Long).Show();
                 }
                 else
                 {
                     ordenalfabeto = "no";
-                    Toast.MakeText(this, "Los elementos se por fecha de descarga", ToastLength.Long);
+                    Toast.MakeText(this, "Los elementos se por fecha de descarga", ToastLength.Long).Show();
                 }
             };
             botonseleccionarcarpeta.Click += async delegate
@@ -301,40 +361,14 @@ namespace App1
 
 
            };
-            botonguardar.Click += delegate
-            {
-                if (klk.Length > 0 && pathvalido == true)
-                {
-
-                   
-                
-                    clasesettings.guardarsetting("rutadescarga", klk);
-                   
-                  
-                }
-                clasesettings.guardarsetting("abrirserver", abrirserver);
-                clasesettings.guardarsetting("ordenalfabeto", ordenalfabeto);
-                clasesettings.guardarsetting("color", color);
-                Toast.MakeText(this, "Guardado exitosamente", ToastLength.Long).Show();
-                clasesettings.preguntarsimenuosalir(this);
-            };
+       
         }
 
         public override void OnBackPressed()
         {
-            if (klk.Length > 0 && pathvalido == true)
-            {
-
-               
-                clasesettings.guardarsetting("rutadescarga", klk);
-
-
-            }
-            clasesettings.guardarsetting("abrirserver", abrirserver);
-            clasesettings.guardarsetting("ordenalfabeto", ordenalfabeto);
-            clasesettings.guardarsetting("color", color);
-            Toast.MakeText(this, "Guardado exitosamente", ToastLength.Long).Show();
+         
             clasesettings.preguntarsimenuosalir(this);
+   
            // clasesettings.preguntarsimenuosalir(this);
             // base.OnBackPressed();
         }
@@ -386,8 +420,28 @@ namespace App1
         {
           
         }
-       
-       
+
+        protected override void OnDestroy()
+        {
+            if (klk.Length > 0 && pathvalido == true)
+            {
+
+
+
+                clasesettings.guardarsetting("rutadescarga", klk);
+
+
+            }
+            clasesettings.guardarsetting("abrirserver", abrirserver);
+            clasesettings.guardarsetting("ordenalfabeto", ordenalfabeto);
+            clasesettings.guardarsetting("color", color);
+            clasesettings.guardarsetting("video", calidad.ToString());
+          //  Toast.MakeText(this, "Guardado exitosamente", ToastLength.Long).Show();
+            clasesettings.preguntarsimenuosalir(this);
+    
+
+            base.OnDestroy();
+        }
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
          
@@ -438,7 +492,17 @@ namespace App1
             }
         }
 
-
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    StartActivity(typeof(actmenuprincipal));
+                    this.Finish();
+                    return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
 
     }
 }
