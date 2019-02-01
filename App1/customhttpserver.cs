@@ -148,8 +148,14 @@ namespace App1
         /// </summary>
         public void Stop()
         {
-            _serverThread.Abort();
-            _listener.Stop();
+            try
+            {
+                _serverThread.Abort();
+                _listener.Stop();
+            }
+            catch (Exception) {
+
+            }
         }
 
         private void Listen()
@@ -163,8 +169,8 @@ namespace App1
 
 
 
-            refreshregistry();
 
+           
             _listener = new HttpListener();
             _listener.Prefixes.Add("http://"+ipadress+":" + _port.ToString() + "/");
             _listener.UnsafeConnectionNtlmAuthentication = false;
@@ -217,8 +223,10 @@ namespace App1
                     if (context.Request.Url.ToString().Contains("meconecte"))
                     {
 
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.Close();
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-                        Notification.Builder nBuilder = new Notification.Builder(conteto);
+                    Notification.Builder nBuilder = new Notification.Builder(conteto);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
                         nBuilder.SetContentTitle("Nuevo dispositivo conectado");
                         nBuilder.SetContentText("Un nuevo dispositivo está stremeando su media");
@@ -247,6 +255,7 @@ namespace App1
 
 
                 }
+            //////////////cuando son archivos
                 else
                 {
 
@@ -277,7 +286,9 @@ namespace App1
                         if (!filename.Contains(".mp3") && !filename.Contains(".mp4"))
                         {
                             filename = Path.Combine(_rootDirectory, filename);
-                        }
+
+
+                    }
 
 
 
@@ -436,7 +447,8 @@ namespace App1
                     else
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    }
+                         context.Response.Close();
+                }
 
                 }
           
@@ -522,6 +534,7 @@ namespace App1
         {
             this._rootDirectory = path;
             this._port = port;
+            refreshregistry();
             _serverThread = new Thread(this.Listen);
             _serverThread.IsBackground = true;
             _serverThread.Start();

@@ -301,18 +301,7 @@ namespace App1
 
             var resultado = await scanner.Scan();
             if (resultado != null)
-            {
-
-                
-
-                    
-
-                      
-
-
-
-         
-
+            {             
 
                 Random rondom = new Random();
                 char[] array = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
@@ -326,17 +315,24 @@ namespace App1
                      +
                     rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString();
 
-              //  Toast.MakeText(this, "Por favor espere mientras se vinculan los dispositivos", ToastLength.Long).Show();
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDozWqE4WZwrY_VVutTTnIlzbG-NkEni_I"));
+                //  Toast.MakeText(this, "Por favor espere mientras se vinculan los dispositivos", ToastLength.Long).Show();
+                try
+                {
+                    var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDozWqE4WZwrY_VVutTTnIlzbG-NkEni_I"));
 
-                var auth = await authProvider.SignInWithEmailAndPasswordAsync("gregoryalexandercabral@gmail.com", "gregory123456");
-                var token = auth.FirebaseToken;
-                var firebase = new FirebaseClient("https://dadass-d7a51.firebaseio.com");
-                var mapita = new Dictionary<string, string>();
-                mapita.Add(clasesettings.gettearid(), serial);
+                    var auth = await authProvider.SignInWithEmailAndPasswordAsync("gregoryalexandercabral@gmail.com", "gregory123456");
+                    var token = auth.FirebaseToken;
+                    var firebase = new FirebaseClient("https://dadass-d7a51.firebaseio.com");
+                    var mapita = new Dictionary<string, string>();
+                    mapita.Add(clasesettings.gettearid(), serial);
 
-                await firebase.Child("WEB").Child(resultado.Text).WithAuth(token).PatchAsync<Dictionary<string, string>>(mapita);
+                    await firebase.Child("WEB").Child(resultado.Text).WithAuth(token).PatchAsync<Dictionary<string, string>>(mapita);
+                  
 
+                }
+                catch (Exception xd) {
+                    Console.WriteLine(xd.Message);
+                }
 
 
             }

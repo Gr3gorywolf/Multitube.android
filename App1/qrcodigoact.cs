@@ -36,8 +36,16 @@ namespace App1
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Qrdialog);
 
-           ipadre= Intent.GetStringExtra("ipadre");
-          
+            ipadre = "";
+            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+            foreach (IPAddress ip in localIPs)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && ip.ToString()!="localhost")
+                {
+                    ipadre = ip.ToString();
+
+                }
+            }
             imagenview = new ImageView(this);
             FloatingActionButton btn = FindViewById<FloatingActionButton>(Resource.Id.floatingActionButton1);
 

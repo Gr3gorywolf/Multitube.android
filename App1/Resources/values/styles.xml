@@ -5,8 +5,11 @@
   
   </style>
   <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.NoActionBar">
-    <item name="colorPrimary">#303335</item>
-    <item name="colorPrimaryDark">#242628</item>
+    <!--color de barras de estado etc-->
+    <item name="colorPrimary">#434e56</item> 
+    <!--Color de fondos-->
+    <item name="colorPrimaryDark">#323538</item>
+    <!--Color de botones-->
     <item name="colorAccent">#d41c17</item>
     <item name="android:textColor">#FFFFFF</item>
 </style>
@@ -19,6 +22,16 @@
     
      
  </style>
+
+  <style name="Theme.UserDialogTraslucent" parent="Base.Theme.DesignDemodialog">
+    <item name="android:windowFrame">@null</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowNoTitle">true</item>
+
+
+  </style>
+
 <style name="Base.Theme.DesignDemodialog" parent="Theme.AppCompat.NoActionBar">
     <item name="colorPrimary">#434e56</item>
     <item name="colorPrimaryDark">#323538</item>

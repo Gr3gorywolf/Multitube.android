@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Speech;
 using Android.Support.Design.Widget;
 using Android.Support.V4.Widget;
+using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using Newtonsoft.Json;
@@ -29,10 +30,12 @@ namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
 
-#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro estï¿½n obsoletos
     public class mainmenu_Offline : Android.Support.V7.App.AppCompatActivity, AudioManager.IOnAudioFocusChangeListener, ISurfaceHolderCallback
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro estï¿½n obsoletos
     {
+
+        public bool connected = true;
         public int videoquality = -1;
         public bool videoon = false;
         public MediaSession mSession;
@@ -66,16 +69,20 @@ namespace App1
         public ImageView play;
         public TcpListener oidor;
         public TcpListener oidorlistas;
+        Thread threadstream;
+        Thread threadlistas;
+        public Android.Support.V7.Widget.RecyclerView listasugerencias;
         public bool fromotherinstance = false;
         //   public IEnumerable<VideoInfo> videoinfoss;
         public Android.Media.MediaPlayer musicaplayer;
         public List<string> lapara = new List<string>();
         public List<string> laparalinks = new List<string>();
         public List<string> listacaratulas = new List<string>();
+        public LinearLayout Layoutsugerencias;
         public List<TcpClient> clienteses = new List<TcpClient>();
-#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro estï¿½n obsoletos
         ProgressDialog dialogoprogreso;
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro estï¿½n obsoletos
         public SeekBar volumen;
         public string termino = "";
         bool bloquearporcentaje = false;
@@ -100,14 +107,25 @@ namespace App1
         Thread threadmediasession;
         public SurfaceView video;
         public ISurfaceHolder holder;
-        LinearLayout layoutbuttons;
+        Android.Support.V7.Widget.CardView layoutbuttons;
         public ProgressBar barracarga;
         List<playlist> listalocal = new List<playlist>();
         public Dictionary<int, int> diccalidad;
         string JSONlistalocal = "";
         int noticode = new Random().Next(23, 999999);
+        public historial objetohistorial;
+        public Dictionary<string, playlistelements> listafavoritos = new Dictionary<string, playlistelements>();
         public Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout panel;
-
+        Android.Support.V7.Widget.CardView solapa;
+        ImageView blacksquare;
+        int sizevideoportrait;
+        int sizevideonormal;
+        bool videoenholder = false;
+        ImageView botonlike;
+        PowerManager.WakeLock wake;
+        public bool headeradded = false;
+        public List<elementosugerencia> sugerenciasdeelemento = new List<elementosugerencia>();
+        public List<YoutubeSearch.VideoInformation> sugerencias = new List<YoutubeSearch.VideoInformation>();
         public static mainmenu_Offline gettearinstancia()
         {
             return instance;
@@ -118,8 +136,12 @@ namespace App1
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.perfectmainoffline5);
+            PowerManager manejador = (PowerManager)GetSystemService(PowerService);
+             wake = manejador.NewWakeLock(WakeLockFlags.Partial, "MyApp::MyWakelockTag");
+            wake.Acquire();
+           
             instance = this;
-
+     
             bool restaurada = false;
             if (savedInstanceState != null)
             {
@@ -129,16 +151,8 @@ namespace App1
             clasesettings.guardarsetting("onlineactivo", "si");
             /////////////////////////////////declaraciones//////////////////////////
             musicaplayer = new Android.Media.MediaPlayer();
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress ip in localIPs)
-            {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    ipadre = ip.ToString();
-
-                }
-            }
-
+            ipadre = clasesettings.gettearip();
+           
             if (!restaurada)
             {
                 oidor = new TcpListener(IPAddress.Parse(ipadre), 1024);
@@ -148,7 +162,7 @@ namespace App1
 
             }
 
-
+       
 
 
 
@@ -165,7 +179,7 @@ namespace App1
             menuham = FindViewById<ScrollView>(Resource.Id.linearLayout9);
             ImageView botonabrirmenu = FindViewById<ImageView>(Resource.Id.imageView22);
             TextView estadomenu = FindViewById<TextView>(Resource.Id.textView9);
-
+            Layoutsugerencias = FindViewById<LinearLayout>(Resource.Id.layoutsugerencias);
             botonaccion = FindViewById<ImageView>(Resource.Id.btnaccion);
             LinearLayout layoutvolumen = FindViewById<LinearLayout>(Resource.Id.linearLayout3);
             ImageView listareprod = FindViewById<ImageView>(Resource.Id.imageView16);
@@ -182,11 +196,13 @@ namespace App1
             ImageView agregar = FindViewById<ImageView>(Resource.Id.imageView11);
             ImageView escuchar = FindViewById<ImageView>(Resource.Id.imageView15);
             ImageView vervideo = FindViewById<ImageView>(Resource.Id.imageView6);
+            blacksquare= FindViewById<ImageView>(Resource.Id.blacksquare);
             lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout7);
             ImageView buscar = FindViewById<ImageView>(Resource.Id.imageView12);
             textbox = FindViewById<EditText>(Resource.Id.editText1);
             ImageView abrirbrowser = FindViewById<ImageView>(Resource.Id.imageView14);
             var botonvideo = FindViewById<ImageView>(Resource.Id.imageView19);
+            botonlike = FindViewById<ImageView>(Resource.Id.imglike);
             //   lineall = FindViewById<RelativeLayout>(Resource.Id.linearLayout0);
             label = FindViewById<TextView>(Resource.Id.textView1);
             caratula2 = FindViewById<ImageView>(Resource.Id.imageView13);
@@ -195,7 +211,7 @@ namespace App1
             botonsincronizar = FindViewById<ImageView>(Resource.Id.imageView18);
             porcientoreproduccion = FindViewById<SeekBar>(Resource.Id.seekBar1);
             var ll10 = FindViewById<LinearLayout>(Resource.Id.linearLayout10);
-            layoutbuttons = FindViewById<LinearLayout>(Resource.Id.linearlayout40);
+            layoutbuttons = FindViewById<Android.Support.V7.Widget.CardView>(Resource.Id.linearLayout6);
             var ll11 = FindViewById<LinearLayout>(Resource.Id.linearLayout11);
             var ll12 = FindViewById<LinearLayout>(Resource.Id.linearLayout12);
             var ll13 = FindViewById<LinearLayout>(Resource.Id.linearLayout13);
@@ -211,6 +227,8 @@ namespace App1
             var searchview = FindViewById<Android.Support.V7.Widget.SearchView>(Resource.Id.searchView);
             var botoncalidad = FindViewById<ImageView>(Resource.Id.imgcalidad);
             botoncalidad.SetBackgroundResource(Resource.Drawable.mp3);
+            listasugerencias = FindViewById<Android.Support.V7.Widget.RecyclerView>(Resource.Id.listasugerencias);
+            video.SetBackgroundColor(Color.Transparent);
             diccalidad = new Dictionary<int, int>() {
             { -1,Resource.Drawable.mp3},
             { 360,Resource.Drawable.mq},
@@ -218,10 +236,17 @@ namespace App1
         };
             ////////////////////////////////////////////////////////////////////////
             ///
+
+           
+            Layoutsugerencias.Visibility = ViewStates.Gone;
+       
+            LinearLayoutManager enlinea = new LinearLayoutManager(this, LinearLayoutManager.Horizontal, false);
+            listasugerencias.SetLayoutManager(enlinea);
+
             panel = FindViewById<Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout>(Resource.Id.sliding_layout);
             panel.IsUsingDragViewTouchEvents = true;
             panel.DragView = FindViewById<RelativeLayout>(Resource.Id.scrollable);
-            var solapa = FindViewById<LinearLayout>(Resource.Id.solapita);
+     solapa = FindViewById<Android.Support.V7.Widget.CardView>(Resource.Id.solapita);
             solapa.Click += delegate
             {
 
@@ -232,7 +257,9 @@ namespace App1
             };
             lineall2.SetBackgroundColor(Android.Graphics.Color.Black);
             //  lineall.SetBackgroundColor(Color.DarkGray);
+         
             holder = video.Holder;
+          
             videoquality = int.Parse(clasesettings.gettearvalor("video"));
             botoncalidad.SetBackgroundResource(diccalidad[videoquality]);
             lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
@@ -246,10 +273,10 @@ namespace App1
                 vervideo.Visibility = ViewStates.Visible;
             else
             {
-                video.Visibility = ViewStates.Gone;
+               
                 vervideo.Visibility = ViewStates.Gone;
             }
-
+            video.Visibility = ViewStates.Invisible;
             vervideo.SetBackgroundResource(Resource.Drawable.video);
             animar2(lineall2);
             clasesettings.guardarsetting("elementosactuales", "");
@@ -261,17 +288,18 @@ namespace App1
             botonabrirmenu.SetBackgroundResource(Resource.Drawable.menu);
             codigoqr.SetImageBitmap(GetQRCode());
             SetSupportActionBar(toolbar);
-
+           
 
 
             //Enable support action bar to display hamburger
 
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.hambur);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.Title = "";
+          
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.hambur);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.Title = "";
+            SupportActionBar.Title = "Reproductor";
+           
             // SupportActionBar.SetBackgroundDrawable(new ColorDrawable(Color.ParseColor("#2b2e30")));
             /////////////////////////////////////////////////
             var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
@@ -286,19 +314,23 @@ namespace App1
 
 
 
-                new Thread(() =>
-                {
-                    cojerlistas();
-                }).Start();
+               
                 new Thread(() =>
                 {
                     llenarplaylist();
                 }).Start();
+                threadlistas = new Thread(() =>
+                  {
+                      cojerlistas();
+                  });
+               threadlistas.Start();
+                threadstream = new Thread(new ThreadStart(cojerstream));
+                threadstream.Start();
 
-                Thread procccc = new Thread(new ThreadStart(cojerstream));
-                procccc.Start();
-                Thread proccccc = new Thread(new ThreadStart(receptor));
-                proccccc.Start();
+                new Thread(() =>
+                {
+                    ipchangerlistener();
+                }).Start();
                 new Thread(() =>
                 {
 
@@ -307,6 +339,12 @@ namespace App1
 
 
 
+                }).Start();
+            
+                new Thread(() =>
+                {
+
+                    loadsuggestionslistener();
                 }).Start();
 
             }
@@ -344,27 +382,65 @@ namespace App1
             WallpaperManager wm = WallpaperManager.GetInstance(this);
             Drawable d = wm.Drawable;
             fondoblurreado = clasesettings.CreateBlurredImageformbitmap(this, 20, ((BitmapDrawable)d).Bitmap);
+            sizevideoportrait = video.LayoutParameters.Height / 2;
+            sizevideonormal = video.LayoutParameters.Height;
 
 
 
 
 
 
+            if (File.Exists(clasesettings.rutacache + "/history.json"))
+            {
 
+                objetohistorial = JsonConvert.DeserializeObject<historial>(File.ReadAllText(clasesettings.rutacache + "/history.json"));
 
+            }
+            else {
+
+               objetohistorial  = new historial();
+                objetohistorial.videos = new List<playlistelements>();
+                objetohistorial.links = new Dictionary<string, int>();
+            }
+
+            if (File.Exists(clasesettings.rutacache + "/favourites.json"))
+            {
+                listafavoritos = JsonConvert.DeserializeObject<Dictionary<string, playlistelements>>(File.ReadAllText(clasesettings.rutacache + "/favourites.json"));
+            }
+          
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             fondo.SetBackgroundColor(Color.ParseColor("#2d3033"));
 
             clasesettings.recogerbasura();
             StartActivity(new Intent(this, typeof(actividadinicio)));
+            OverridePendingTransition(0, 0);
             ///////////////////////////////#clicks#/////////////////////////////////
 
 
 
+            botonlike.Click += delegate
+            {
+                animar(botonlike);
+                if (linkactual.Trim() != "") {
+                    var link = linkactual.Replace("https", "http");
+                    var elemento = new playlistelements() {
+                        link=link,
+                        nombre=nombreactual
+                    };
+                  listafavoritos=  clasesettings.agregarfavoritos(this, listafavoritos, elemento);
 
+                    if (!listafavoritos.ContainsKey(link))
+                        botonlike.SetBackgroundResource(Resource.Drawable.heartoutline);
+                    else 
+                        botonlike.SetBackgroundResource(Resource.Drawable.heartcomplete);
+                  
+                    }
+
+            };
             botoncalidad.Click += delegate
             {
+                animar(botoncalidad);
                 var spinner = new Spinner(this);
                 spinner.SetPadding(60, 30, 60, 30);
 
@@ -408,19 +484,17 @@ namespace App1
                         {
                             vervideo.Visibility = ViewStates.Gone;
 
-
+                            videoon = false;
+                            animar(vervideo);
                             layoutbuttons.Alpha = 1f;
-                            SupportActionBar.Show();
-                            fondo.Visibility = ViewStates.Visible;
+                            solapa.Alpha = 1f;
                             vervideo.SetBackgroundResource(Resource.Drawable.video);
-                            video.Visibility = ViewStates.Gone;
-                            lista.Visibility = ViewStates.Visible;
-                            if (Clouding_service.gettearinstancia().musicaplayer != null)
-                                Clouding_service.gettearinstancia().musicaplayer.SetDisplay(null);
+                            video.Visibility = ViewStates.Invisible;
+                            FindViewById<ImageView>(Resource.Id.bgimg).Visibility = ViewStates.Visible;
+                            blacksquare.Visibility = ViewStates.Visible;
+                           // Clouding_service.gettearinstancia().musicaplayer.SetDisplay(null);
                             video.KeepScreenOn = false;
                             Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
-
-
                         }
                         else
                         {
@@ -438,6 +512,13 @@ namespace App1
             };
             panel.PanelExpanded += delegate
             {
+                if (videoon) { 
+                    layoutbuttons.Alpha = 0.7f;
+                solapa.Alpha = 0.7f;
+                    botoncalidad.Alpha = 1f;
+                    botonlike.Alpha = 1f;
+                    clasesettings.modoinmersivo(this.Window, false);
+                }
                 if (volumenactual == 0)
                     botonaccion.SetBackgroundResource(Resource.Drawable.volumelow);
                 else
@@ -451,6 +532,11 @@ namespace App1
             };
             panel.PanelCollapsed += delegate
             {
+
+                if(videoon)
+                    clasesettings.modoinmersivo(this.Window, true);
+                layoutbuttons.Alpha = 1f;
+                solapa.Alpha = 1f;
                 if (Clouding_service.gettearinstancia() != null)
                 {
                     if (Clouding_service.gettearinstancia().musicaplayer.IsPlaying)
@@ -484,29 +570,52 @@ namespace App1
 
             video.Click += delegate
             {
-                if (FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility == ViewStates.Visible)
-                    FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility = ViewStates.Gone;
-                else
-                    FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility = ViewStates.Visible;
+                /* if (FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility == ViewStates.Visible)
+                     FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility = ViewStates.Gone;
+                 else
+                     FindViewById<RelativeLayout>(Resource.Id.scrollable).Visibility = ViewStates.Visible;*/
+
+                if (layoutbuttons.Alpha > 0f)
+                {
+                    botonlike.Alpha =0f;
+                    solapa.Alpha = 0f;
+                    botoncalidad.Alpha = 0f;
+                    layoutbuttons.Alpha = 0f;
+                }
+                else {
+                    botonlike.Alpha = 1f;
+                    solapa.Alpha = 0.7f;
+                    botoncalidad.Alpha = 1f;
+                    layoutbuttons.Alpha = 0.7f;
+                }
+
             };
             vervideo.Click += delegate
             {
-                if (Clouding_service.gettearinstancia().musicaplayer.IsPlaying)
-                {
-                    if (!videoon)
+
+
+                animar(vervideo);
+                if (!videoon)
                     {
                         videoon = true;
-                        animar(vervideo);
-                        SupportActionBar.Hide();
-                        layoutbuttons.Alpha = 0.5f;
-                        fondo.Visibility = ViewStates.Gone;
+                      
+                        solapa.Alpha = 0.7f;
+                        layoutbuttons.Alpha = 0.7f;
                         video.Visibility = ViewStates.Visible;
-                        lista.Visibility = ViewStates.Gone;
-                        vervideo.SetBackgroundResource(Resource.Drawable.list);
+                        FindViewById<ImageView>(Resource.Id.bgimg).Visibility = ViewStates.Gone;
+                        blacksquare.Visibility = ViewStates.Gone;
+                        vervideo.SetBackgroundResource(Resource.Drawable.videooff);
                         video.KeepScreenOn = true;
-                        Clouding_service.gettearinstancia().musicaplayer.SetDisplay(holder);
+                        if (!videoenholder) {
+                            // Clouding_service.gettearinstancia().musicaplayer.SetDisplay(holder);
+                          
+                            videoenholder = true;
+                        }
+                        
+                       
                         Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-
+                       setVideoSize();
+                        clasesettings.modoinmersivo(this.Window, false);
                     }
                     else
                     {
@@ -515,21 +624,24 @@ namespace App1
                         videoon = false;
                         animar(vervideo);
                         layoutbuttons.Alpha = 1f;
-                        SupportActionBar.Show();
-                        fondo.Visibility = ViewStates.Visible;
+                        solapa.Alpha = 1f;
                         vervideo.SetBackgroundResource(Resource.Drawable.video);
-                        video.Visibility = ViewStates.Gone;
-                        lista.Visibility = ViewStates.Visible;
-                        Clouding_service.gettearinstancia().musicaplayer.SetDisplay(null);
+                        video.Visibility = ViewStates.Invisible;
+                        FindViewById<ImageView>(Resource.Id.bgimg).Visibility = ViewStates.Visible;
+                        blacksquare.Visibility = ViewStates.Visible;
+                      //  Clouding_service.gettearinstancia().musicaplayer.SetDisplay(null);
                         video.KeepScreenOn = false;
                         Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                        clasesettings.modoinmersivo(this.Window, true);
                     }
-                    panel.CollapsePane();
-                }
-                else
-                {
-                    Toast.MakeText(this, "Reproduzca un video primero", ToastLength.Long).Show();
-                }
+                    
+              
+            };
+            FindViewById<RelativeLayout>(Resource.Id.scrollable).Click += delegate
+            {
+                if (videoon)
+                    video.PerformClick();
+
             };
             itemsm.NavigationItemSelected += (sender, e) =>
             {
@@ -628,9 +740,9 @@ namespace App1
 
                     animar(codigoqr);
                     Intent intetno = new Intent(this, typeof(qrcodigoact));
-                    intetno.PutExtra("ipadre", ipadre);
+                  
                     StartActivity(intetno);
-
+                 
                     botonabrirmenu.SetBackgroundResource(Resource.Drawable.menu);
                     estadomenu.Text = "";
                 }
@@ -657,7 +769,7 @@ namespace App1
                     Intent intento = new Intent(this, typeof(actvideo));
                     intento.PutExtra("link", linkactual);
                     intento.PutExtra("posactual", indiceactual.ToString());
-                    clasesettings.guardarsetting("listaactual", string.Join("¤", listacaratulas) + "¹" + string.Join("¤", laparalinks));
+                    clasesettings.guardarsetting("listaactual", string.Join("ï¿½", listacaratulas) + "ï¿½" + string.Join("ï¿½", laparalinks));
                     clasesettings.guardarsetting("progresovideoactual", Clouding_service.gettearinstancia().musicaplayer.CurrentPosition.ToString());
                     StartActivity(intento);
 
@@ -683,10 +795,19 @@ namespace App1
                 else
                 if (e.MenuItem.TitleFormatted.ToString().Trim() == "Inicio")
                 {
-                    Intent intento = new Intent(this, typeof(actividadinicio));
-                   
-                    StartActivity(intento);
+                    if (actividadinicio.gettearinstancia() == null)
+                    {
+                        Intent intento = new Intent(this, typeof(actividadinicio));
 
+                        StartActivity(intento);
+                    }
+                    else {
+
+                        actividadinicio.gettearinstancia().Finish();
+                        Intent intento = new Intent(this, typeof(actividadinicio));
+
+                        StartActivity(intento);
+                    }
 
 
                 }
@@ -753,7 +874,7 @@ namespace App1
                     animar6(menuham);
                     menuham.Visibility = ViewStates.Visible;
                     botonabrirmenu.SetBackgroundResource(Resource.Drawable.leftarrow);
-                    estadomenu.Text = "Cerrar menú";
+                    estadomenu.Text = "Cerrar menï¿½";
                     layoutvolumen.Visibility = ViewStates.Invisible;
                 }
                 else
@@ -853,14 +974,20 @@ namespace App1
 
                 if (lapara.Count > 0)
                 {
+
+                    var posicion = 0;
+                    if (headeradded)
+                        posicion = easter.Position - 1;
+                    else
+                        posicion = easter.Position;
                     Intent intentoo = new Intent(this, typeof(deletedialogact));
 
-                    intentoo.PutExtra("index", easter.Position.ToString());
+                    intentoo.PutExtra("index", posicion.ToString());
                     intentoo.PutExtra("color", "DarkGray");
-                    intentoo.PutExtra("titulo", lapara[easter.Position]);
+                    intentoo.PutExtra("titulo", lapara[posicion]);
                     intentoo.PutExtra("ipadress", ipadre);
-                    intentoo.PutExtra("url", laparalinks[easter.Position]);
-                    intentoo.PutExtra("imagen", @"https://i.ytimg.com/vi/" + laparalinks[easter.Position].Split('=')[1] + "/hqdefault.jpg");
+                    intentoo.PutExtra("url", laparalinks[posicion]);
+                    intentoo.PutExtra("imagen", @"https://i.ytimg.com/vi/" + laparalinks[posicion].Split('=')[1] + "/mqdefault.jpg");
                     StartActivity(intentoo);
                 }
 
@@ -870,17 +997,6 @@ namespace App1
 
 
 
-                /*
-                automated = true;
-                termino = laparalinks[easter.Position];
-                listacaratulas[locanterior] = lapara[locanterior];
-                locanterior = easter.Position;                
-                listacaratulas[locanterior] = ">" + lapara[locanterior] + "<";
-                adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, listacaratulas);
-                RunOnUiThread(() => lista.Adapter = adaptadol);
-                Thread ter = new Thread(new ThreadStart(buscarvid));
-                ter.Start();
-             //   automated = false;*/
 
             };
             lista.ItemSelected += (sender, easter) =>
@@ -978,22 +1094,10 @@ namespace App1
 
             };
 
-            buscar.Click += (sender, easter) =>
-            {
-                animar(buscar);
-                automated = false;
-                if (textbox.Text.Trim().Length > 0 && buscando != true)
-                {
-                    termino = textbox.Text;
-                    textbox.Text = "";
-                    Thread proc = new Thread(new ThreadStart(buscarvid));
-                    proc.Start();
-                }
 
 
 
-
-            };
+ 
 
 
 
@@ -1072,80 +1176,92 @@ namespace App1
                            DownloadUrlResolver.DecryptDownloadUrl(elvid);
                        }*/
                     var asdd = clasesettings.gettearvideoid(url, envideo, videoquality);
-                    if (automated == false)
-                    {
 
-                        if (!encontroparecido(url, laparalinks))
+                    if (asdd != null)
+                    {
+                        if (automated == false)
                         {
-                            lapara.Add(asdd.titulo);
-                            laparalinks.Add(url);
-                            if (listacaratulas.Count > 0)
+
+                            if (!encontroparecido(url, laparalinks))
                             {
-                                listacaratulas[locanterior] = lapara[locanterior];
+                                lapara.Add(asdd.titulo);
+                                laparalinks.Add(url);
+                                if (listacaratulas.Count > 0)
+                                {
+                                    listacaratulas[locanterior] = lapara[locanterior];
+                                }
+                                listacaratulas.Add(">" + asdd.titulo + "<");
+                                locanterior = lapara.Count - 1;
+                                indiceactual = locanterior;
+                                clasesettings.mostrarnotificacion(this, asdd.titulo, " Agregado a la cola!", url, noticode);
                             }
-                            listacaratulas.Add(">" + asdd.titulo + "<");
-                            locanterior = lapara.Count - 1;
-                            indiceactual = locanterior;
-                            clasesettings.mostrarnotificacion(this, asdd.titulo, " Agregado a la cola!", url, noticode);
+                            else
+                            {
+                                buscando = false;
+                                RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                            }
+
+                        }
+                        adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+
+                        RunOnUiThread(() =>
+                        {
+                            var parcelable = lista.OnSaveInstanceState();
+                            lista.Adapter = adaptadol;
+                            lista.OnRestoreInstanceState(parcelable);
+                        });
+
+                        RunOnUiThread(() => label.Text = asdd.titulo);
+
+
+                        string imagensilla = "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg";
+                        imgurl = imagensilla;
+                        Bitmap blur = null;
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
+                        {
+                            //  blur = CreateBlurredImage(20, GetImageBitmapFromUrl(imagensilla));
+                        }
+
+                        Thread.Sleep(20);
+                        var sinblur = GetImageBitmapFromUrl(imagensilla);
+                        RunOnUiThread(() => caratula2.SetImageBitmap(sinblur));
+
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
+                        {
+                            //  RunOnUiThread(() => fondo.SetImageBitmap(blur));
+                            RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#2d3033")));
+                            fondoblurreado = blur;
+                        }
+
+                        actualizartodo();
+                        buscando = false;
+
+                        //////////////////////////////////////////mimicv2
+                        if (!envideo)
+                        {
+                            reproducir(asdd.downloadurl);
                         }
                         else
+                        ////////////////////////////mimicv2
                         {
-                            buscando = false;
-                            RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                            Clouding_service.gettearinstancia().linkactual = linkactual;
+                            Clouding_service.gettearinstancia().tituloactual = label.Text;
+                            actvideo.gettearinstacia().indiceactual = indiceactual;
+                            actvideo.gettearinstacia().linkactual = linkactual;
+                            contienevideo = false;
+                            actvideo.gettearinstacia().buscaryreproducir(true);
+                            Clouding_service.gettearinstancia().mostrarnotificacion();
+                            actualizarcaratula();
+
                         }
-
-                    }
-                    adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-
-                    RunOnUiThread(() =>
-                    {
-                        var parcelable = lista.OnSaveInstanceState();
-                        lista.Adapter = adaptadol;
-                        lista.OnRestoreInstanceState(parcelable);
-                    });
-
-                    RunOnUiThread(() => label.Text = asdd.titulo);
-
-
-                    string imagensilla = "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg";
-                    imgurl = imagensilla;
-                    Bitmap blur = null;
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
-                    {
-                        //  blur = CreateBlurredImage(20, GetImageBitmapFromUrl(imagensilla));
-                    }
-
-                    Thread.Sleep(20);
-                    var sinblur = GetImageBitmapFromUrl(imagensilla);
-                    RunOnUiThread(() => caratula2.SetImageBitmap(sinblur));
-
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
-                    {
-                        //  RunOnUiThread(() => fondo.SetImageBitmap(blur));
-                        RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#2d3033")));
-                        fondoblurreado = blur;
-                    }
-
-                    actualizartodo();
-                    buscando = false;
-
-                    //////////////////////////////////////////mimicv2
-                    if (!envideo)
-                    {
-                        reproducir(asdd.downloadurl);
                     }
                     else
-                    ////////////////////////////mimicv2
                     {
-                        Clouding_service.gettearinstancia().linkactual = linkactual;
-                        Clouding_service.gettearinstancia().tituloactual = label.Text;
-                        actvideo.gettearinstacia().indiceactual = indiceactual;
-                        actvideo.gettearinstacia().linkactual = linkactual;
-                        contienevideo = false;
-                        actvideo.gettearinstacia().buscaryreproducir(true);
-                        Clouding_service.gettearinstancia().mostrarnotificacion();
-                        actualizarcaratula();
-
+                        RunOnUiThread(() =>
+                        {
+                           
+                            Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
+                        });
                     }
                 }
             }
@@ -1189,50 +1305,56 @@ namespace App1
         }
         public void agregarvid()
         {
-            string urll = getearurl(termino);
-            if (urll.Length > 0)
+            if (connected)
             {
-                if (!encontroparecido(urll, laparalinks))
+                string urll = getearurl(termino);
+                if (urll.Length > 0)
                 {
-                    GR3_UiF.Geteartitulo titulo = new GR3_UiF.Geteartitulo();
-
-
-                    if (lapara.Count == 0)
+                    if (!encontroparecido(urll, laparalinks))
                     {
-                        automated = false;
-                        termino = urll;
-                        buscarvid();
+                        GR3_UiF.Geteartitulo titulo = new GR3_UiF.Geteartitulo();
+
+
+                        if (lapara.Count == 0)
+                        {
+
+                            buscarvidth(urll, false);
+
+                        }
+                        else
+                        {
+
+                            laparalinks.Add(urll);
+                            lapara.Add(titulo.GetVideoTitle(titulo.LoadJson(urll)));
+                            listacaratulas.Add(lapara[lapara.Count - 1]);
+
+                            adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adaptadol;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+                            RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
+                            clasesettings.mostrarnotificacion(this, titulo.GetVideoTitle(titulo.LoadJson(urll)), " Agregado a la cola!", urll, noticode);
+                            actualizarlista();
+
+                        }
+
 
                     }
                     else
                     {
 
-                        laparalinks.Add(urll);
-                        lapara.Add(titulo.GetVideoTitle(titulo.LoadJson(urll)));
-                        listacaratulas.Add(lapara[lapara.Count - 1]);
-
-                        adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                        RunOnUiThread(() =>
-                        {
-                            var parcelable = lista.OnSaveInstanceState();
-                            lista.Adapter = adaptadol;
-                            lista.OnRestoreInstanceState(parcelable);
-                        });
-                        RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
-                        clasesettings.mostrarnotificacion(this, titulo.GetVideoTitle(titulo.LoadJson(urll)), " Agregado a la cola!", urll, noticode);
-                        actualizarlista();
-
+                        RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
                     }
 
 
                 }
-                else
-                {
+            }
+            else {
 
-                    RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
-                }
-
-
+                RunOnUiThread(() => Toast.MakeText(this, "No hay conexion a internet", ToastLength.Long).Show());
             }
         }
 
@@ -1241,116 +1363,104 @@ namespace App1
 
 
             string url = "";
-            if (buscando == false)
+            if (connected)
             {
-
-                // Searchercocinado cocina = new Searchercocinado();
-                // cocina.devolverurl(textbox.Text);
-
-                url = getearurl(terminoi);
-
-                if (url != "%%nulo%%")
+                if (buscando == false)
                 {
 
+                    // Searchercocinado cocina = new Searchercocinado();
+                    // cocina.devolverurl(textbox.Text);
 
+                    url = getearurl(terminoi);
 
-                    RunOnUiThread(() => Toast.MakeText(this, "Cargando...", ToastLength.Long).Show());
-                    buscando = true;
-                    actualizarcaratula();
-                    zelda = url;
-                    linkactual = url;
-                    /*
-                          videoinfoss = DownloadUrlResolver.GetDownloadUrls(url, false);
-
-
-                          VideoInfo elvid = videoinfoss.First(video => video.Resolution == 360 && video.VideoType == VideoType.Mp4);
-                          if (elvid.RequiresDecryption)
-                          {
-                              DownloadUrlResolver.DecryptDownloadUrl(elvid);
-                          }
-                      downloadurrrl = elvid.DownloadUrl;*/
-                    var asdd = clasesettings.gettearvideoid(url, envideo, videoquality);
-                    if (automatedi == false)
+                    if (url != "%%nulo%%")
                     {
-                        if (!encontroparecido(url, laparalinks))
+
+
+
+                        RunOnUiThread(() => Toast.MakeText(this, "Cargando...", ToastLength.Long).Show());
+                        buscando = true;
+                        actualizarcaratula();
+                        zelda = url;
+                        linkactual = url;
+
+                        GR3_UiF.Geteartitulo getter = new GR3_UiF.Geteartitulo();
+                        var Titulo = getter.GetVideoTitle(getter.LoadJson(url));
+
+                        if (automatedi == false)
                         {
-                            lapara.Add(asdd.titulo);
-                            laparalinks.Add(url);
-                            if (listacaratulas.Count > 0)
+                            if (!encontroparecido(url, laparalinks))
                             {
-                                listacaratulas[locanterior] = lapara[locanterior];
+                                lapara.Add(Titulo);
+                                laparalinks.Add(url);
+                                if (listacaratulas.Count > 0)
+                                {
+                                    listacaratulas[locanterior] = lapara[locanterior];
+                                }
+                                listacaratulas.Add(">" + Titulo + "<");
+                                locanterior = lapara.Count - 1;
+                                indiceactual = locanterior;
+                                adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                                clasesettings.mostrarnotificacion(this, Titulo, " Agregado a la cola!", url, noticode);
+                                RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
+
                             }
-                            listacaratulas.Add(">" + asdd.titulo + "<");
-                            locanterior = lapara.Count - 1;
-                            indiceactual = locanterior;
-                            adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                            clasesettings.mostrarnotificacion(this, asdd.titulo, " Agregado a la cola!", url, noticode);
-                            RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
-
+                            else
+                            {
+                                //  buscando = false;
+                                RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                            }
                         }
-                        else
+
+
+
+                        adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                        RunOnUiThread(() =>
                         {
-                            buscando = false;
-                            //  RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                            var parcelable = lista.OnSaveInstanceState();
+                            lista.Adapter = adaptadol;
+                            lista.OnRestoreInstanceState(parcelable);
+
+                        });
+                        RunOnUiThread(() => label.Text = Titulo);
+
+
+                        string imagensilla = "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg";
+                        imgurl = imagensilla;
+                        Bitmap blur = null;
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
+                        {
+                            blur = CreateBlurredImage(20, GetImageBitmapFromUrl(imagensilla));
                         }
-                    }
 
+                        Thread.Sleep(20);
+                        var sinblur = GetImageBitmapFromUrl(imagensilla);
+                        RunOnUiThread(() => caratula2.SetImageBitmap(sinblur));
 
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
+                        {
+                            //  RunOnUiThread(() => fondo.SetImageBitmap(blur));
+                            RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#2d3033")));
+                            fondoblurreado = blur;
+                        }
 
-                    adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                    RunOnUiThread(() =>
-                    {
-                        var parcelable = lista.OnSaveInstanceState();
-                        lista.Adapter = adaptadol;
-                        lista.OnRestoreInstanceState(parcelable);
+                        actualizartodo();
+                        var downloadurl = clasesettings.gettearvideoid(url, envideo, videoquality).downloadurl;
+                        buscando = false;
+                        reproducir(downloadurl);
 
-                    });
-                    RunOnUiThread(() => label.Text = asdd.titulo);
+                        /// actualizartodo();
 
-
-                    string imagensilla = "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg";
-                    imgurl = imagensilla;
-                    Bitmap blur = null;
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
-                    {
-                        blur = CreateBlurredImage(20, GetImageBitmapFromUrl(imagensilla));
-                    }
-
-                    Thread.Sleep(20);
-                    var sinblur = GetImageBitmapFromUrl(imagensilla);
-                    RunOnUiThread(() => caratula2.SetImageBitmap(sinblur));
-
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
-                    {
-                        //  RunOnUiThread(() => fondo.SetImageBitmap(blur));
-                        RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#2d3033")));
-                        fondoblurreado = blur;
-                    }
-                    buscando = false;
-
-                    actualizartodo();
-                    if (!envideo)
-                    {
-                        reproducir(asdd.downloadurl);
                     }
                     else
-                    ////////////////////////////mimicv2
                     {
-                        Clouding_service.gettearinstancia().linkactual = linkactual;
-                        Clouding_service.gettearinstancia().tituloactual = label.Text;
-                        actvideo.gettearinstacia().indiceactual = indiceactual;
-                        actvideo.gettearinstacia().linkactual = linkactual;
-                        contienevideo = false;
-                        actvideo.gettearinstacia().buscaryreproducir(true);
-                        Clouding_service.gettearinstancia().mostrarnotificacion();
-                        actualizarcaratula();
+
+                        buscando = false;
                     }
                 }
-                else
-                {
-
-                    buscando = false;
-                }
+            }
+            else {
+                RunOnUiThread(() => Toast.MakeText(this, "No hay conexion a internet", ToastLength.Long).Show());
             }
         }
 
@@ -1387,114 +1497,109 @@ namespace App1
         {
 
 
-
-            if (buscando == false)
+            if (connected)
             {
-
-                // Searchercocinado cocina = new Searchercocinado();
-                // cocina.devolverurl(textbox.Text);
-
-
-
-                if (url != "%%nulo%%")
+                if (buscando == false)
                 {
 
+                    // Searchercocinado cocina = new Searchercocinado();
+                    // cocina.devolverurl(textbox.Text);
 
 
-                    RunOnUiThread(() => Toast.MakeText(this, "Cargando...", ToastLength.Long).Show());
-                    buscando = true;
-                    actualizarcaratula();
-                    zelda = url;
-                    linkactual = url;
-                    /*
-                          videoinfoss = DownloadUrlResolver.GetDownloadUrls(url, false);
 
-
-                          VideoInfo elvid = videoinfoss.First(video => video.Resolution == 360 && video.VideoType == VideoType.Mp4);
-                          if (elvid.RequiresDecryption)
-                          {
-                              DownloadUrlResolver.DecryptDownloadUrl(elvid);
-                          }
-                      downloadurrrl = elvid.DownloadUrl;*/
-                    var asdd = clasesettings.gettearvideoid(url, envideo, videoquality);
-                    if (automatedi == false)
+                    if (url != "%%nulo%%")
                     {
-                        if (!encontroparecido(url, laparalinks))
+
+
+
+                        RunOnUiThread(() => Toast.MakeText(this, "Cargando...", ToastLength.Long).Show());
+                        buscando = true;
+                        actualizarcaratula();
+                        zelda = url;
+                        linkactual = url;
+                        GR3_UiF.Geteartitulo getter = new GR3_UiF.Geteartitulo();
+                        var asdd = getter.GetVideoTitle(getter.LoadJson(url));
+
+
+
+
+                        if (automatedi == false)
                         {
-                            lapara.Add(asdd.titulo);
-                            laparalinks.Add(url);
-                            if (listacaratulas.Count > 0)
+                            if (!encontroparecido(url, laparalinks))
                             {
-                                listacaratulas[locanterior] = lapara[locanterior];
+                                lapara.Add(asdd);
+                                laparalinks.Add(url);
+                                if (listacaratulas.Count > 0)
+                                {
+                                    listacaratulas[locanterior] = lapara[locanterior];
+                                }
+                                listacaratulas.Add(">" + asdd + "<");
+                                locanterior = lapara.Count - 1;
+                                indiceactual = locanterior;
+                                adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                                /*    clasesettings.mostrarnotificacion(this, asdd.titulo, " Agregado a la cola!", url, noticode);*/
                             }
-                            listacaratulas.Add(">" + asdd.titulo + "<");
-                            locanterior = lapara.Count - 1;
-                            indiceactual = locanterior;
-                            adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                            clasesettings.mostrarnotificacion(this, asdd.titulo, " Agregado a la cola!", url, noticode);
+                            else
+                            {
+                                // buscando = false;
+                                RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                            }
                         }
-                        else
+
+
+
+                        adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                        RunOnUiThread(() =>
                         {
-                            buscando = false;
-                            RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                            var parcelable = lista.OnSaveInstanceState();
+                            lista.Adapter = adaptadol;
+                            lista.OnRestoreInstanceState(parcelable);
+
+                        });
+                        RunOnUiThread(() => label.Text = asdd);
+
+
+                        string imagensilla = "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg";
+                        imgurl = imagensilla;
+                        Bitmap blur = null;
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
+                        {
+                            blur = CreateBlurredImage(20, GetImageBitmapFromUrl(imagensilla));
                         }
-                    }
+
+                        Thread.Sleep(20);
+                        var sinblur = GetImageBitmapFromUrl(imagensilla);
+                        RunOnUiThread(() => caratula2.SetImageBitmap(sinblur));
+
+                        if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
+                        {
+                            //RunOnUiThread(() => fondo.SetImageBitmap(blur));
+
+                            RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#2d3033")));
+                            fondoblurreado = blur;
+                        }
 
 
 
-                    adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                    RunOnUiThread(() =>
-                    {
-                        var parcelable = lista.OnSaveInstanceState();
-                        lista.Adapter = adaptadol;
-                        lista.OnRestoreInstanceState(parcelable);
+                        actualizartodo();
+                        var video = clasesettings.gettearvideoid(url, envideo, videoquality);
+                        buscando = false;
+                        reproducir(video.downloadurl);
 
-                    });
-                    RunOnUiThread(() => label.Text = asdd.titulo);
+                        //actualizartodo();
 
 
-                    string imagensilla = "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg";
-                    imgurl = imagensilla;
-                    Bitmap blur = null;
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
-                    {
-                        blur = CreateBlurredImage(20, GetImageBitmapFromUrl(imagensilla));
-                    }
 
-                    Thread.Sleep(20);
-                    var sinblur = GetImageBitmapFromUrl(imagensilla);
-                    RunOnUiThread(() => caratula2.SetImageBitmap(sinblur));
-
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
-                    {
-                        //RunOnUiThread(() => fondo.SetImageBitmap(blur));
-
-                        RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#2d3033")));
-                        fondoblurreado = blur;
-                    }
-                    buscando = false;
-                    actualizartodo();
-                    if (!envideo)
-                    {
-                        reproducir(asdd.downloadurl);
                     }
                     else
-                    ////////////////////////////mimicv2
                     {
-                        Clouding_service.gettearinstancia().linkactual = linkactual;
-                        Clouding_service.gettearinstancia().tituloactual = label.Text;
-                        actvideo.gettearinstacia().indiceactual = indiceactual;
-                        actvideo.gettearinstacia().linkactual = linkactual;
-                        actvideo.gettearinstacia().buscaryreproducir();
-                        Clouding_service.gettearinstancia().mostrarnotificacion();
-                        actualizarcaratula();
+
+                        buscando = false;
                     }
                 }
-                else
-                {
-
-                    buscando = false;
-                }
+            }
+            else {
+                RunOnUiThread(() => Toast.MakeText(this, "No hay conexion a internet", ToastLength.Long).Show());
             }
         }
 
@@ -1502,48 +1607,56 @@ namespace App1
         public void agregarvidth(string terminoi)
         {
             string urll = "";
-            urll = getearurl(terminoi);
-            if (urll.Length > 0)
+            if (connected)
             {
-                if (!encontroparecido(urll, laparalinks))
+                urll = getearurl(terminoi);
+                if (urll.Length > 0)
                 {
-
-
-                    GR3_UiF.Geteartitulo titulo = new GR3_UiF.Geteartitulo();
-
-
-                    if (lapara.Count == 0)
+                    if (!encontroparecido(urll, laparalinks))
                     {
 
-                        buscarvidth(urll, false);
+
+                        GR3_UiF.Geteartitulo titulo = new GR3_UiF.Geteartitulo();
+
+
+                        if (lapara.Count == 0)
+                        {
+
+                            buscarvidth(urll, false);
+
+                        }
+                        else
+                        {
+                            laparalinks.Add(urll);
+                            lapara.Add(titulo.GetVideoTitle(titulo.LoadJson(urll)));
+                            listacaratulas.Add(lapara[lapara.Count - 1]);
+
+                            adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adaptadol;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+                            RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
+                            clasesettings.mostrarnotificacion(this, titulo.GetVideoTitle(titulo.LoadJson(urll)), " Agregado a la cola!", urll, noticode);
+                            actualizarlista();
+
+                        }
+
 
                     }
                     else
                     {
-                        laparalinks.Add(urll);
-                        lapara.Add(titulo.GetVideoTitle(titulo.LoadJson(urll)));
-                        listacaratulas.Add(lapara[lapara.Count - 1]);
-
-                        adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                        RunOnUiThread(() =>
-                        {
-                            var parcelable = lista.OnSaveInstanceState();
-                            lista.Adapter = adaptadol;
-                            lista.OnRestoreInstanceState(parcelable);
-                        });
-                        RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
-                        clasesettings.mostrarnotificacion(this, titulo.GetVideoTitle(titulo.LoadJson(urll)), " Agregado a la cola!", urll, noticode);
-                        actualizarlista();
-
+                        RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
                     }
 
-
                 }
-                else
-                {
-                    RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
-                }
+            }
+            else
+            {
 
+                RunOnUiThread(() => Toast.MakeText(this, "No hay conexion a internet", ToastLength.Long).Show());
             }
         }
 
@@ -1551,27 +1664,72 @@ namespace App1
 
         public void agregarviddireckt(string urll, string titulo)
         {
-
-            if (urll.Length > 0)
+            if (connected)
             {
-                if (!encontroparecido(urll, laparalinks))
+                if (urll.Length > 0)
                 {
-
-
-                    //   GR3_UiF.Geteartitulo titulo = new GR3_UiF.Geteartitulo();
-
-
-                    if (lapara.Count == 0)
+                    if (!encontroparecido(urll, laparalinks))
                     {
 
-                        buscarvidth(urll, false);
+
+                        //   GR3_UiF.Geteartitulo titulo = new GR3_UiF.Geteartitulo();
+
+
+                        if (lapara.Count == 0)
+                        {
+
+                            buscarvidth(urll, false);
+
+                        }
+                        else
+                        {
+                            laparalinks.Add(urll);
+                            lapara.Add(titulo);
+                            listacaratulas.Add(lapara[lapara.Count - 1]);
+
+                            adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+                            RunOnUiThread(() =>
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adaptadol;
+                                lista.OnRestoreInstanceState(parcelable);
+                            });
+                            RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
+                            /* clasesettings.mostrarnotificacion(this, titulo, " Agregado a la cola!", urll, noticode);*/
+                            actualizarlista();
+
+                        }
+
 
                     }
                     else
                     {
-                        laparalinks.Add(urll);
-                        lapara.Add(titulo);
-                        listacaratulas.Add(lapara[lapara.Count - 1]);
+                        RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
+                    }
+
+                }
+            }
+            else {
+                RunOnUiThread(() => Toast.MakeText(this, "No hay conexion a internet", ToastLength.Long).Show());
+            }
+        }
+
+        public void siguiente()
+        {
+            try
+            {
+              
+               
+                    if (laparalinks.ToArray().Length-1 >= indiceactual+1 && !buscando)
+                    {
+                    if (lapara.Count > 0 && lapara[indiceactual + 1].Trim().Length > 0 )
+                      {
+                        termino = laparalinks[indiceactual + 1];
+
+
+                        listacaratulas[locanterior] = lapara[locanterior];
+                        locanterior = indiceactual + 1;
+                        listacaratulas[locanterior] = ">" + lapara[locanterior] + "<";
 
                         adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                         RunOnUiThread(() =>
@@ -1580,53 +1738,25 @@ namespace App1
                             lista.Adapter = adaptadol;
                             lista.OnRestoreInstanceState(parcelable);
                         });
-                        RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
-                        clasesettings.mostrarnotificacion(this, titulo, " Agregado a la cola!", urll, noticode);
-                        actualizarlista();
+                        automated = true;
+                        indiceactual++;
+                        new Thread(() =>
+                        {
+                            buscarvidth(laparalinks[indiceactual], true);
+                        }).Start();
+                      }
+                    }
+                    else {
+                        if (sugerenciasdeelemento.Count > 0 && !buscando) {
 
+                             if(clasesettings.gettearvalor("automatica")=="si")
+                                   buscarviddireckt(sugerenciasdeelemento[0].link, false);
+                        }
+                        
                     }
 
-
                 }
-                else
-                {
-                    RunOnUiThread(() => Toast.MakeText(this, "El elemento ya existe en la lista de reproduccion", ToastLength.Long).Show());
-                }
-
-            }
-        }
-
-        public void siguiente()
-        {
-            try
-            {
-                if (lapara.Count > 0 && lapara[indiceactual + 1].Trim().Length > 0 && !buscando)
-                {
-
-                    termino = laparalinks[indiceactual + 1];
-
-
-                    listacaratulas[locanterior] = lapara[locanterior];
-                    locanterior = indiceactual + 1;
-                    listacaratulas[locanterior] = ">" + lapara[locanterior] + "<";
-
-                    adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
-                    RunOnUiThread(() =>
-                    {
-                        var parcelable = lista.OnSaveInstanceState();
-                        lista.Adapter = adaptadol;
-                        lista.OnRestoreInstanceState(parcelable);
-                    });
-                    automated = true;
-                    indiceactual++;
-                    new Thread(() =>
-                    {
-                        buscarvid();
-                    }).Start();
-
-
-                }
-            }
+          
             catch (Exception)
             {
 
@@ -1653,7 +1783,7 @@ namespace App1
                     indiceactual--;
                     new Thread(() =>
                     {
-                        buscarvid();
+                        buscarvidth(laparalinks[indiceactual], true);
                     }).Start();
 
 
@@ -1675,99 +1805,80 @@ namespace App1
 
 
 
-            // musicaplayer.SetDataSource(downloadurl);
-            try
+            if (downloadurl != null)
             {
+                try
+                {
 
-                /*   clasesettings.guardarsetting("musica", downloadurl);
-                   clasesettings.guardarsetting("servicio", "musica");
-                   Thread.Sleep(1000);
-                   clasesettings.guardarsetting("cquerry", "data()>" + label.Text.Replace('>',' ') + ">" + linkactual.Replace('>', ' '));
-                   /*
-             musicaplayer.Reset();
-
-
-
-
-
-                 musicaplayer = Android.Media.MediaPlayer.Create(this, Android.Net.Uri.Parse(downloadurl));
-             musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
-             musicaplayer.Start();
-
-                 RunOnUiThread(() => play.SetBackgroundResource(Resource.Drawable.pausebutton2));
-                 RunOnUiThread(() => volumen.Progress = 100);
-                 volumenactual = 100;
+                    contienevideo = false;
+                    nombreactual = label.Text;
+                    Clouding_service.gettearinstancia().tituloactual = label.Text;
+                    Clouding_service.gettearinstancia().linkactual = linkactual;
+                    Clouding_service.gettearinstancia().reproducir(downloadurl);
+                    string normalizedlink = linkactual.Replace("https", "http");
 
 
-        musicaplayer.Error += delegate
-             {
-                 musicaplayer.Reset();
-                 musicaplayer = new Android.Media.MediaPlayer();
-             };
+                    objetohistorial.videos.RemoveAll(ax => ax.link == normalizedlink);
 
 
+                    objetohistorial.videos.Add(new playlistelements
+                    {
+                        nombre = label.Text,
+                        link = normalizedlink
 
-                musicaplayer.Completion += delegate
-                 {
+                    });
+
+                    RunOnUiThread(() =>
+                    {
+                        if (!listafavoritos.ContainsKey(normalizedlink))
+                            botonlike.SetBackgroundResource(Resource.Drawable.heartoutline);
+                        else
+                            botonlike.SetBackgroundResource(Resource.Drawable.heartcomplete);
+                    });
+
+                    if (objetohistorial.links.ContainsKey(normalizedlink))
+                        objetohistorial.links[normalizedlink]++;
+                    else
+                    {
+
+                        objetohistorial.links.Add(normalizedlink, 1);
+
+                    }
+
+                    RunOnUiThread(() => { play.SetBackgroundResource(Resource.Drawable.pausebutton2); }); 
+                    new Thread(() =>
+                    {
+                        actualizartodo();
+                    }).Start();
+
+                    clasesettings.recogerbasura();
+                    new Thread(() =>
+                    {
+                        var archivo = File.CreateText(clasesettings.rutacache + "/history.json");
+                        archivo.Write(JsonConvert.SerializeObject(objetohistorial));
+                        archivo.Close();
+                    }).Start();
+                    if (actividadinicio.gettearinstancia() != null)
+                    {
+                        actividadinicio.gettearinstancia().recargarhistorial();
+
+                    }
 
 
-                     try
-                     {
-                         if (lapara.Count > 0 && lapara[laparalinks.IndexOf(linkactual) + 1].Trim().Length > 0)
-                         {
-
-                             termino = laparalinks[indiceactual + 1];
-
-
-                             listacaratulas[locanterior] = lapara[locanterior];
-                             locanterior = indiceactual + 1;
-                             listacaratulas[locanterior] = ">" + lapara[locanterior] + "<";
-
-                             adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, listacaratulas);
-                             RunOnUiThread(() => lista.Adapter = adaptadol);
-
-                             indiceactual++;
-                             buscarvidth(termino, true);
-
-                         }
-                     }
-                     catch (Exception)
-                     {
-                         RunOnUiThread(() => volumen.Progress = 100);
-                         volumenactual = 100;
-
-
-                         RunOnUiThread(() => play.SetBackgroundResource(Resource.Drawable.playbutton2));
-
-                         RunOnUiThread(() => porcientoreproduccion.Progress = 0);
-
-                     }
-
-
-
-
-                 };
-             */
-                contienevideo = false;
-                nombreactual = label.Text;
-                Clouding_service.gettearinstancia().tituloactual = label.Text;
-                Clouding_service.gettearinstancia().linkactual = linkactual;
-                Clouding_service.gettearinstancia().reproducir(downloadurl);
-
-                play.SetBackgroundResource(Resource.Drawable.pausebutton2);
+                }
+                catch (Exception)
+                {
+                    RunOnUiThread(() => Toast.MakeText(this, "Ha ocurrido un error.", ToastLength.Long).Show());
+                }
+            }
+            else {
+                RunOnUiThread(() => Toast.MakeText(this, "Error al conectar al obtener el elemento. Posiblemente haya problemas de conexion", ToastLength.Long).Show());
                 new Thread(() =>
                 {
                     actualizartodo();
                 }).Start();
 
-                clasesettings.recogerbasura();
-
             }
-            catch (Exception)
-            {
-                RunOnUiThread(() => Toast.MakeText(this, "No se puede reproducir el elemento", ToastLength.Long).Show());
-            }
-
             //TODO whatever you wanted to happen on completion
 
 
@@ -1786,16 +1897,24 @@ namespace App1
 
             while (true)
             {
+
+
+                if (instance == null)
+                    break;
+
                 try
                 {
-                    if (Clouding_service.gettearinstancia().musicaplayer.IsPlaying == true && !bloquearporcentaje)
+                    if (Clouding_service.gettearinstancia().musicaplayer.IsPlaying == true  && !bloquearporcentaje)
                     {
-                        RunOnUiThread(() => porcientoreproduccion.Max = Convert.ToInt32(Clouding_service.gettearinstancia().musicaplayer.Duration));
-                        RunOnUiThread(() => porcientoreproduccion.Progress = Convert.ToInt32(Clouding_service.gettearinstancia().musicaplayer.CurrentPosition));
+
                         if (!panel.IsExpanded)
                         {
 
                             RunOnUiThread(() => botonaccion.SetBackgroundResource(Resource.Drawable.pausebutton2));
+                        }
+                        else {
+                            RunOnUiThread(() => porcientoreproduccion.Max = Convert.ToInt32(Clouding_service.gettearinstancia().musicaplayer.Duration));
+                            RunOnUiThread(() => porcientoreproduccion.Progress = Convert.ToInt32(Clouding_service.gettearinstancia().musicaplayer.CurrentPosition));
                         }
                     }
                     else
@@ -1809,7 +1928,7 @@ namespace App1
                 }
                 catch (Exception)
                 {
-
+                    
 
                 }
 
@@ -1838,7 +1957,7 @@ namespace App1
 
                 }
 
-
+               
                 Thread.Sleep(1000);
             }
 
@@ -1864,13 +1983,14 @@ namespace App1
 
 
 
-
+            List<string> listaips = new List<string>();
             foreach (TcpClient c in clienteses)
             {
 
-
-                if (prueba_de_lista_generica.SocketExtensions.IsConnected(c) == true)
+                var ipactual = ((IPEndPoint)c.Client.RemoteEndPoint).Address.ToString();
+                if (prueba_de_lista_generica.SocketExtensions.IsConnected(c) == true && listaips.IndexOf(ipactual)==-1)
                 {
+                   
                     new Thread(() =>
                     {
 
@@ -1879,8 +1999,10 @@ namespace App1
 
                         try
                         {
-                            c.Client.Send(System.Text.Encoding.Default.GetBytes(headers));
 
+                           
+                            c.Client.Send(System.Text.Encoding.Default.GetBytes(headers));
+                            listaips.Add(ipactual);
 
 
                         }
@@ -1895,8 +2017,9 @@ namespace App1
                 }
 
             }
-            /* clasesettings.guardarsetting("listaactual", string.Join("¤", listacaratulas) + "¹" + string.Join("¤", laparalinks));
+            /* clasesettings.guardarsetting("listaactual", string.Join("ï¿½", listacaratulas) + "ï¿½" + string.Join("ï¿½", laparalinks));
              clasesettings.guardarsetting("elementosactuales", listenlinea + "$" + listenlinea2);*/
+            listaips = new List<string>();
             clienteses = clientesact;
         }
 
@@ -1921,11 +2044,12 @@ namespace App1
 
 
 
-
+            List<string> ipenviadas = new List<string>();
             foreach (TcpClient c in clienteses)
             {
+                var ipactual = ((IPEndPoint)c.Client.RemoteEndPoint).Address.ToString();
 
-                if (prueba_de_lista_generica.SocketExtensions.IsConnected(c) == true)
+                if (prueba_de_lista_generica.SocketExtensions.IsConnected(c) == true && ipenviadas.IndexOf(ipactual)==-1)
                 {
                     new Thread(() =>
                     {
@@ -1936,7 +2060,7 @@ namespace App1
                             clientesact.Add(c);
 
                             c.Client.Send(System.Text.Encoding.Default.GetBytes(headers));
-
+                            ipenviadas.Add(ipactual);
                         }
                         catch (Exception)
                         {
@@ -1951,7 +2075,8 @@ namespace App1
 
 
             }
-            /*     clasesettings.guardarsetting("listaactual", string.Join("¤", listacaratulas) + "¹" + string.Join("¤", laparalinks));
+            ipenviadas.Clear();
+            /*     clasesettings.guardarsetting("listaactual", string.Join("ï¿½", listacaratulas) + "ï¿½" + string.Join("ï¿½", laparalinks));
                  clasesettings.guardarsetting("elementosactuales", listenlinea + "$" + listenlinea2);*/
             clienteses = clientesact;
 
@@ -2118,11 +2243,11 @@ namespace App1
             {
 
             }
-            while (detenedor == true)
+            while (detenedor == true && clieente.Connected)
             {
 
-
-                if (JSONlistalocal.Trim() != "" && (!enviolistas || lenviejo != JSONlistalocal.Length))
+               
+                if (JSONlistalocal.Trim() != "" && (!enviolistas || lenviejo != JSONlistalocal.Length) )
                 {
                     lenviejo = JSONlistalocal.Length;
                     enviolistas = true;
@@ -2159,20 +2284,21 @@ namespace App1
                         RunOnUiThread(() =>
                     {
 
-                        new Android.Support.V7.App.AlertDialog.Builder(this)
-                            .SetTitle("Advertencia")
-                            .SetMessage("Desea reproducir la lista de reproduccion remota: " + listareproduccion.nombre + "??")
-                            .SetPositiveButton("Si", (aa, aaa) =>
-                            {
-                                new Thread(() =>
-                                {
-                                    reproducirlistaremota(listareproduccion);
-                                }).Start();
-                            })
-                            .SetNegativeButton("No", (aa, aaa) => { })
-                            .Create()
-                            .Show();
+                        var alerta = new Android.Support.V7.App.AlertDialog.Builder(this)
+                                 .SetTitle("Advertencia")
+                                 .SetMessage("Desea reproducir la lista de reproduccion remota: " + listareproduccion.nombre + "??")
+                                 .SetPositiveButton("Si", (aa, aaa) =>
+                                 {
+                                     new Thread(() =>
+                                     {
+                                         reproducirlistaremota(listareproduccion);
+                                     }).Start();
+                                 })
+                                 .SetNegativeButton("No", (aa, aaa) => { })
 
+                                 .Create();
+                        alerta.Window .SetType(WindowManagerTypes.Toast);
+                        alerta.Show();
                     });
 
 
@@ -2184,19 +2310,20 @@ namespace App1
                         RunOnUiThread(() =>
                         {
 
-                            new Android.Support.V7.App.AlertDialog.Builder(this)
-                                .SetTitle("Advertencia")
-                                .SetMessage("Desea reproducir la lista de reproduccion local: " + listareproduccion.nombre + "??")
-                                .SetPositiveButton("Si", (aa, aaa) =>
-                                {
-                                    new Thread(() =>
-                                    {
-                                        reproducirlalistalocal(listareproduccion.nombre);
-                                    }).Start();
-                                })
-                                .SetNegativeButton("No", (aa, aaa) => { })
-                                .Create()
-                               .Show();
+                            var aler = new Android.Support.V7.App.AlertDialog.Builder(this)
+                                   .SetTitle("Advertencia")
+                                   .SetMessage("Desea reproducir la lista de reproduccion local: " + listareproduccion.nombre + "??")
+                                   .SetPositiveButton("Si", (aa, aaa) =>
+                                   {
+                                       new Thread(() =>
+                                       {
+                                           reproducirlalistalocal(listareproduccion.nombre);
+                                       }).Start();
+                                   })
+                                   .SetNegativeButton("No", (aa, aaa) => { })
+                                   .Create();
+                            aler.Window.SetType(WindowManagerTypes.Toast);
+                            aler.Show();
 
                         });
                     }
@@ -2207,26 +2334,27 @@ namespace App1
                         RunOnUiThread(() =>
                         {
 
-                            new Android.Support.V7.App.AlertDialog.Builder(this)
-                                .SetTitle("Advertencia")
-                                .SetMessage("Desea guardar la lista de reproduccion remota: " + listareproduccion.nombre + "??\n NOTA:\nsi hay una lista con este mismo nombre sera sustituida por esta")
-                                .SetPositiveButton("Si", (aa, aaa) =>
-                                {
-                                    new Thread(() =>
-                                    {
-                                        var nombreses = string.Join(";", listareproduccion.elementos.Select(axx => axx.nombre).ToArray()) + ";";
-                                        var linkeses = string.Join(";", listareproduccion.elementos.Select(axx => axx.link).ToArray()) + ";";
-                                        var archi = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + listareproduccion.nombre);
-                                        archi.Write(nombreses + "$" + linkeses);
-                                        archi.Close();
+                            var alerta = new Android.Support.V7.App.AlertDialog.Builder(this)
+                                   .SetTitle("Advertencia")
+                                   .SetMessage("Desea guardar la lista de reproduccion remota: " + listareproduccion.nombre + "??\n NOTA:\nsi hay una lista con este mismo nombre sera sustituida por esta")
+                                   .SetPositiveButton("Si", (aa, aaa) =>
+                                   {
+                                       new Thread(() =>
+                                       {
+                                           var nombreses = string.Join(";", listareproduccion.elementos.Select(axx => axx.nombre).ToArray()) + ";";
+                                           var linkeses = string.Join(";", listareproduccion.elementos.Select(axx => axx.link).ToArray()) + ";";
+                                           var archi = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + listareproduccion.nombre);
+                                           archi.Write(nombreses + "$" + linkeses);
+                                           archi.Close();
 
-                                        RunOnUiThread(() => Toast.MakeText(this, "Lista guardada exitosamente", ToastLength.Long).Show());
-                                        new Thread(() => { llenarplaylist(); }).Start();
-                                    }).Start();
-                                })
-                                .SetNegativeButton("No", (aa, aaa) => { })
-                                .Create()
-                               .Show();
+                                           RunOnUiThread(() => Toast.MakeText(this, "Lista guardada exitosamente", ToastLength.Long).Show());
+                                           new Thread(() => { llenarplaylist(); }).Start();
+                                       }).Start();
+                                   })
+                                   .SetNegativeButton("No", (aa, aaa) => { })
+                                   .Create();
+                            alerta.Window.SetType(WindowManagerTypes.Toast);
+                            alerta.Show();
 
                         });
                     }
@@ -2316,7 +2444,7 @@ namespace App1
 
                     int o;
 
-                    while ((o = stream.Read(bites, 0, bites.Length)) != 0 && detenedor == true)
+                    while ((o = stream.Read(bites, 0, bites.Length)) != 0 && detenedor == true && clieente.Connected)
                     {
 
                         string capturado = System.Text.Encoding.UTF8.GetString(bites, 0, o);
@@ -2662,8 +2790,9 @@ namespace App1
                 }
                 catch (Exception) { }
 
-
-
+          
+                Thread.Sleep(500);
+                
             }
 
             oidor.Stop();
@@ -2676,11 +2805,11 @@ namespace App1
 
             var JSONcaratula = JsonConvert.SerializeObject(new string[] { imgurl, label.Text, zelda, estadovolumen, buscando.ToString(), Android.OS.Build.Model });
             var headers = $"[%%CARATULA%%]{ JSONcaratula }[%%LINKS%%][%%TITLES%%]";
-
+            List<string> listaips = new List<string>();
             foreach (TcpClient c in clienteses)
             {
-
-                if (prueba_de_lista_generica.SocketExtensions.IsConnected(c) == true)
+                var ipactual = ((IPEndPoint)c.Client.RemoteEndPoint).Address.ToString();
+                if (prueba_de_lista_generica.SocketExtensions.IsConnected(c) == true && listaips.IndexOf(ipactual)==-1)
                 {
                     new Thread(() =>
                     {
@@ -2688,7 +2817,7 @@ namespace App1
                         {
 
                             clientesact.Add(c);
-
+                            listaips.Add(ipactual);
                             c.Client.Send(System.Text.Encoding.Default.GetBytes(headers));
                         }
                         catch (Exception)
@@ -2702,7 +2831,7 @@ namespace App1
                 }
 
             }
-
+            listaips.Clear();
             clienteses = clientesact;
         }
 
@@ -3100,7 +3229,7 @@ namespace App1
 
 
 
-
+            wake.Release();
             clasesettings.recogerbasura();
             if (Clouding_service.gettearinstancia() != null)
             {
@@ -3114,8 +3243,9 @@ namespace App1
             instance = null;
             try { UnregisterReceiver(br); } catch (Exception) { }
 
-
-
+        
+           
+        
             base.OnDestroy();
         }
         public override void Finish()
@@ -3129,10 +3259,7 @@ namespace App1
             base.FinishAndRemoveTask();
 
         }
-        public void receptor()
-        {
-
-        }
+     
         public bool nocontienequerry(string querrystring)
         {
             if (querrystring.Contains("fullscreen()"))
@@ -3272,16 +3399,18 @@ namespace App1
                     }
                     else
                     {
+                       
                         try
                         {
                             UnregisterReceiver(br);
-                            break;
+                           
                         }
                         catch (Exception)
                         {
 
-                            break;
+                         
                         }
+                        break;
                     }
                     Thread.Sleep(2500);
                 }
@@ -3336,18 +3465,135 @@ namespace App1
                     break;
             }
         }
+        public void loadsuggestionslistener() {
+            var Innerlink = "";
+            while (detenedor) {
+
+           
+                    if (linkactual != Innerlink && linkactual.Trim()!="")
+                    {
+                    Innerlink = linkactual;
+
+                        sugerenciasdeelemento = clasesettings.gettearsugerencias(linkactual,laparalinks);
+                        RunOnUiThread(() =>
+                        {
+                            adaptadorsugerencias adap = new adaptadorsugerencias(this, sugerenciasdeelemento);
+                            adap.ItemClick += (aa, aaa) =>
+                            {
+                                RunOnUiThread(() =>
+                                {
+                                    Intent intentar = new Intent(this, typeof(customdialogact));
+                                    intentar.PutExtra("ipadress", ipadre);
+                                    intentar.PutExtra("imagen", sugerenciasdeelemento[aaa.Position].portada);
+                                    intentar.PutExtra("url", sugerenciasdeelemento[aaa.Position].link);
+                                    intentar.PutExtra("titulo", sugerenciasdeelemento[aaa.Position].nombre);
+                                    intentar.PutExtra("color", "DarkGray");
+                                    StartActivity(intentar);
+
+                                });
+                            };
+                            adap.ItemLongClick += (aa, aaa) =>
+                            {
+
+                                RunOnUiThread(() =>
+                                {
+                                    Toast.MakeText(this, sugerenciasdeelemento[aaa.Position].nombre, ToastLength.Long).Show();
+                                });
+                            };
+                            listasugerencias.SetAdapter(adap);
+                            if (!headeradded) {
+                               
+                                headeradded = true;
+                            Layoutsugerencias.Visibility = ViewStates.Visible;
+                            ((ViewGroup)Layoutsugerencias.Parent).RemoveView(Layoutsugerencias);
+                           lista.AddHeaderView(Layoutsugerencias, null, false);
+                                lista.SetHeaderDividersEnabled(true);
+                            }
+                        });
+                    }
+
+              
+
+                Thread.Sleep(2000);
+            }
 
 
+        }
+        public void ipchangerlistener() {
+      
+               while (detenedor) {
+
+                   string currentip = clasesettings.gettearip();
+                   if (ipadre != currentip) {
+                    
+                       ipadre = currentip;
+
+                    detenedor = false;
+                    Thread.Sleep(1500);
+                    detenedor = true;
+                    threadlistas.Abort();
+                    threadstream.Abort();
+                    clienteses.Clear();
+                       oidor.Stop();            
+                       oidorlistas.Stop();               
+                       oidor = new TcpListener(IPAddress.Parse(ipadre), 1024);
+                       oidor.Start();
+                       oidorlistas= new TcpListener(IPAddress.Parse(ipadre), 9856);
+                       oidorlistas.Start();
+                    
+                    threadlistas = new Thread(() =>
+                    {
+                        cojerlistas();
+                    });
+                    threadstream = new Thread(() => {
+                        cojerstream();
+                    });
+                    threadlistas.Start();
+                    threadstream.Start();
+                    if (!clasesettings.tieneconexion())
+                    {
+                        RunOnUiThread(() =>
+                        {
+
+                            var alerta = new AlertDialog.Builder(this).SetTitle("Error")
+                                .SetMessage("No hay conexion a internet.\n Es posible que no pueda realizar ciertas funciones dentro de la app")
+                                .SetPositiveButton("Entendido", (aa, aaa) =>
+                                {
+
+                                })
+
+                                .Create();
+                            alerta.Window.SetType(WindowManagerTypes.Toast);
+                            alerta.SetCancelable(false);
+                            alerta.Show();
+
+
+
+                        });
+                        connected = false;
+
+                    }
+                    else {
+                     RunOnUiThread(()=>   Toast.MakeText(this, "Conexion reestablecida", ToastLength.Long).Show());
+                        connected = true;
+                    }
+
+                   }
+
+                   Thread.Sleep(3000);
+               }
+                   
+        }
         public void buscaryabrir(string termino)
         {
 
 
             RunOnUiThread(() =>
             {
-#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro estï¿½n obsoletos
                 dialogoprogreso = new ProgressDialog(this);
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro estï¿½n obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro estï¿½n obsoletos
                 dialogoprogreso.SetCanceledOnTouchOutside(false);
                 dialogoprogreso.SetCancelable(false);
                 dialogoprogreso.SetTitle("Buscando resultados...");
@@ -3364,12 +3610,13 @@ namespace App1
 
                     var a = clasesettings.gettearvideoid(url, true, -1);
                     //    RunOnUiThread(() => progreso.Progress = 100);
+                    if (a != null) { 
                     Intent intentar = new Intent(this, typeof(customdialogact));
 
                     RunOnUiThread(() =>
                     {
                         dialogoprogreso.Dismiss();
-
+                   
                         intentar.PutExtra("ipadress", ipadre);
                         intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
                         intentar.PutExtra("url", url);
@@ -3380,6 +3627,16 @@ namespace App1
 
 
                     });
+                    }
+                    else
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            dialogoprogreso.Dismiss();
+                            Toast.MakeText(this, "Video no encontrado", ToastLength.Long).Show();
+                        });
+                    }
+              
                 }
                 else
                 {
@@ -3403,6 +3660,7 @@ namespace App1
         {
 
             Clouding_service.gettearinstancia().musicaplayer.SetDisplay(holder);
+            videoenholder = true;
 
         }
         public void SurfaceDestroyed(ISurfaceHolder holder)
@@ -3419,53 +3677,74 @@ namespace App1
             base.OnConfigurationChanged(newConfig);
             if (newConfig.Orientation == Android.Content.Res.Orientation.Portrait && videoon)
             {
+              //  video.LayoutParameters =new RelativeLayout.LayoutParams(video.LayoutParameters.Width, sizevideoportrait)  ;
+                  setVideoSize();
 
-                //  setVideoSize();
+          
             }
             else
             if (newConfig.Orientation == Android.Content.Res.Orientation.Landscape && videoon)
             {
-                // setVideoSize();
-
+                setVideoSize();
+             //   video.LayoutParameters = new RelativeLayout.LayoutParams(video.LayoutParameters.Width,sizevideonormal);
             }
 
         }
 
-        /// <summary>
-        /// //////////cambia el aspect ratio del video
-        /// </summary>
+
+        public void Onresume() {
+            if(videoon)
+            video.Visibility = ViewStates.Visible;
+        
+            base.OnResume();
+        }
+        public void Onpause()
+        {
+
+
+
+            video.Visibility = ViewStates.Gone;
+
+            base.OnPause();
+        }
+
         private void setVideoSize()
         {
 
-            // // Get the dimensions of the video
-            int videoWidth = Clouding_service.gettearinstancia().musicaplayer.VideoWidth;
-            int videoHeight = Clouding_service.gettearinstancia().musicaplayer.VideoHeight;
-            float videoProportion = videoWidth / (float)videoHeight;
-
-            // Get the width of the screen
-#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-            int screenWidth = WindowManager.DefaultDisplay.Width;
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-            int screenHeight = WindowManager.DefaultDisplay.Height;
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-            float screenProportion = screenWidth / (float)screenHeight;
-
-            // Get the SurfaceView layout parameters
-            Android.Views.ViewGroup.LayoutParams lp = video.LayoutParameters;
-            if (videoWidth > videoHeight)
+            try
             {
-                lp.Width = screenWidth;
-                lp.Height = screenWidth * videoHeight / videoWidth;
-            }
-            else
-            {
-                lp.Width = screenHeight * videoWidth / videoHeight;
-                lp.Height = screenHeight;
-            }
-            // Commit the layout parameters
-            video.LayoutParameters = lp;
+                // // Get the dimensions of the video
+                int videoWidth = Clouding_service.gettearinstancia().musicaplayer.VideoWidth;
+                int videoHeight = Clouding_service.gettearinstancia().musicaplayer.VideoHeight;
+                float videoProportion = videoWidth / (float)videoHeight;
 
+                // Get the width of the screen
+#pragma warning disable CS0618 // El tipo o el miembro estï¿½n obsoletos
+                int screenWidth = WindowManager.DefaultDisplay.Width;
+#pragma warning restore CS0618 // El tipo o el miembro estï¿½n obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro estï¿½n obsoletos
+                int screenHeight = WindowManager.DefaultDisplay.Height;
+#pragma warning restore CS0618 // El tipo o el miembro estï¿½n obsoletos
+                float screenProportion = screenWidth / (float)screenHeight;
+
+                // Get the SurfaceView layout parameters
+                Android.Views.ViewGroup.LayoutParams lp = video.LayoutParameters;
+                if (videoWidth > videoHeight)
+                {
+                    lp.Width = screenWidth;
+                    lp.Height = screenWidth * videoHeight / videoWidth;
+                }
+                else
+                {
+                    lp.Width = screenHeight * videoWidth / videoHeight;
+                    lp.Height = screenHeight;
+                }
+                // Commit the layout parameters
+                var relative = new RelativeLayout.LayoutParams(lp.Width, lp.Height);
+                relative.AddRule(LayoutRules.CenterInParent);
+                video.LayoutParameters = relative;
+            }
+            catch (Exception) { }
         }
 
 

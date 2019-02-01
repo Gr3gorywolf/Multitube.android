@@ -50,8 +50,8 @@ namespace App1
         public LinearLayout lineall2;
         public MediaSession mSession;
         public string ip = "";
-        List<string> lista2;
-        List<string> listalinks;
+      public  List<string> lista2;
+     public   List<string> listalinks;
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         ProgressDialog dialogoprogreso;
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
@@ -81,9 +81,14 @@ namespace App1
         public string jsonlistasremotas = "";
         public TcpClient clientelalistas;
         public bool playlistreceived = false;
+        public Dictionary<string, playlistelements> listafavoritos = new Dictionary<string, playlistelements>();
         public bool compatible = true;
         public int volact = 0;
         Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout panel;
+        public historial objetohistorial = new historial();
+        ImageView botonlike;
+        public List<YoutubeSearch.VideoInformation> sugerencias = new List<YoutubeSearch.VideoInformation>();
+        PowerManager.WakeLock wake;
         public static mainmenu gettearinstancia()
         {
             return instancia;
@@ -95,8 +100,10 @@ namespace App1
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.perfectmain4);
+            PowerManager manejador = (PowerManager)GetSystemService(PowerService);
+             wake = manejador.NewWakeLock(WakeLockFlags.Partial, "MyApp::MyWakelockTag");
+            wake.Acquire();
 
-        
 
 
             clientela = new TcpClient();
@@ -158,13 +165,14 @@ namespace App1
             fondo = FindViewById<ImageView>(Resource.Id.imageView45);
             var barra = FindViewById<LinearLayout>(Resource.Id.linearLayout1);
             var barra2 = FindViewById<LinearLayout>(Resource.Id.linearLayout3);
-            var barra4 = FindViewById<LinearLayout>(Resource.Id.linearLayout6);
+            var barra4 = FindViewById<Android.Support.V7.Widget.CardView>(Resource.Id.linearLayout6);
             sidem = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.my_toolbar);
             itemsm = FindViewById<NavigationView>(Resource.Id.content_frame);
             barrap = FindViewById<ProgressBar>(Resource.Id.progresoind);
             var searchview = FindViewById<Android.Support.V7.Widget.SearchView>(Resource.Id.searchView);
             modeloip = clasesettings.gettearips();
+            botonlike = FindViewById<ImageView>(Resource.Id.imglike);
             panel = FindViewById<Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout>(Resource.Id.sliding_layout);
             //  var barra3 = FindViewById<LinearLayout>(Resource.Id.linearLayout6);
             ////////////////////////////////////////////////////////////////////////
@@ -172,7 +180,7 @@ namespace App1
             SetSupportActionBar(toolbar);
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.hambur);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.Title = "";
+            SupportActionBar.Title = "Control remoto";
            // SupportActionBar.SetBackgroundDrawable(new ColorDrawable(Color.ParseColor("#2b2e30")));
             lineall2.SetBackgroundColor(Android.Graphics.Color.Black);
             animar2(lineall2);
@@ -186,7 +194,7 @@ namespace App1
 
             panel.IsUsingDragViewTouchEvents = true;
             panel.DragView = FindViewById<RelativeLayout>(Resource.Id.scrollable);
-            var solapa = FindViewById<LinearLayout>(Resource.Id.solapita);
+            var solapa = FindViewById<Android.Support.V7.Widget.CardView>(Resource.Id.solapita);
             solapa.Click += delegate
             {
 
@@ -212,49 +220,7 @@ namespace App1
                 lista.OnRestoreInstanceState(parcelable);
             });
 
-            /*    
-              bool estacontenido = false;
-            string todaslasip = clasesettings.gettearvalor("ips").Trim();
-
-                  try
-                  {
-
-                      foreach(string e in todaslasip.Split('>'))
-                      {
-                          if(e.Trim()== Intent.GetStringExtra("MyData").Trim() )
-                          {
-                              estacontenido = true;
-                          }
-                      }
-
-
-                  }
-                  catch (Exception)
-                  {
-
-                  }
-              if (!estacontenido)
-              {
-                  clasesettings.guardarsetting("ips", todaslasip +  Intent.GetStringExtra("MyData").Trim()+">" );
-              }
-
-              */
-
-
-
-            ////////////////media fake sesion
-
-            /*      PlaybackState pbs = new PlaybackState.Builder()
-                                .SetActions(PlaybackState.ActionFastForward | PlaybackState.ActionPause | PlaybackState.ActionPlay | PlaybackState.ActionPlayPause | PlaybackState.ActionSeekTo | PlaybackState.ActionSkipToNext | PlaybackState.ActionSkipToPrevious)
-                                .SetState(PlaybackStateCode.Playing, 0, 1f, SystemClock.ElapsedRealtime())
-                                .Build();
-               mSession = new MediaSession(this, PackageName);
-                //  Intent intent = new Intent(this, typeof(broadcast_receiver));
-                  //PendingIntent pintent = PendingIntent.GetBroadcast(this, 4564, intent, PendingIntentFlags.UpdateCurrent);
-                  //mSession.SetMediaButtonReceiver(pintent);
-                  mSession.Active = (true);
-                  mSession.SetPlaybackState(pbs);
-                  */
+        
 
 
             new Thread(() =>
@@ -278,10 +244,50 @@ namespace App1
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // fondo.SetImageBitmap(fondoblurreado);
             RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#323538")));
+
+         
+                if (File.Exists(clasesettings.rutacache + "/history.json"))
+                {
+
+                    objetohistorial = JsonConvert.DeserializeObject<historial>(File.ReadAllText(clasesettings.rutacache + "/history.json"));
+
+            }
+            else
+            {
+
+                objetohistorial = new historial();
+                objetohistorial.videos = new List<playlistelements>();
+                objetohistorial.links = new Dictionary<string, int>();
+            }
+            if (File.Exists(clasesettings.rutacache + "/favourites.json"))
+            {
+                listafavoritos = JsonConvert.DeserializeObject<Dictionary<string, playlistelements>>(File.ReadAllText(clasesettings.rutacache + "/favourites.json"));
+            }
+
             StartActivity(new Intent( this, typeof(actividadinicio)));
             ///////////////////////////////#clicks#/////////////////////////////////
 
+            botonlike.Click += delegate
+            {
 
+               
+                if (zelda.Trim() != "")
+                {
+                    var link = zelda.Replace("https", "http");
+                    var elemento = new playlistelements()
+                    {
+                        link = link,
+                        nombre = label.Text
+                    };
+                    listafavoritos = clasesettings.agregarfavoritos(this, listafavoritos, elemento);
+
+                    if (!listafavoritos.ContainsKey(link))
+                        botonlike.SetBackgroundResource(Resource.Drawable.heartoutline);
+                    else
+                        botonlike.SetBackgroundResource(Resource.Drawable.heartcomplete);
+
+                }
+            };
             panel.PanelExpanded += delegate
             {
 
@@ -419,8 +425,21 @@ namespace App1
                 else
                 if (e.MenuItem.TitleFormatted.ToString().Trim() == "Inicio")
                 {
-                    Intent intento = new Intent(this, typeof(actividadinicio));
-                    StartActivity(intento);
+                    if (actividadinicio.gettearinstancia() == null)
+                    {
+                        Intent intento = new Intent(this, typeof(actividadinicio));
+
+                        StartActivity(intento);
+                    }
+                    else
+                    {
+
+                        actividadinicio.gettearinstancia().Finish();
+                        Intent intento = new Intent(this, typeof(actividadinicio));
+
+                        StartActivity(intento);
+                    }
+                    OverridePendingTransition(0, 0);
                 }
                 e.MenuItem.SetChecked(false);
                 e.MenuItem.SetChecked(false);
@@ -998,7 +1017,7 @@ namespace App1
                         if (modeloip.ips.ContainsKey(ip)) { 
                         if (modeloip.ips[ip] != listaelementos[5]) {
                             modeloip.ips[ip] = listaelementos[5];
-
+                             
                                 var jsons = JsonConvert.SerializeObject(modeloip);
                                 var axc = File.CreateText(clasesettings.rutacache + "/ips.json");
                                 axc.Write(jsons);
@@ -1020,28 +1039,37 @@ namespace App1
                         });
 
 
-                        if (panel.IsExpanded) {
+                      
                             if (listaelementos[3].Trim() == "vol0()")
                             {
+                                if(panel.IsExpanded)
                                 RunOnUiThread(() => botonaccion.SetBackgroundResource(Resource.Drawable.volumelowrojo));
+
                                 volact = 0;
                             }
 
                             else
                         if (listaelementos[3].Trim() == "vol50()")
                             {
+                               if (panel.IsExpanded)
                                 RunOnUiThread(() => botonaccion.SetBackgroundResource(Resource.Drawable.volumemediumrojo));
                                 volact = 50;
                             }
 
                             else
                         if (listaelementos[3].Trim() == "vol100()") {
+                                if (panel.IsExpanded)
                                 RunOnUiThread(() => botonaccion.SetBackgroundResource(Resource.Drawable.volumehighrojo));
                                 volact = 100;
                             }
                             
-                        }
                      
+                        RunOnUiThread(() => {
+                        if (!listafavoritos.ContainsKey(zelda.Replace("https", "http")))
+                            botonlike.SetBackgroundResource(Resource.Drawable.heartoutline);
+                        else
+                            botonlike.SetBackgroundResource(Resource.Drawable.heartcomplete);
+                        });
                         clasesettings.recogerbasura();
                         new Thread(() =>
                         {
@@ -1132,7 +1160,7 @@ namespace App1
             {
                 cloudingserviceonline.gettearinstancia().StopSelf();
             }
-
+            wake.Release();
             base.OnDestroy();
         }
         public override void Finish()
@@ -1239,17 +1267,21 @@ namespace App1
 
         public void testconnection()
         {
-            bool auto = true;
-            while (auto)
+           
+            while (true)
             {
                 if (nocomprobar) {
                     break;
                 }
                 if (!prueba_de_lista_generica.SocketExtensions.IsConnected(clientela) && !nocomprobar)
                 {
-                    auto = false;
+                   
+                    
                     this.Finish();
+                    if (actividadinicio.gettearinstancia() != null)
+                        actividadinicio.gettearinstancia().Finish();
                     StartActivity(typeof(actmenuprincipal));
+                    break;
                 }
                 Thread.Sleep(2000);
             }
@@ -1295,7 +1327,8 @@ namespace App1
 
 
                     var a = clasesettings.gettearvideoid(url, true, -1);
-                    //    RunOnUiThread(() => progreso.Progress = 100);
+                //    RunOnUiThread(() => progreso.Progress = 100);
+                if (a != null) { 
                     Intent intentar = new Intent(this, typeof(customdialogact));
 
                     RunOnUiThread(() =>
@@ -1313,6 +1346,15 @@ namespace App1
 
                     });
                 }
+                else
+                {
+                    RunOnUiThread(() =>
+                    {
+                        dialogoprogreso.Dismiss();
+                        Toast.MakeText(this, "Video no encontrado", ToastLength.Long).Show();
+                    });
+                }
+            }
                 else
                 {
                     RunOnUiThread(() =>

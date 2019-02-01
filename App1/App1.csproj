@@ -43,6 +43,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <AndroidSupportedAbis />
+    <MandroidI18n>
+    </MandroidI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,8 +56,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkMode>Full</AndroidLinkMode>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <PlatformTarget>x64</PlatformTarget>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <BundleAssemblies>false</BundleAssemblies>
     <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
@@ -122,6 +124,9 @@
     </Reference>
     <Reference Include="glidex, Version=4.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\glidex.1.0.2\lib\monoandroid70\glidex.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.8.14.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.8.14\lib\netstandard2.0\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="Java.Interop" />
     <Reference Include="JWT, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -279,6 +284,7 @@
     <Compile Include="actvideo.cs" />
     <Compile Include="adaptadorcartas.cs" />
     <Compile Include="adaptadorlista.cs" />
+    <Compile Include="adaptadorsugerencias.cs" />
     <Compile Include="adapterlistaremotoconeliminar.cs" />
     <Compile Include="adapterlistaremotobuscadores.cs" />
     <Compile Include="adapterlistaremoto.cs" />
@@ -885,6 +891,23 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\layoutinicioremote.axml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\corazon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\heartoutline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\heartcomplete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\videooff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\layoutadaptadorsugerencias.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

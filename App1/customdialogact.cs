@@ -78,8 +78,7 @@ namespace App1
             var intentoo = Intent;
             var share = intentoo.Action;
             var tipo = intentoo.Type;
-            if (mainmenu.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null)
-            {
+          
                 if (Intent.ActionSend.Equals(share))
                 {
                     if (tipo.Contains("text/plain"))
@@ -133,12 +132,7 @@ namespace App1
                     proc = new Thread(new ThreadStart(ponerimagen));
                     proc.Start();
                 }
-            }
-            else {
-              
-                Toast.MakeText(this,"Usted no esta conectado a ningun servidor", ToastLength.Long).Show();
-                this.Finish();
-            }
+         
 
 
 
@@ -154,11 +148,14 @@ namespace App1
             {
                 animar(addlista);
                 if (!buscando) { 
+                   
                 Intent intentar = new Intent(this, typeof(actividadagregarlistahecha));
                 intentar.PutExtra("nombrevid", titulo);
                 intentar.PutExtra("linkvid", url);
                 StartActivity(intentar);
                 this.Finish();
+               
+                   
                 }
                 else {
                     Toast.MakeText(this, "Aun se esta buscando la info del video", ToastLength.Long).Show();
@@ -196,7 +193,9 @@ namespace App1
                 animar(agregar);
                 if (!buscando)
                 {
-                    if (mainmenu_Offline.gettearinstancia() == null)
+                    if (mainmenu.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null)
+                    {
+                        if (mainmenu_Offline.gettearinstancia() == null)
                     {
                         mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("agregar()"));
                         Thread.Sleep(250);
@@ -210,7 +209,10 @@ namespace App1
                         }).Start();
 
                     }
-                    this.Finish();
+                        this.Finish();
+                    }
+                    else
+                        Toast.MakeText(this, "No esta conectado a ningun servidor ni tiene la aplicacion abierta en modo de reproductor online", ToastLength.Long).Show();
                 }
                 else
                 {
@@ -222,25 +224,30 @@ namespace App1
                 animar(buscar);
                 if (!buscando)
                 {
-                    if (mainmenu_Offline.gettearinstancia() == null)
+                    if (mainmenu.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null)
                     {
-                        if (mainmenu.gettearinstancia().clientela.Connected == true)
+                        if (mainmenu_Offline.gettearinstancia() == null)
                         {
-                            mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(url));
+                            if (mainmenu.gettearinstancia().clientela.Connected == true)
+                            {
+                                mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(url));
 
+
+                            }
+                        }
+                        else
+                        {
+                            new Thread(() =>
+                            {
+                                mainmenu_Offline.gettearinstancia().buscarviddireckt(url, false);
+                            }).Start();
 
                         }
+                        this.Finish();
                     }
                     else
-                    {
-                        new Thread(() =>
-                        {
-                            mainmenu_Offline.gettearinstancia().buscarviddireckt(url, false);
-                        }).Start();
-
+                        Toast.MakeText(this, "No esta conectado a ningun servidor ni tiene la aplicacion abierta en modo de reproductor online", ToastLength.Long).Show();
                     }
-                    this.Finish();
-                }
                 else
                 {
                     Toast.MakeText(this, "Aun se esta buscando la info del video", ToastLength.Long).Show();

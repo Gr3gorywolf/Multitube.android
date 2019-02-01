@@ -8,8 +8,8 @@
         android:layout_height="match_parent"
         android:id="@+id/fondo1"
         android:scaleType="fitXY"
-        android:background="@android:color/black"
-        android:alpha="0.5" />
+      android:background="?attr/colorPrimaryDark"
+        android:alpha="1" />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

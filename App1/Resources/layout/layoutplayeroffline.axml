@@ -53,16 +53,7 @@
 			p1:background="@android:color/black"
 			p1:alpha="0.5"
 			p1:visibility="gone" />
-		<SurfaceView
-			p1:layout_alignParentTop="true"
-			p1:layout_alignParentBottom="true"
-			p1:layout_alignParentLeft="true"
-			p1:layout_alignParentRight="true"
-			p1:layout_width="fill_parent"
-			p1:layout_height="fill_parent"
-			p1:id="@+id/videoView1" 
 		
-			/>
 
 			<!--old layout-->
 		
@@ -263,19 +254,35 @@
          <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-	    android:background="?attr/colorPrimary"
+android:background="@android:color/black"
 	
 				android:clickable="true"
 					 android:focusable="false"
 				android:id="@+id/scrollable"
 				>   
-
+			<SurfaceView
+			p1:layout_alignParentTop="true"
+			p1:layout_alignParentBottom="true"
+			p1:layout_alignParentLeft="true"
+			p1:layout_alignParentRight="true"
+			p1:layout_width="fill_parent"
+			p1:layout_height="fill_parent"
+			p1:id="@+id/videoView1" 
+		
+			/>
 					<!--solapita-->
+					  <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top" 
+				 app:cardCornerRadius="6dp"
+				android:id="@+id/solapita"
+   app:cardElevation="8dp">
 					<LinearLayout
 					p1:orientation="horizontal"
 					p1:layout_width="match_parent"
 					p1:layout_height="68dp"
-							android:id="@+id/solapita"
+						 
 					 android:background="?attr/colorPrimary"
 				  android:elevation="4dp"
 						
@@ -333,6 +340,7 @@
 					
 
 				</LinearLayout>
+				</android.support.v7.widget.CardView>
 			<ImageView
 						
 						p1:layout_width="match_parent"
@@ -344,12 +352,19 @@
 				android:background="?attr/colorPrimaryDark"
 			/>
 
-			
+			  <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top" 
+				p1:id="@+id/linearLayout6"		
+				app:cardCornerRadius="6dp"
+				p1:layout_alignParentBottom="true"
+   app:cardElevation="8dp">
 			<LinearLayout
 					p1:orientation="vertical"
 					p1:layout_width="match_parent"
 					p1:layout_height="wrap_content"
-					p1:id="@+id/linearLayout6"		
+					
 					 android:background="?attr/colorPrimary"
 				 android:elevation="4dp"
 					p1:layout_alignParentBottom="true">
@@ -363,11 +378,12 @@
 			
 			
 				/>
+				
 				<LinearLayout
 					p1:orientation="horizontal"
 					p1:layout_width="match_parent"
 					p1:layout_height="50dp"
-					p1:id="@+id/linearLayout6"
+			
 					p1:gravity="center">
 					<ImageView
 						p1:src="@drawable/fastfowardarrowscopia"
@@ -405,7 +421,7 @@
 				</LinearLayout>
 
 					</LinearLayout>
-
+				</android.support.v7.widget.CardView>
 
 
 

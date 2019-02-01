@@ -291,71 +291,21 @@ namespace App1
                 var aa = buscavideos.SearchQuery(termino, 3);
               
 
-         //   RunOnUiThread(() => progresooo.Max = aa.Count);
+        
             foreach (var ec in aa )
             {
                    
              
                 if (parar == true)
                 {
-                          
-             /*     Videos video = new Videos();
-                    video.nombre = RemoveIllegalPathCharacters(ec.Title.Replace("&quot;", "").Replace("&amp;", ""));
-                    video.url = ec.Url;
-                    video.tiempo = RemoveIllegalPathCharacters(ec.Title.Replace("&quot;", "").Replace("&amp;", ""));
-                    video.imgurl = "https://i.ytimg.com/vi/" + ec.Url.Split('=')[1] + "/mqdefault.jpg";*/
-                /*   videoimagen = new Videosimage();
-                    videoimagen.nombre = RemoveIllegalPathCharacters(ec.Title.Replace("&quot;", "").Replace("&amp;", ""));
-                    videoimagen.imagen = "https://i.ytimg.com/vi/" + ec.Url.Split('=')[1] + "/mqdefault.jpg"; ;*/
                         nombreses.Add(WebUtility.HtmlDecode( RemoveIllegalPathCharacters( ec.Title.Replace("&quot;", "").Replace("&amp;", ""))));
                         autoreses.Add(ec.Url);
                         duraciones.Add(ec.Duration);
-                        /*
-                          Byte[] biteimagen =  clienteee.DownloadData(ec.Thumbnail);
-
-                          using (MemoryStream memoria = new MemoryStream(biteimagen))
-                          {
-                              Android.Graphics.Bitmap imagen = Android.Graphics.BitmapFactory.DecodeStream(memoria);
-                              video.imagen = imagen;
-                              videoimagen.imagen = imagen;
-                          }
-                          */
-
-
-                        //  Byte[] biteimagen = clienteee.DownloadData(ec.Thumbnail);
-
-
-
-                        //   Android.Graphics.Bitmap imagen = Android.Graphics.BitmapFactory.DecodeByteArray(biteimagen, 0, biteimagen.Length);
-                        //   var aah = File.Create(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + index);
-                        //   aah.Write(biteimagen, 0, biteimagen.Length);
-                        //    aah.Close();
-
-                        // biteimagen = new byte[0];
-
                         linkeses.Add(ec.Url);
-                       // viddeos.Add(video);
-                        // listaimagen.Add(videoimagen);
-
-                        //    imagelist.Add(video.imagen);
-
-
-
-
-
-
-
-
-
                         index++;
-                 //   RunOnUiThread(() => progresooo.Progress = index);
              
-                }
-                //  ArrayAdapter<string> adaptadorvids = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, listaimagen);
              
-              
-
-
+                }                                      
             }
                 dialogoprogreso.Dismiss();
 

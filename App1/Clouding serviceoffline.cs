@@ -96,119 +96,6 @@ namespace App1
 
 
 
-
-            /*    while (detenedor)
-                {
-
-
-                       if (clasesettings.gettearvalor("servicio").Trim() != "")
-                    {
-                        string querry = clasesettings.gettearvalor("servicio");
-                        clasesettings.guardarsetting("servicio", "");
-                        if (querry.Trim() == "musica")
-                        {
-                            clasesettings.guardarsetting("servicio", "");
-                            var musi = clasesettings.gettearvalor("musica");
-                            clasesettings.guardarsetting("musica", "");
-
-
-                            reproducir(musi);
-
-                        }else
-                          if (querry.Trim() == "matar")
-                        {
-                            detenedor = false;
-                            StopSelf();
-                        }
-
-
-
-                    }
-                    if (clasesettings.gettearvalor("cquerry").Trim() != "")
-                    {
-                        string qvalue = clasesettings.gettearvalor("cquerry").Trim();
-                        string playervid = clasesettings.gettearvalor("videoactivo");
-                        clasesettings.guardarsetting("cquerry", "");
-
-                        if (qvalue.StartsWith("playpause()") && playervid.Trim() == "no")
-                        {
-                            if (ponerestado() != "reproduciendo")
-                            {
-
-
-
-                                musicaplayer.Start();
-                            }
-                            else
-
-                            {
-
-
-                                musicaplayer.Pause();
-
-                            }
-                        }
-                        else
-                        if (qvalue.StartsWith("siguiente()") && playervid.Trim() == "no")
-                        {
-                            clasesettings.guardarsetting("palante", "siii");
-
-                        }
-                        else
-                        if (qvalue.StartsWith("anterior()") && playervid.Trim() == "no")
-                        {
-
-                            clasesettings.guardarsetting("patra", "siii");
-                        }
-                        else
-                        if (qvalue.StartsWith( "play()") && playervid.Trim() == "no")
-                        {
-                            musicaplayer.Start();
-                        }
-                     else
-                          if( qvalue.StartsWith("pause()") && playervid.Trim() == "no")
-                        {
-                            musicaplayer.Pause();
-                        }               
-                        else
-                          if (qvalue.StartsWith("adelantar()") && playervid.Trim() == "no")
-                        {
-                            musicaplayer.SeekTo(Convert.ToInt32(musicaplayer.CurrentPosition + musicaplayer.Duration * 0.10));
-                        }
-                        else
-                         if (qvalue.StartsWith("atrazar()") && playervid.Trim() == "no")
-                        {
-                            musicaplayer.SeekTo(Convert.ToInt32(musicaplayer.CurrentPosition - musicaplayer.Duration * 0.10));
-                        }
-                        else
-                          if (qvalue.StartsWith("volact()") && playervid.Trim() == "no")
-                        {
-                            musicaplayer.SetVolume(float.Parse(qvalue.Split('>')[1]), float.Parse(qvalue.Split('>')[2]));
-                        }
-                        if (qvalue.StartsWith("data()"))
-                        {
-
-                            linkactual = (qvalue.Split('>')[2]);
-                            tituloactual = (qvalue.Split('>')[1]);
-                            
-
-                            mostrarnotificacion();
-
-                        }
-
-
-
-                    }
-                    if (musicaplayer != null)
-                    {
-                        clasesettings.guardarsetting("playerstatus", ponerestado()+">" + musicaplayer.Duration.ToString()+">" + musicaplayer.CurrentPosition.ToString());
-
-
-
-                    }
-
-                }
-                Thread.Sleep(1000);*/
         }
      
         public void reproducir(string downloadurl,bool desdecache)
@@ -223,14 +110,26 @@ namespace App1
 
                 try
                 {
-                    musicaplayer.Reset();
+                    musicaplayer.Release();
 
 
-                    musicaplayer = Android.Media.MediaPlayer.Create(this, Android.Net.Uri.Parse(downloadurl.Trim()));
+                    musicaplayer = new MediaPlayer();
+              
 #pragma warning disable 414
+                    if (Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.N)
+                    {
+                        musicaplayer.SetAudioAttributes(new AudioAttributes.Builder()
+                            .SetUsage(AudioUsageKind.Media)
+                            .SetContentType(AudioContentType.Music)
+                            .Build());
+                    }
+                    else
+                    {
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-                    musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
+                        musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                    }
+                  
 #pragma warning restore 414
                     musicaplayer.SetWakeMode(this, WakeLockFlags.Partial);
 #pragma warning disable 414
@@ -243,26 +142,49 @@ namespace App1
                         //could not get audio focus
                         Console.WriteLine("Could not get audio focus");
                     }
-                    if (!desdecache)
+              
+                 
+                    musicaplayer.Prepared += delegate
                     {
                         musicaplayer.Start();
+                        if (playeroffline.gettearinstancia() != null)
+                        {
+                            if (playeroffline.gettearinstancia().video.Visibility == ViewStates.Visible)
+                            {
+
+                                musicaplayer.SetDisplay(null);
+                                musicaplayer.SetDisplay(playeroffline.gettearinstancia().holder);
+                            }
+
+
+                        }
+
                     };
-
-
                     musicaplayer.Completion += delegate
                     {
                          playeroffline.gettearinstancia().RunOnUiThread(() =>
                          {
-                           playeroffline.gettearinstancia().reproducir(playeroffline.gettearinstancia().indiceactual + 1, false);
+                             playeroffline.gettearinstancia().RunOnUiThread(() =>
+                             {
+                                 playeroffline.gettearinstancia().siguiente.PerformClick();
+                             });
+                             
                          });
                     };
+                  
+                    musicaplayer.SetDataSource(this, Android.Net.Uri.Parse(downloadurl.Trim()));
                     mostrarnotificacion();
+                    musicaplayer.PrepareAsync();
+                  
                 }
                 catch (Exception)
                 {
                     //if()
-                    musicaplayer = new Android.Media.MediaPlayer();
-                    playeroffline.gettearinstancia().reproducir(playeroffline.gettearinstancia().indiceactual + 1, false);
+                
+                    playeroffline.gettearinstancia().RunOnUiThread(() =>
+                    {
+                        Toast.MakeText(playeroffline.gettearinstancia(), "Error al reproducir", ToastLength.Long).Show();
+                    });
                 }
             }
             else {

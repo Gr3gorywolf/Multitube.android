@@ -93,6 +93,7 @@ namespace App1
 
                     var a = clasesettings.gettearvideoid(url, true,-1);
                     //    RunOnUiThread(() => progreso.Progress = 100);
+                    if (a != null) { 
                     Intent intentar = new Intent(this, typeof(customdialogact));
 
                     RunOnUiThread(() =>
@@ -109,6 +110,15 @@ namespace App1
 
 
                     });
+                    }
+                    else
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            dialogoprogreso.Dismiss();
+                            Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
+                        });
+                    }
                 }
                 else {
                     RunOnUiThread(() =>

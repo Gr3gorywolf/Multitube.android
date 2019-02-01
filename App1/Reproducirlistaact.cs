@@ -178,20 +178,31 @@ namespace App1
                 Intent intento = new Intent(this, typeof(dialogolistasact));
                 if (query == "Fromremote" && listaslocales.Count>0)
                 {
-                    intento.PutExtra("nombrelista", listaslocales[playlistidx].nombre);
-                    intento.PutExtra("portada", listaslocales[playlistidx].portrait);
-                    intento.PutExtra("querry", query);
+                    if (listaslocales[playlistidx].portrait.Trim() != "") {
+                        intento.PutExtra("nombrelista", listaslocales[playlistidx].nombre);
+                        intento.PutExtra("portada", listaslocales[playlistidx].portrait);
+                        intento.PutExtra("querry", query);
 
-                    StartActivity(intento);
+                        StartActivity(intento);
+                    }
+                    else {
+                        Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
+                        }
                 }
                 else
                 
                 {
-                    if (listasremotas.Count > 0) {  
-                    intento.PutExtra("nombrelista", listasremotas[playlistidx].nombre);
-                    intento.PutExtra("portada", listasremotas[playlistidx].portrait);
-                    intento.PutExtra("querry", query);
-                    StartActivity(intento);
+                    if (listasremotas.Count > 0) {
+                        if (listasremotas[playlistidx].elementos.Count > 0)
+                        {
+                            intento.PutExtra("nombrelista", listasremotas[playlistidx].nombre);
+                            intento.PutExtra("portada", listasremotas[playlistidx].portrait);
+                            intento.PutExtra("querry", query);
+                            StartActivity(intento);
+                        }
+                        else {
+                            Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
+                        }
                     }
                     /*    mainmenu.gettearinstancia()
                        .clientelalistas

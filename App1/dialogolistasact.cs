@@ -45,8 +45,20 @@ namespace App1
                 textoaccion.Text = "Enviar lista";
 
             }
+            var arch= File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].nombre);
+            var counter = arch.Split('$')[1].Split(';').ToList();
+            if (counter.Count > 0) {
+                if (counter[0].Trim() == "") {
+                    this.Finish();
+                    Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
 
-
+                }
+                 
+            }
+            else {
+                this.Finish();
+                Toast.MakeText(this, "La lista esta vacia", ToastLength.Long).Show();
+            }
             botonaccion.Click += delegate
             {
                 new Thread(() =>

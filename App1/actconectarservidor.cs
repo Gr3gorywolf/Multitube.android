@@ -135,8 +135,7 @@ namespace App1
                 {
                     if (misips.Count > 0)
                     {
-                        if (estaon(misips[aasd.Position]))
-                        {
+                       
 
 
                             //SetActionBar(null);
@@ -152,26 +151,12 @@ namespace App1
                         
                           
                            
-                        }
+                     
                     }
                 };
 
 
 
-            /*    botoniralultimo.Click += delegate
-                {
-                    Intent activity2 = new Intent(this, typeof(mainmenu));
-
-                    activity2.PutExtra("MyData", ultimaipescaneada);
-                   RunOnUiThread(() => botoniralultimo.Visibility = ViewStates.Visible);
-                   RunOnUiThread(() => this.Finish());
-                   RunOnUiThread(() => StartActivity(activity2));
-                 
-                    animar2(botoniralultimo, activity2);
-                    animar3(botonscan);
-                    animar3(listaelementos);
-                    animar3(textoservers);
-                };*/
 
                 botonscan.Click +=  (aaaa, aaa) =>
                {
@@ -225,8 +210,10 @@ namespace App1
 
         public override void OnBackPressed()
         {
-            StartActivity(typeof(actmenuprincipal));
+        
             this.Finish();
+            StartActivity(typeof(actmenuprincipal));
+            clasesettings.recogerbasura();
             base.OnBackPressed();
         }
         public override void Finish()
@@ -318,7 +305,7 @@ namespace App1
                     //   cliente.Client.Connect(ipadre, 1024);
 
                     var result = cliente.Client.BeginConnect(ipadre, 1024, null, null);
-                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1.5));
                     
                     if (cliente.Client.Connected)
                     {

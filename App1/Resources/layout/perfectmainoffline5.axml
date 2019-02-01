@@ -5,6 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	xmlns:p1="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
 	>
 
 		<cheesebaron.slidinguppanel.SlidingUpPanelLayout
@@ -21,22 +22,13 @@
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:id="@+id/linearLayout0">
-		<SurfaceView
-			android:layout_alignParentTop="true"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentRight="true"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:id="@+id/videoView1"
 	
-		 />
 		<ImageView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:id="@+id/imageView45"
 			android:scaleType="fitXY"
-			android:alpha="0.5"
+			android:alpha="1"
 			android:visibility="gone" />
 		<android.support.design.widget.AppBarLayout
 			p1:layout_width="match_parent"
@@ -218,7 +210,7 @@
 			android:orientation="vertical"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:id="@+id/linearLayout6"
+			
 			android:gravity="right"
 			android:backgroundTint="#00000000" />
 		<Space
@@ -293,6 +285,54 @@
 				android:layout_height="48dp"
 				android:id="@+id/imageView12" />
 		</LinearLayout>
+
+
+
+				<LinearLayout
+					p1:orientation="vertical"
+					p1:layout_width="match_parent"
+					p1:layout_height="wrap_content"					
+					
+					app:elevation="4dp"
+				android:background="?attr/colorPrimaryDark"
+						android:id="@+id/layoutsugerencias"
+				
+				 
+					>
+
+					<TextView
+					 p1:layout_marginTop="3dp"
+							p1:textAppearance="?android:attr/textAppearanceSmall"
+							p1:layout_width="match_parent"
+							p1:layout_height="wrap_content"
+						 android:textAlignment="center"
+					   android:gravity="center"
+							p1:singleLine="true"
+							p1:scrollHorizontally="true"
+							p1:marqueeRepeatLimit="marquee_forever"
+							p1:ellipsize="marquee"
+							p1:layout_marginLeft="4dp"
+							android:text="Sugerencias"
+							p1:layout_marginRight="5dp"
+					 android:clickable="false"
+					 p1:layout_centerVertical="true"
+					/>
+			   <android.support.v7.widget.RecyclerView
+        android:id="@+id/listasugerencias"
+	     p1:layout_marginLeft="6dp"
+	    p1:layout_marginRight="6dp"
+	    p1:layout_marginTop="5dp"
+					 p1:layout_marginBottom="5dp"
+        android:scrollbars="vertical"
+	    android:orientation="horizontal"
+          android:layout_width="fill_parent"
+        android:layout_height="50dp"
+		 app:layoutManager="android.support.v7.widget.LinearLayoutManager"	
+			
+			/>
+
+				</LinearLayout>
+
 		<LinearLayout
 			android:orientation="horizontal"
 			android:minWidth="25px"
@@ -301,7 +341,10 @@
 			android:layout_height="match_parent"
 			android:id="@+id/linearLayout5"
 			android:isScrollContainer="true"
-			android:layout_below="@id/my_toolbar"
+		android:layout_below="@id/my_toolbar"
+				 
+				 p1:layout_marginTop="?attr/actionBarSize"
+				
 			android:layout_marginBottom="68dp">
 			<ListView
 				android:minWidth="25px"
@@ -309,7 +352,7 @@
 				android:id="@+id/listView1"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-			 android:layout_marginTop="?attr/actionBarSize"
+			
 				android:background="?attr/colorPrimaryDark"
 			/>
 		</LinearLayout>
@@ -491,28 +534,49 @@
 		android:layout_marginBottom="-7dp"
 	 android:layout_marginTop="-7dp"
 		/>
+
+
+		
+
+
 	</RelativeLayout>
 
 
 
 		<!--parte de el menu slideable-->
 			<!--contenedor principal-->
+	
 		 <RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="?attr/colorPrimary"
+		android:background="@android:color/black"
 	
 				android:clickable="true"
 					 android:focusable="false"
 				android:id="@+id/scrollable"
 				>   
+					<SurfaceView
 
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:id="@+id/videoView1"
+		  android:layout_centerInParent="true"
+	       
+		 />
 					<!--solapita-->
+			 
+			  <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top" 
+				 app:cardCornerRadius="6dp"
+				android:id="@+id/solapita"
+   app:cardElevation="8dp">
 					<LinearLayout
 					p1:orientation="horizontal"
 					p1:layout_width="match_parent"
 					p1:layout_height="68dp"
-							android:id="@+id/solapita"
+							
 					 android:background="?attr/colorPrimary"
 				   app:elevation="4dp"
 						
@@ -567,14 +631,14 @@
 					/>
 					</RelativeLayout>
 				</LinearLayout>
-					
+		 </android.support.v7.widget.CardView>
 
 				
 				<ImageView
 						
 						p1:layout_width="match_parent"
 						p1:layout_height="match_parent"
-					
+					p1:id="@+id/blacksquare"
 				p1:layout_above="@+id/linearLayout6"
 			 p1:layout_marginTop="68dp"
 		 p1:scaleType="centerCrop"
@@ -592,29 +656,54 @@
 				android:background="?attr/colorPrimaryDark"
 			/>
 			<ImageView
-						p1:layout_width="45dp"
-						p1:layout_height="45dp"
-						p1:id="@+id/imgcalidad"
+						p1:layout_width="35dp"
+						p1:layout_height="35dp"
+						p1:id="@+id/imglike"
 						p1:layout_gravity="center"
-						p1:layout_marginTop="4dp"
+						p1:layout_marginTop="80dp"
 						p1:layout_marginBottom="4dp"
 						p1:layout_marginLeft="4dp"
-						p1:layout_marginRight="4dp"
-				 android:layout_alignParentEnd="true"
+						p1:layout_marginRight="15dp"
+				
+				android:layout_alignParentRight="true"
 					android:layout_above="@id/linearLayout6"
 							 android:clickable="true"
 					android:focusable="true"
 					
 					/>
-			
+			<ImageView
+						p1:layout_width="35dp"
+						p1:layout_height="35dp"
+						p1:id="@+id/imgcalidad"
+						p1:layout_gravity="center"
+						p1:layout_marginTop="4dp"
+						p1:layout_marginBottom="4dp"
+						p1:layout_marginLeft="15dp"
+						p1:layout_marginRight="4dp"
+				 android:layout_alignParentStart="true"
+					android:layout_above="@id/linearLayout6"
+							 android:clickable="true"
+					android:focusable="true"
+					
+					/>
+				
+
+			  <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top" 
+				p1:id="@+id/linearLayout6"		
+				app:cardCornerRadius="6dp"
+				p1:layout_alignParentBottom="true"
+   app:cardElevation="8dp">
 			<LinearLayout
 					p1:orientation="vertical"
 					p1:layout_width="match_parent"
 					p1:layout_height="wrap_content"
-					p1:id="@+id/linearLayout6"		
+					
 					 android:background="?attr/colorPrimary"
 					app:elevation="4dp"
-					p1:layout_alignParentBottom="true">
+					>
 			 <SeekBar
 				   p1:layout_width="match_parent"
 				   p1:layout_height="wrap_content"
@@ -683,8 +772,8 @@
 					p1:layout_marginLeft="7dp"/>
 				</LinearLayout>
 		</LinearLayout>
-
-</RelativeLayout>
+				</android.support.v7.widget.CardView>
+      </RelativeLayout>
 
 
 		

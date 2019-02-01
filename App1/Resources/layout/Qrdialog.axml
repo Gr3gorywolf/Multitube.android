@@ -10,13 +10,18 @@
         android:layout_height="match_parent"
         android:id="@+id/fondo1"
         android:scaleType="fitXY"
-        android:background="@android:color/black"
-        android:alpha="0.5" />
+        android:background="?attr/colorPrimaryDark"
+        android:alpha="1" />
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:id="@+id/linearlayout0">
+			  <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+   app:cardElevation="8dp">
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="match_parent"
@@ -53,6 +58,7 @@
 				android:singleLine="true"
 				android:scrollHorizontally="true" />
 		</LinearLayout>
+			</android.support.v7.widget.CardView>
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="match_parent"

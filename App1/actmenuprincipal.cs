@@ -15,7 +15,7 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using Android.Content.PM;
-
+using Android.Support.V4.Provider;
 
 namespace App1
 {
@@ -44,8 +44,13 @@ namespace App1
             {
                 RequestPermissions(arraydatos.ToArray(), 0);
 
+
+
             }
+         
+
             fondito = FindViewById<ImageView>(Resource.Id.fondo1);
+           
             var botoncontrolremoto = FindViewById<LinearLayout>(Resource.Id.linearLayout2);
             var botonserver = FindViewById<LinearLayout>(Resource.Id.linearLayout3);
             var botonplayer = FindViewById<LinearLayout>(Resource.Id.linearLayout4);
@@ -126,20 +131,24 @@ namespace App1
             {
                 clasesettings.guardarsetting("video", "-1");
             }
-          
+            if (!clasesettings.probarsetting("automatica"))
+            {
+                clasesettings.guardarsetting("automatica", "si");
+            }
+
             botoninfo.Click += delegate
             {
 
 
-                //  var intento = new Intent(this, typeof(actbio));
-                var intento = new Intent(this, typeof(actividadinicio));
+                 var intento = new Intent(this, typeof(actbio));
                 animar20(botoninfo, intento);            
                 clasesettings.recogerbasura();
 
             };
             botonplayer.Click += delegate
-            {
+            { 
 
+               
                 if (clasesettings.tieneelementos())
                 {
                     var intento = new Intent(this, typeof(playeroffline));
@@ -168,27 +177,38 @@ namespace App1
             };
             botonserver.Click += delegate
             {
+                if (clasesettings.tieneconexion())
+                {
+                    var intento = new Intent(this, typeof(mainmenu_Offline));
 
-                var intento = new Intent(this, typeof(mainmenu_Offline));
-                
-                 animar3(botonsettings);
-                  animar3(botoncontrolremoto);
-                  animar3(botonplayer);
-                animar3(botoninfo);
-                animar2(botonserver,intento);
-                clasesettings.recogerbasura();
+                    animar3(botonsettings);
+                    animar3(botoncontrolremoto);
+                    animar3(botonplayer);
+                    animar3(botoninfo);
+                    animar2(botonserver, intento);
+                    clasesettings.recogerbasura();
+                }
+                else {
+                    Toast.MakeText(this, "Error al conectar a youtube", ToastLength.Long).Show();
+                }
             };
             botoncontrolremoto.Click += delegate
             {
 
-               // var intento = new Intent(this, typeof(mainmenu_Offline));
-
-                animar3(botonsettings);
+                // var intento = new Intent(this, typeof(mainmenu_Offline));
+                if (clasesettings.tieneconexion())
+                {
+                    animar3(botonsettings);
                 animar3(botonserver);
                 animar3(botonplayer);
                 animar3(botoninfo);
                 animar2(botoncontrolremoto, new Intent(this,typeof(actconectarservidor)));
                 clasesettings.recogerbasura();
+                }
+                else
+                {
+                    Toast.MakeText(this, "Error al conectar a youtube", ToastLength.Long).Show();
+                }
             };
 
 
@@ -364,7 +384,7 @@ namespace App1
         }
 
 
-
+     
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             bool acepted = true;
@@ -377,23 +397,26 @@ namespace App1
              
             }
             if (acepted) {
-
-                if (clasesettings.probarsetting("abrirserver"))
-                {
-                    if (clasesettings.gettearvalor("abrirserver") == "si")
+               
+                    if (clasesettings.probarsetting("abrirserver"))
                     {
-
-                        if (serviciostreaming.gettearinstancia() != null)
+                        if (clasesettings.gettearvalor("abrirserver") == "si")
                         {
-                            StopService(new Intent(this, typeof(serviciostreaming)));
-                            StartService(new Intent(this, typeof(serviciostreaming)));
+
+                            if (serviciostreaming.gettearinstancia() != null)
+                            {
+                                StopService(new Intent(this, typeof(serviciostreaming)));
+                                StartService(new Intent(this, typeof(serviciostreaming)));
+                            }
+                            else
+                            {
+                                StartService(new Intent(this, typeof(serviciostreaming)));
+                            }
+
                         }
-                        else {
-                            StartService(new Intent(this, typeof(serviciostreaming)));
-                        }
-                      
                     }
-                }
+                
+           
             }
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);

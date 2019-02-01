@@ -37,7 +37,7 @@ namespace App1
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         ProgressDialog dialogoprogreso;
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-        
+       string reprodautomatica = "";
 
 
         public bool CheckInternetConnection()
@@ -80,7 +80,7 @@ namespace App1
             var colormuestra = FindViewById<ImageView>(Resource.Id.imageView3);
             colormuestra.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
             color = clasesettings.gettearvalor("color");
-          
+            reprodautomatica = clasesettings.gettearvalor("automatica");
             var ll1 = FindViewById<LinearLayout>(Resource.Id.linearLayout3);
             var ll2 = FindViewById<LinearLayout>(Resource.Id.linearLayout4);
             var ll3 = FindViewById<LinearLayout>(Resource.Id.linearLayout5);
@@ -89,6 +89,7 @@ namespace App1
             var fondo = FindViewById<ImageView>(Resource.Id.fondo1);
             var toggle1 = FindViewById<Android.Support.V7.Widget.SwitchCompat>(Resource.Id.toggleButton1);
             var toggle2 = FindViewById<Android.Support.V7.Widget.SwitchCompat>(Resource.Id.toggleButton2);
+            var automatica = FindViewById<Android.Support.V7.Widget.SwitchCompat>(Resource.Id.automatico);
             var botonclearcache = FindViewById<LinearLayout>(Resource.Id.linearLayout8);
             calidades = FindViewById<Spinner>(Resource.Id.spinner1);
             var action = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.my_toolbar);
@@ -101,6 +102,10 @@ namespace App1
 
             ////////////////////////////////////////////////////////////////
             ///
+            if (reprodautomatica == "si")
+                automatica.Checked = true;
+            else
+                automatica.Checked = false;
 
 
             SetSupportActionBar(action);
@@ -194,6 +199,20 @@ namespace App1
 
                 }
              
+            };
+            automatica.Click += delegate
+            {
+                if (automatica.Checked)
+                {
+                    reprodautomatica = "si";
+                    Toast.MakeText(this, "Si no hay mas elementos en cola se reproducira el primer elemento de las sugerencias",ToastLength.Long).Show();
+                }
+                else
+                {
+                    reprodautomatica = "no";
+                    Toast.MakeText(this, "Si no hay mas elementos en cola no se ejecutara ninguna accion", ToastLength.Long).Show();
+                }
+
             };
             toggle2.Click += delegate
             {
@@ -436,7 +455,8 @@ namespace App1
             clasesettings.guardarsetting("ordenalfabeto", ordenalfabeto);
             clasesettings.guardarsetting("color", color);
             clasesettings.guardarsetting("video", calidad.ToString());
-          //  Toast.MakeText(this, "Guardado exitosamente", ToastLength.Long).Show();
+            clasesettings.guardarsetting("automatica", reprodautomatica);
+            //  Toast.MakeText(this, "Guardado exitosamente", ToastLength.Long).Show();
             clasesettings.preguntarsimenuosalir(this);
     
 

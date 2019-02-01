@@ -93,8 +93,14 @@ namespace App1
             requ.SetNotificationVisibility(DownloadVisibility.VisibleNotifyCompleted);
             requ.SetTitle( tituloo );
             var destino = Android.Net.Uri.FromFile(new Java.IO.File(path));
+            if (clasesettings.gettearvalor("rutadescarga") == Android.OS.Environment.DirectoryDownloads)
+                requ.SetDestinationInExternalPublicDir(clasesettings.gettearvalor("rutadescarga"), Path.GetFileName(path));
+            else {
+           
             requ.SetDestinationUri(destino);
-         
+            }
+            requ.AllowScanningByMediaScanner();
+        
             requ.SetVisibleInDownloadsUi(true);
 
 
@@ -120,10 +126,21 @@ namespace App1
                     Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits");
                 }
 
-                if (!datosviejos.Contains(Path.GetFileNameWithoutExtension(path) + "²" + link + "²" +path + "¤"))
+                if (!datosviejos.Contains(link.Split('=')[1]))
                 {
+
                     var aafff = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d");
                     aafff.Write(datosviejos + Path.GetFileNameWithoutExtension(path) + "²" + link + "²" + path + "¤");
+                    aafff.Close();
+
+                }
+                else {
+                    var datosparsed = clasesettings.obtenermedia(clasesettings.rutacache+"/downloaded.gr3d");
+                    var videoid = link.Split('=')[1];
+                    int indexelemento = datosparsed.FindIndex(ax => ax.link.Contains(videoid));
+                    datosparsed[indexelemento].path = path;
+                    var aafff = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d");
+                    aafff.Write(clasesettings.serializarmedia(datosparsed));
                     aafff.Close();
 
                 }
@@ -150,10 +167,22 @@ namespace App1
                     Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits");
                 }
 
-                if (!datosviejos.Contains(Path.GetFileNameWithoutExtension(path) + "²" + link + "²" + path + "¤"))
+                if (!datosviejos.Contains(link.Split('=')[1]))
                 {
+
                     var aafff = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d2");
                     aafff.Write(datosviejos + Path.GetFileNameWithoutExtension(path) + "²" + link + "²" + path + "¤");
+                    aafff.Close();
+
+                }
+                else
+                {
+                    var datosparsed = clasesettings.obtenermedia(clasesettings.rutacache + "/downloaded.gr3d2");
+                    var videoid = link.Split('=')[1];
+                    int indexelemento = datosparsed.FindIndex(ax => ax.link.Contains(videoid));
+                    datosparsed[indexelemento].path = path;
+                    var aafff = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d2");
+                    aafff.Write(clasesettings.serializarmedia(datosparsed));
                     aafff.Close();
 
                 }

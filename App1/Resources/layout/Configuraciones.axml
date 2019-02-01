@@ -56,7 +56,7 @@
 					android:layout_height="wrap_content">
 					<TextView
 						android:text="Ruta de descargas"
-						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textAppearance="?android:attr/textAppearanceSmall"
 						android:layout_width="wrap_content"
 						android:layout_height="match_parent"
 						android:id="@+id/textView2"
@@ -102,7 +102,7 @@
 					android:id="@+id/linearLayout6">
 					<TextView
 						android:text="Color de los menues"
-						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textAppearance="?android:attr/textAppearanceSmall"
 						android:layout_width="wrap_content"
 						android:layout_height="match_parent"
 						android:id="@+id/textView4" />
@@ -112,116 +112,7 @@
 						android:id="@+id/imageView3"
 						android:layout_marginLeft="5dp" />
 				</LinearLayout>
-				<GridLayout
-					android:minWidth="25px"
-					android:minHeight="25px"
-					android:layout_width="320dp"
-					android:layout_height="132dp"
-					android:id="@+id/gridLayout1"
-					android:alignmentMode="alignMargins"
-					android:columnCount="7"
-					android:rowCount="5"
-					android:layout_marginTop="6dp"
-					android:layout_gravity="center">
-					<ImageView
-						android:id="@+id/imageView4"
-						android:layout_height="40dp"
-						android:layout_width="40dp"
-						android:background="#F44336"
-						android:layout_marginLeft="5dp"
-						android:layout_marginBottom="5dp" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView5"
-						android:layout_marginLeft="5dp"
-						android:background="#E91E63" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView6"
-						android:layout_marginLeft="5dp"
-						android:background="#9C27B0" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView7"
-						android:layout_marginLeft="5dp"
-						android:background="#673AB7" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView8"
-						android:layout_marginLeft="5dp"
-						android:background="#3F51B5" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView9"
-						android:layout_marginLeft="5dp"
-						android:background="#2196F3" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView10"
-						android:layout_marginLeft="5dp"
-						android:background="#03A9F4" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView11"
-						android:layout_marginLeft="5dp"
-						android:background="#00BCD4"
-						android:layout_marginBottom="5dp" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView12"
-						android:layout_marginLeft="5dp"
-						android:background="#009688" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView13"
-						android:layout_marginLeft="5dp"
-						android:background="#FFC107" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView14"
-						android:layout_marginLeft="5dp"
-						android:background="#8BC34A" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView15"
-						android:layout_marginLeft="5dp"
-						android:background="#FF9800" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView16"
-						android:layout_marginLeft="5dp"
-						android:background="#795548" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView17"
-						android:layout_marginLeft="5dp"
-						android:background="#FFEB3B" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView18"
-						android:layout_marginLeft="5dp"
-						android:background="#FF9800" />
-					<ImageView
-						android:layout_width="40dp"
-						android:layout_height="40dp"
-						android:id="@+id/imageView19"
-						android:layout_marginLeft="5dp"
-						android:background="#000000" />
-				</GridLayout>
+			 
 			</LinearLayout>
 			<LinearLayout
 				android:orientation="horizontal"
@@ -234,7 +125,7 @@
 				android:layout_marginRight="25dp">
 				<TextView
 					android:text="Organizar alfabeticamente?"
-					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:id="@+id/textView5"
@@ -261,7 +152,7 @@
 				android:layout_marginRight="25dp">
 				<TextView
 					android:text="Servidor de Streaming"
-					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:id="@+id/textView24"
@@ -277,6 +168,38 @@
 					android:layout_marginLeft="10dp"
 					android:layout_marginRight="5dp" />
 			</LinearLayout>
+			
+			
+			
+				<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="70dp"
+		  
+				android:layout_marginTop="20dp"
+				android:alpha="1"
+				android:layout_marginLeft="25dp"
+				android:layout_marginRight="25dp">
+				<TextView
+					android:text="Reproducción automática"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+				 
+					android:gravity="center"
+					android:singleLine="true"
+					android:scrollHorizontally="true"
+					android:layout_marginLeft="5dp"
+					android:textColor="@android:color/white" />
+				<android.support.v7.widget.SwitchCompat
+					android:layout_width="wrap_content"
+					android:layout_height="10dp"
+					android:id="@+id/automatico"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="5dp" />
+			</LinearLayout>
+			
+			
 			<LinearLayout
 				android:orientation="horizontal"
 				android:layout_width="match_parent"
@@ -290,7 +213,7 @@
 				android:visibility="visible">
 				<TextView
 					android:text="Calidad por defecto"
-					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:id="@+id/textView6"
@@ -329,7 +252,7 @@
 					android:layout_marginLeft="5dp" />
 				<TextView
 					android:text="Limpiar cache"
-					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:id="@+id/textView6"

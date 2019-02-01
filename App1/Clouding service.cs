@@ -46,51 +46,73 @@ namespace App1
 
 
             // musicaplayer.SetDataSource(downloadurl);
-
+          
             if (mainmenu_Offline.gettearinstancia() != null) {
 
-         
-
-                musicaplayer.Reset();
 
 
-                musicaplayer = Android.Media.MediaPlayer.Create(this, Android.Net.Uri.Parse(downloadurl));
+                musicaplayer.Release();
 
+
+                musicaplayer = new MediaPlayer();
+              
+                if ( Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.N) {
+                    musicaplayer.SetAudioAttributes(new AudioAttributes.Builder().SetUsage(AudioUsageKind.Media).SetContentType(AudioContentType.Music).Build());
+                }
+                else {
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-                musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
+                    musicaplayer.SetAudioStreamType(Android.Media.Stream.Music);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                }
                 musicaplayer.SetWakeMode(this, WakeLockFlags.Partial);
-            musicaplayer.Start();
+         
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
                 var focusResult = audioManager.RequestAudioFocus(this, Stream.Music, AudioFocus.Gain);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-               musicaplayer.SetVideoScalingMode(VideoScalingMode.ScaleToFitWithCropping);
+           //    musicaplayer.SetVideoScalingMode(VideoScalingMode.ScaleToFitWithCropping);
                
                 if (focusResult != AudioFocusRequest.Granted)
             {
                 //could not get audio focus
                 Console.WriteLine("Could not get audio focus");
             }
-                if (mainmenu_Offline.gettearinstancia().videoon) {
-                    mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+               
+     
+                musicaplayer.Error += (aa, aaaa) =>
+                {
+                    Console.WriteLine("klk aw aw aw");
+
+                };
+              
+                musicaplayer.Prepared += delegate
+                {
+                    if (mainmenu_Offline.gettearinstancia().videoon)
                     {
-                       musicaplayer.SetDisplay(null);
-                       musicaplayer.SetDisplay(mainmenu_Offline.gettearinstancia().holder);
-                    });
-                    
-                }
+                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                        {
+                            musicaplayer.SetDisplay(null);
+                            musicaplayer.SetDisplay(mainmenu_Offline.gettearinstancia().holder);
+                        });
+                    }
+                        musicaplayer.Start();
+                };
             musicaplayer.Completion += delegate
             {
+
+               
                 if ((musicaplayer.Duration > 5 && musicaplayer.CurrentPosition > 5) && clasesettings.gettearvalor("acaboelplayer").Trim() == "")
                 {
-
-                    mainmenu_Offline.gettearinstancia().siguiente();
+                    new Thread(() =>
+                    {
+                        mainmenu_Offline.gettearinstancia().siguiente();
+                    }).Start();
                 }
             };
                 
 
             mostrarnotificacion();
-
+                musicaplayer.SetDataSource(this, Android.Net.Uri.Parse(downloadurl));
+                musicaplayer.PrepareAsync();
             }
             else {
                 musicaplayer.Reset();
@@ -105,18 +127,20 @@ namespace App1
            
             musicaplayer.Reset();
             StopSelf();
+            clasesettings.recogerbasura();
              base.OnTaskRemoved(rootIntent);
 
         }
         public override void OnCreate()
         {
-
-
-            base.OnCreate();
-
+            if (mainmenu_Offline.gettearinstancia() != null) { 
+                 mainmenu_Offline.gettearinstancia().holder.AddCallback(mainmenu_Offline.gettearinstancia());
+       
+            }
             audioManager = (AudioManager)GetSystemService(AudioService);
             instance = this;
-        
+            base.OnCreate();
+
         }
 
         public override IBinder OnBind(Intent intent)

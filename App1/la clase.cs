@@ -13,11 +13,11 @@ namespace prueba_de_lista_generica
   
     static class SocketExtensions
     {
-        public static bool IsConnected(this TcpClient socket)
+        public static bool IsConnected(this TcpClient s)
         {
             try
             {
-                return !(socket.Client.Poll(1, SelectMode.SelectRead) && socket.Available == 0);
+                return !((s.Client.Poll(1000, SelectMode.SelectRead) && (s.Client.Available == 0)) || !s.Client.Connected);
             }
             catch (Exception) { return false; }
         }

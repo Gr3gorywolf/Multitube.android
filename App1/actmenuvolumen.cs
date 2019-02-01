@@ -14,7 +14,7 @@ using Android.Graphics;
 using System.Threading;
 namespace App1
 {
-    [Activity(Label = "actvolumen", Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
+    [Activity(Label = "actvolumen", Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialogTraslucent")]
     public class actmenuvolumen : Activity
     {
 

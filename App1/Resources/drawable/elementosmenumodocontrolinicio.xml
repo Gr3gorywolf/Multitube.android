@@ -7,8 +7,8 @@
     <item
    
      android:id="@+id/reproductor"
-     android:icon="@drawable/playarrow"
-     android:title="Reproductor"
+     android:icon="@drawable/remotecontrolbuttons"
+     android:title="Control remoto"
     ></item>
 
 

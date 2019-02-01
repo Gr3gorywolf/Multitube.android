@@ -22,7 +22,7 @@ using Plugin.DownloadManager;
 namespace App1
 {
     [Activity(Label = "Descargar desde multitube" , Icon = "@drawable/icon",ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
-    [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = "text/plain")]
+   // [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = "text/plain")]
 
     public class actdownloadcenterofflinedialog : Activity
     {
@@ -352,6 +352,7 @@ namespace App1
             RunOnUiThread(() => Toast.MakeText(this, "obteniendo informacion del video", ToastLength.Long).Show());
             RunOnUiThread(() => progreso.Progress = 25);
             var asd = clasesettings.gettearvideoid(linkvid,false,-1);
+            if (asd != null) { 
             RunOnUiThread(() => progreso.Progress = 50);
           //  Intent intento = new Intent(this, typeof(serviciodownload));
             string localFilename = RemoveIllegalPathCharacters(asd.titulo).Trim() + ".mp3";
@@ -384,32 +385,40 @@ namespace App1
           ///  StartService(intento);
             RunOnUiThread(() => this.Finish());
             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-            /*
-           WebClient webClient = new WebClient();
-            webClient.DownloadDataAsync(new Uri(video2.DownloadUrl));
-            RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-            webClient.DownloadProgressChanged += (sendel, easter) =>
+                /*
+               WebClient webClient = new WebClient();
+                webClient.DownloadDataAsync(new Uri(video2.DownloadUrl));
+                RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
+                webClient.DownloadProgressChanged += (sendel, easter) =>
+                {
+
+                    pv.Progress = easter.ProgressPercentage;
+
+                };
+                webClient.DownloadDataCompleted += (s, e) => {
+                    RunOnUiThread(() => Toast.MakeText(this, "Descarga completada", ToastLength.Long).Show());
+                            mostrarnotificacion(100, video2.Title, linkvid);
+                    var bytes = e.Result; // get the downloaded data
+
+                    var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
+                    string documentsPath = pathFile.AbsolutePath;
+
+                    string localFilename = video2.Title + ".mp3";
+                    string localPath = Path.Combine(rutadedescarga, localFilename);
+                    archivocompleto = localPath;
+                    File.WriteAllBytes(localPath, bytes); // writes to local storage
+                    enporceso = false;
+                    pv.Progress = 0;
+                };*/
+            }
+            else
             {
+                RunOnUiThread(() =>
+                {
 
-                pv.Progress = easter.ProgressPercentage;
-
-            };
-            webClient.DownloadDataCompleted += (s, e) => {
-                RunOnUiThread(() => Toast.MakeText(this, "Descarga completada", ToastLength.Long).Show());
-                        mostrarnotificacion(100, video2.Title, linkvid);
-                var bytes = e.Result; // get the downloaded data
-
-                var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
-                string documentsPath = pathFile.AbsolutePath;
-
-                string localFilename = video2.Title + ".mp3";
-                string localPath = Path.Combine(rutadedescarga, localFilename);
-                archivocompleto = localPath;
-                File.WriteAllBytes(localPath, bytes); // writes to local storage
-                enporceso = false;
-                pv.Progress = 0;
-            };*/
-
+                    Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
+                });
+            }
 
         }
         public void cojerstream()

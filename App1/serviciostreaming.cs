@@ -273,14 +273,14 @@ namespace App1
                 }
 
                 // Email/Password Auth
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<firebase auth id>"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDozWqE4WZwrY_VVutTTnIlzbG-NkEni_I"));
 
-                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<firebase username>", "<firebase password>");
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<firebase email>", "<firebase password>");
 
                 // The auth Object will contain auth.User and the Authentication Token from the request
                 var token = auth.FirebaseToken;
                 // System.Diagnostics.Debug.WriteLine();
-                var firebase = new FirebaseClient("<firebase database url>");
+                var firebase = new FirebaseClient("https://dadass-d7a51.firebaseio.com");
 
 
                 // Console.WriteLine($"Key for the new item: {item.Key}");
@@ -378,6 +378,8 @@ namespace App1
             .OnceAsync<YourObject>();
 
     */
+
+         
                 foreach (var prro in textotodo.Split('¤')) {
                     var diccio = new Dictionary<string, string>();
                     diccio.Add(clasesettings.gettearvalor("uniqueid"), serial);

@@ -34,7 +34,7 @@
         android:id="@+id/fondo1"
         android:scaleType="fitXY"
         android:background="@android:color/black"
-        android:alpha="0.5" />
+      />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

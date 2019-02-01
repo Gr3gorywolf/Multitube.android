@@ -1032,20 +1032,31 @@ namespace App1
 
 
                 var a = clasesettings.gettearvideoid(url, true,-1);
-              
-                Intent intentar = new Intent(this, typeof(customdialogact));
+                    if (a != null)
+                    {
+                        Intent intentar = new Intent(this, typeof(customdialogact));
 
-                RunOnUiThread(() => {
-                    intentar.PutExtra("ipadress", "localhost");
-                    intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
-                    intentar.PutExtra("url", url);
-                    intentar.PutExtra("titulo", a.titulo);
-                    intentar.PutExtra("color", "DarkGray");
-                    StartActivity(intentar);
-                   
-                });
-               
-            }
+                        RunOnUiThread(() =>
+                        {
+                            intentar.PutExtra("ipadress", "localhost");
+                            intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
+                            intentar.PutExtra("url", url);
+                            intentar.PutExtra("titulo", a.titulo);
+                            intentar.PutExtra("color", "DarkGray");
+                            StartActivity(intentar);
+
+                        });
+                    }
+                    else
+                    {
+                        RunOnUiThread(() =>
+                        {
+
+                            Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
+                        });
+                    }
+
+                }
 
             }
             catch (Exception)
