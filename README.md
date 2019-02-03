@@ -14,4 +14,4 @@ Features
 <li>You can transfer media from one device with multitube to another</li>
 </ul>
 and much more!! get more info and dowload from the app's <a href='https://gr3gorywolf.github.io/multitubepage.github.io/'>official website</a>
-   or you can also download the beta apk from <a href='https://mega.nz/#!5EQQ3KLa!mW0RJqb-wUfHRoiPjKUvSdGZBilo9auaXzVLrEGrpC0'> here</a>
+   or you can also download the beta apk from <a href='https://gr3gorywolf.github.io/getromdownload/youtubepc.html'> here</a>
