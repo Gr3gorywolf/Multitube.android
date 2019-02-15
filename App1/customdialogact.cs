@@ -50,19 +50,6 @@ namespace App1
 
 
 
-           /* string colol = Intent.GetStringExtra("color");
-              
-            if (colol.Trim() != "none") {
-             //   lineaa.SetBackgroundColor(Color.ParseColor(colol));
-                if (colol == "Black")
-                {
-                 //  lineall2.SetBackgroundColor(Android.Graphics.Color.DarkGray);
-                }
-                else
-                {
-                  //  lineall2.SetBackgroundColor(Android.Graphics.Color.Black);
-                };
-            }*/
           
             string titulo = "";
             texto.Text = "";

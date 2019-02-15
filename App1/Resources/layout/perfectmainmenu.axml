@@ -28,7 +28,7 @@
 			android:layout_marginTop="5dp">
 			<ImageView
 				android:src="@drawable/logo"
-				android:layout_width="match_parent"
+				android:layout_width="300dp"
 				android:layout_height="match_parent"
 				android:id="@+id/imageView1"
 			 />
@@ -36,12 +36,13 @@
 		<ScrollView
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			
 			>
 			<LinearLayout
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_marginTop="10dp"
+			 
 				android:layout_gravity="center"
 				>
 				<LinearLayout

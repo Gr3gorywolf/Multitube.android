@@ -83,24 +83,68 @@ namespace App1
                     Console.WriteLine("klk aw aw aw");
 
                 };
-              
+
+               musicaplayer.Info += (aa, aaa) =>
+                {
+                    var instancia = mainmenu_Offline.gettearinstancia();
+                    if (instancia != null)
+                    {
+                        switch (aaa.What)
+                        {
+                            case MediaInfo.BufferingStart:
+                                if (instancia.progresobuffering.Visibility != ViewStates.Visible)
+                                    instancia.progresobuffering.Visibility = ViewStates.Visible;
+                                break;
+                            case MediaInfo.BufferingEnd:
+                                if (instancia.progresobuffering.Visibility != ViewStates.Gone)
+                                    instancia.progresobuffering.Visibility = ViewStates.Gone;
+                                break;
+                            case MediaInfo.VideoRenderingStart:
+                                if (instancia.progresobuffering.Visibility != ViewStates.Gone)
+                                    instancia.progresobuffering.Visibility = ViewStates.Gone;
+                                break;
+
+                        };
+                    }
+                };
+               
+           
+               
                 musicaplayer.Prepared += delegate
                 {
                     if (mainmenu_Offline.gettearinstancia().videoon)
                     {
                         mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
                         {
-                            musicaplayer.SetDisplay(null);
-                            musicaplayer.SetDisplay(mainmenu_Offline.gettearinstancia().holder);
+                            try
+                            {
+                                musicaplayer.SetDisplay(null);
+                                musicaplayer.SetDisplay(mainmenu_Offline.gettearinstancia().holder);
+                            }
+                            catch (Exception) {
+
+                            }
+
+                       
+                            mainmenu_Offline.gettearinstancia().setVideoSize();
                         });
                     }
                         musicaplayer.Start();
+                    if (mainmenu_Offline.gettearinstancia().qualitychanged)
+                    {
+                        try
+                        {
+                         mainmenu_Offline.gettearinstancia().qualitychanged = false;
+                         musicaplayer.SeekTo(mainmenu_Offline.gettearinstancia().previousprogress);
+                        }
+                        catch (Exception) { }
+                    }
                 };
             musicaplayer.Completion += delegate
             {
 
                
-                if ((musicaplayer.Duration > 5 && musicaplayer.CurrentPosition > 5) && clasesettings.gettearvalor("acaboelplayer").Trim() == "")
+                if ((musicaplayer.Duration > 5 && musicaplayer.CurrentPosition > 5))
                 {
                     new Thread(() =>
                     {

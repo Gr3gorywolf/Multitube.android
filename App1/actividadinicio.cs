@@ -10,6 +10,8 @@ using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Support.Design.Widget;
 using System.Linq;
+using System;
+
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
@@ -32,7 +34,7 @@ namespace App1
         RecyclerView listafavoritos;
         bool detenedor = true;
         public List<playlistelements> favoritos = new List<playlistelements>();
-     
+        public Android.Support.V7.App.AlertDialog alertareproducirvideo = null;
         public Dictionary<string,playlistelements>  Diccfavoritos = new Dictionary<string,playlistelements>();
         /*
          0-mas reproducidos
@@ -155,11 +157,15 @@ namespace App1
             listasugerencias.SetLayoutManager(enlinea4);
 
             adaptadorcartas adap = new adaptadorcartas(listafake, this);
-         
-         //   listafavoritos.SetAdapter(adap);
+
+            //   listafavoritos.SetAdapter(adap);
 
 
+            FindViewById<CardView>(Resource.Id.cartainicio).Click += delegate
+            {
 
+                this.Finish();
+            };
 
             itemsm.NavigationItemSelected += (sender, e) =>
             {
@@ -248,42 +254,48 @@ namespace App1
         }
         public void cargarmasvistos()
         {
-            var linksorted = objetohistorial.links.OrderBy(x => x.Value).ToList();
-            linksorted.Reverse();
-            var elemsorted = new List<playlistelements>();
+            try
+            {
+                var linksorted = objetohistorial.links.OrderBy(x => x.Value).ToList();
+                linksorted.Reverse();
+                var elemsorted = new List<playlistelements>();
 
-            foreach (var elem in linksorted) {
-                elemsorted.Add(objetohistorial.videos.FirstOrDefault(x => x.link == elem.Key));
+                foreach (var elem in linksorted)
+                {
+                    elemsorted.Add(objetohistorial.videos.FirstOrDefault(x => x.link == elem.Key));
+
+                }
+                RunOnUiThread(() =>
+                {
+                    adaptadorcartas adap = new adaptadorcartas(elemsorted.Take(30).ToList(), this);
+                    adap.ItemClick += (aa, aaa) =>
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            var elemento = elemsorted[aaa.Position];
+                            Intent intento = new Intent(this, typeof(customdialogact));
+
+                            intento.PutExtra("url", elemento.link);
+                            intento.PutExtra("titulo", elemento.nombre);
+                            intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
+                            StartActivity(intento);
+                        });
+                    };
+                    listamas.SetAdapter(adap);
+                    if (elemsorted.Count > 0)
+                        secciones[0].Visibility = ViewStates.Visible;
+                    else
+                        secciones[0].Visibility = ViewStates.Gone;
+                });
+            }
+            catch (Exception) {
 
             }
-            RunOnUiThread(() =>
-            {
-                adaptadorcartas adap = new adaptadorcartas(elemsorted.Take(30).ToList(), this);
-                adap.ItemClick += (aa, aaa) =>
-                {
-                    RunOnUiThread(() =>
-                    {
-                        var elemento = elemsorted[aaa.Position];
-                        Intent intento = new Intent(this, typeof(customdialogact));
-
-                        intento.PutExtra("url", elemento.link);
-                        intento.PutExtra("titulo", elemento.nombre);
-                        intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
-                        StartActivity(intento);
-                    });
-                };
-               listamas.SetAdapter(adap);
-                if (elemsorted.Count > 0)
-                    secciones[0].Visibility = ViewStates.Visible;
-                else
-                    secciones[0].Visibility = ViewStates.Gone;
-            });
- 
         }
 
 
         public void cargarhistorial() {
-
+            try { 
             var elementos = objetohistorial.videos;
             elementos.Reverse();
             var historyelements = elementos.Take(30).ToList();
@@ -307,7 +319,13 @@ namespace App1
                 secciones[1].Visibility = ViewStates.Visible;
             else
                 secciones[1].Visibility = ViewStates.Gone;
+
+
         }
+            catch (Exception) {
+
+            }
+}
 
 
 
@@ -315,113 +333,15 @@ namespace App1
         public void cargarfavoritos()
         {
 
-           
-            
-            adaptadorcartas adap = new adaptadorcartas(favoritos, this);
-            adap.ItemClick += (aa, aaa) =>
+
+            try
             {
-                RunOnUiThread(() =>
-                {
-                    var elemento = favoritos[aaa.Position];
-                    Intent intento = new Intent(this, typeof(customdialogact));
-                   
-                    intento.PutExtra("url", elemento.link);
-                    intento.PutExtra("titulo", elemento.nombre);
-                    intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
-                    StartActivity(intento);
-                });
-            };
-            adap.ItemLongClick += (aa, aaa) =>
-            {
-                RunOnUiThread(() =>
-                {
-                    var elemento = favoritos[aaa.Position];
-                    new Android.App.AlertDialog.Builder(this)
-                    .SetTitle("Advertencia")
-                    .SetMessage("Desea eliminar este elemento de la lista de favoritos?")
-                    .SetPositiveButton("Si", (aax, asd) =>
-                    {
-                        Diccfavoritos = clasesettings.agregarfavoritos(this, Diccfavoritos, elemento);
-                        favoritos = Diccfavoritos.Values.ToList();
-                        favoritos.Reverse();
-                        cargarfavoritos();
-                    })
-                    .SetNegativeButton("No", (asdd, ffff) => { })
-                    .Create()
-                    .Show();
-                });
-            };
-            RunOnUiThread(() => { 
-           listafavoritos.SetAdapter(adap);
-            if (favoritos.Count > 0)
-                secciones[2].Visibility = ViewStates.Visible;
-            else
-                secciones[2].Visibility = ViewStates.Gone;
-      
-            });
-
-        }
-        public void cargarresults()
-        {
-
-            RunOnUiThread(() =>
-            {
-
-              
-
-#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-                alerta = new ProgressDialog(this);
-#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-                alerta.SetTitle("Buscando videos sugeridos");
-                alerta.SetMessage("Por favor espere...");
-                alerta.Create();
-                alerta.Show();
-                
-               
-            });
-
-            YoutubeSearch.VideoSearch buscar = new YoutubeSearch.VideoSearch();
-            List<YoutubeSearch.VideoInformation> results = new List<YoutubeSearch.VideoInformation>();
-            if (mainmenu_Offline.gettearinstancia() != null)
-                if (mainmenu_Offline.gettearinstancia().sugerencias.Count > 0)
-                       results = mainmenu_Offline.gettearinstancia().sugerencias;
-                else {
-                    results = buscar.SearchQuery("", 1);
-                    mainmenu_Offline.gettearinstancia().sugerencias = results;
-                     }
-            else
-            if (mainmenu.gettearinstancia() != null)
-                   if (mainmenu.gettearinstancia().sugerencias.Count > 0)
-                       results = mainmenu.gettearinstancia().sugerencias;
-                   else {
-                       results = buscar.SearchQuery("", 1);
-                       mainmenu.gettearinstancia().sugerencias = results;
-                    }
-  
-                      
-
-
-            List<playlistelements> listafake = new List<playlistelements>();
-            foreach (var data in results)
-            {
-
-                listafake.Add(new playlistelements
-                {
-                    nombre = WebUtility.HtmlDecode(data.Title),
-                    link = data.Url
-                });
-
-
-            }
-            RunOnUiThread(() =>
-            {
-             
-                adaptadorcartas adap = new adaptadorcartas(listafake, this);
+                adaptadorcartas adap = new adaptadorcartas(favoritos, this);
                 adap.ItemClick += (aa, aaa) =>
                 {
                     RunOnUiThread(() =>
                     {
-                        var elemento = listafake[aaa.Position];
+                        var elemento = favoritos[aaa.Position];
                         Intent intento = new Intent(this, typeof(customdialogact));
 
                         intento.PutExtra("url", elemento.link);
@@ -430,16 +350,151 @@ namespace App1
                         StartActivity(intento);
                     });
                 };
-                listasugerencias.SetAdapter(adap);
-                alerta.Dismiss();
-              
-                if (listafake.Count > 0)
-                    secciones[3].Visibility = ViewStates.Visible;
+                adap.ItemLongClick += (aa, aaa) =>
+                {
+                    RunOnUiThread(() =>
+                    {
+                        var elemento = favoritos[aaa.Position];
+                        new Android.App.AlertDialog.Builder(this)
+                        .SetTitle("Advertencia")
+                        .SetMessage("Desea eliminar este elemento de la lista de favoritos?")
+                        .SetPositiveButton("Si", (aax, asd) =>
+                        {
+                            Diccfavoritos = clasesettings.agregarfavoritos(this, Diccfavoritos, elemento);
+                            favoritos = Diccfavoritos.Values.ToList();
+                            favoritos.Reverse();
+                            cargarfavoritos();
+                        })
+                        .SetNegativeButton("No", (asdd, ffff) => { })
+                        .Create()
+                        .Show();
+                    });
+                };
+                RunOnUiThread(() =>
+                {
+                    listafavoritos.SetAdapter(adap);
+                    if (favoritos.Count > 0)
+                    {
+                        secciones[2].Visibility = ViewStates.Visible;
+                        if (!clasesettings.probarsetting("dialogofavoritos"))
+                        {
+                            RunOnUiThread(() =>
+                            {
+                                new Android.Support.V7.App.AlertDialog.Builder(this)
+                                 .SetTitle("Informacion")
+                                 .SetMessage("Al dejar presionado un elemento de favoritos usted podra eliminarlo de la lista")
+                                 .SetCancelable(false)
+                                 .SetPositiveButton("Entendido", (aa, fddggfd) => { })
+                                 .Create()
+                                 .Show();
+                                clasesettings.guardarsetting("dialogofavoritos", "si");
+                            });
+
+                        }
+
+
+
+
+
+                    }
+                    else
+                    {
+                        secciones[2].Visibility = ViewStates.Gone;
+                    }
+
+                });
+
+            }
+            catch (Exception) {
+            }
+
+        }
+        public void cargarresults()
+        {
+            try
+            {
+                RunOnUiThread(() =>
+                {
+
+
+
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+                    alerta = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
+                    alerta.SetTitle("Buscando videos sugeridos");
+                    alerta.SetMessage("Por favor espere...");
+                    alerta.SetCancelable(false);
+                    alerta.Create();
+                    alerta.Show();
+
+
+                });
+
+                YoutubeSearch.VideoSearch buscar = new YoutubeSearch.VideoSearch();
+                List<YoutubeSearch.VideoInformation> results = new List<YoutubeSearch.VideoInformation>();
+                if (mainmenu_Offline.gettearinstancia() != null)
+                    if (mainmenu_Offline.gettearinstancia().sugerencias.Count > 0)
+                        results = mainmenu_Offline.gettearinstancia().sugerencias;
+                    else
+                    {
+                        results = buscar.SearchQuery("", 1);
+                        mainmenu_Offline.gettearinstancia().sugerencias = results;
+                    }
                 else
-                    secciones[3].Visibility = ViewStates.Gone;
+                if (mainmenu.gettearinstancia() != null)
+                    if (mainmenu.gettearinstancia().sugerencias.Count > 0)
+                        results = mainmenu.gettearinstancia().sugerencias;
+                    else
+                    {
+                        results = buscar.SearchQuery("", 1);
+                        mainmenu.gettearinstancia().sugerencias = results;
+                    }
 
-            });
 
+
+
+                List<playlistelements> listafake = new List<playlistelements>();
+                foreach (var data in results)
+                {
+
+                    listafake.Add(new playlistelements
+                    {
+                        nombre = WebUtility.HtmlDecode(data.Title),
+                        link = data.Url
+                    });
+
+
+                }
+                RunOnUiThread(() =>
+                {
+
+                    adaptadorcartas adap = new adaptadorcartas(listafake, this);
+                    adap.ItemClick += (aa, aaa) =>
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            var elemento = listafake[aaa.Position];
+                            Intent intento = new Intent(this, typeof(customdialogact));
+
+                            intento.PutExtra("url", elemento.link);
+                            intento.PutExtra("titulo", elemento.nombre);
+                            intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
+                            StartActivity(intento);
+                        });
+                    };
+                    listasugerencias.SetAdapter(adap);
+                    alerta.Dismiss();
+
+                    if (listafake.Count > 0)
+                        secciones[3].Visibility = ViewStates.Visible;
+                    else
+                        secciones[3].Visibility = ViewStates.Gone;
+
+                });
+            }
+            catch (Exception) {
+               RunOnUiThread(()=>alerta.Dismiss());
+            }
         }
         public void recargarhistorial() {
 

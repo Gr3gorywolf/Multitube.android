@@ -291,6 +291,7 @@ namespace App1
             instancia = this;
             video.Visibility = ViewStates.Invisible;
             /////////////////////////////////////////////////////////clicks////////////////////////////////////////
+      
             panel.PanelExpanded += delegate
             {
                 solapa.Visibility = ViewStates.Visible;
@@ -1684,7 +1685,7 @@ namespace App1
                         mSession.SetMediaButtonReceiver(pintent);
                         mSession.Active = (true);
                         mSession.SetPlaybackState(pbs);
-                        Thread.Sleep(7500);
+                        Thread.Sleep(60000);
                     }
                     else {
                         try

@@ -276,55 +276,20 @@ namespace App1
             string title = "";
             RunOnUiThread(() => Toast.MakeText(this, "obteniendo informacion del video", ToastLength.Long).Show());
             RunOnUiThread(() => progreso.Progress = 25);
-            using (var videito = Client.For(YouTube.Default))
-            {
-                var video = videito.GetAllVideosAsync(linkvid);
-                var resultados = video.Result;
-                title = resultados.First().Title.Replace("- YouTube", "");
-                video2 = resultados.First(info => info.Resolution == quality && info.AudioFormat == AudioFormat.Aac).GetUriAsync().Result;
-            }
+
+            var elemento = clasesettings.gettearvideoid(linkvid, false, quality);
+            if (elemento != null) { 
+            title = elemento.titulo;
+            video2 = elemento.downloadurl;
+       
             RunOnUiThread(() => progreso.Progress = 50);
-            /*
-            videoinfoss = DownloadUrlResolver.GetDownloadUrls(linkvid, false);
-
-            VideoInfo video2 = videoinfoss.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == quality);
-            /* WebClient webClient = new WebClient();
-             webClient.DownloadDataAsync(new Uri(video2.DownloadUrl));
-             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-             webClient.DownloadProgressChanged +=(sendel,easter)=>
-             {
-
-
-
-                 pv.Progress = easter.ProgressPercentage;
-             };
-             webClient.DownloadDataCompleted += (s, e) => {
-                 mostrarnotificacion(100, video2.Title, linkvid);
-                 RunOnUiThread(() => Toast.MakeText(this, "Descarga completada", ToastLength.Long).Show());
-                 var bytes = e.Result; // get the downloaded data
-
-                 var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
-                 string documentsPath = pathFile.AbsolutePath;
-
-                 string localFilename = video2.Title+".mp4";
-                 string localPath = Path.Combine(rutadedescarga, localFilename);
-                 archivocompleto = localPath;
-                 File.WriteAllBytes(localPath, bytes); // writes to local storage
-                 enporceso = false;
-                 pv.Progress = 0;
-             };*/
-
+    
             var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
             string documentsPath = pathFile.AbsolutePath;
             RunOnUiThread(() => progreso.Progress = 75);
             string localFilename = RemoveIllegalPathCharacters(title).Trim() + ".mp4";
             string localPath = Path.Combine(rutadedescarga, localFilename);
-            /* Intent intento = new Intent(this, typeof(serviciodownload));
-             intento.PutExtra("path", localPath);
-             intento.PutExtra("archivo", video2);
-             intento.PutExtra("titulo", title);
-             intento.PutExtra("link", linkvid);
-             StartService(intento);*/
+    
             if (serviciodownload.gettearinstancia() != null)
             {
                 serviciodownload.gettearinstancia().descargar(localPath, video2, title, linkvid);
@@ -338,8 +303,17 @@ namespace App1
             RunOnUiThread(() => this.Finish());
             RunOnUiThread(() => progreso.Progress = 100);
             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-
         }
+            else
+            {
+                RunOnUiThread(() =>
+                {
+
+            Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
+            });
+            }
+
+}
         public void descmp3()
         {
             progreso.Visibility = ViewStates.Visible;
@@ -385,31 +359,7 @@ namespace App1
           ///  StartService(intento);
             RunOnUiThread(() => this.Finish());
             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-                /*
-               WebClient webClient = new WebClient();
-                webClient.DownloadDataAsync(new Uri(video2.DownloadUrl));
-                RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-                webClient.DownloadProgressChanged += (sendel, easter) =>
-                {
-
-                    pv.Progress = easter.ProgressPercentage;
-
-                };
-                webClient.DownloadDataCompleted += (s, e) => {
-                    RunOnUiThread(() => Toast.MakeText(this, "Descarga completada", ToastLength.Long).Show());
-                            mostrarnotificacion(100, video2.Title, linkvid);
-                    var bytes = e.Result; // get the downloaded data
-
-                    var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
-                    string documentsPath = pathFile.AbsolutePath;
-
-                    string localFilename = video2.Title + ".mp3";
-                    string localPath = Path.Combine(rutadedescarga, localFilename);
-                    archivocompleto = localPath;
-                    File.WriteAllBytes(localPath, bytes); // writes to local storage
-                    enporceso = false;
-                    pv.Progress = 0;
-                };*/
+            
             }
             else
             {

@@ -267,7 +267,7 @@ namespace App1
                     //  cliente.Client.ConnectAsync(ipadre, 1024);
                     //   cliente.Client.Connect(ipadre, 1024);
                     var result = cliente.Client.BeginConnect(ipadre, 1024, null, null);
-                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(4));
                     if (cliente.Client.Connected)
                     {
                         cliente.Client.Shutdown(SocketShutdown.Both);
@@ -305,7 +305,7 @@ namespace App1
                     //   cliente.Client.Connect(ipadre, 1024);
 
                     var result = cliente.Client.BeginConnect(ipadre, 1024, null, null);
-                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1.5));
+                    result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(4));
                     
                     if (cliente.Client.Connected)
                     {

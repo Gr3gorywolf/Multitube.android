@@ -274,7 +274,7 @@ namespace App1
                                     {
 
                                         WebClient cliente = new WebClient();
-                                        var version = cliente.DownloadString("https://gr3gorywolf.github.io/Multitubeweb/version.gr3v");
+                                        var version = cliente.DownloadString("https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/Updates/version.gr3v");
                                         using (var file = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/version.gr3v")) { 
                                             file.Write(version);
                                         file.Close();
@@ -284,7 +284,13 @@ namespace App1
                                         {
                                             alerta.Dismiss();
                                             StartService(new Intent(this, typeof(serviciostreaming)));
-                                        });
+                                            new AlertDialog.Builder(this)
+                                            .SetTitle("Informacion")
+                                            .SetMessage("El servidor de streaming le permitirara reproducir su contenido previamente descargado desde cualquier navegador de cualquier dispositivo conectado a su misma red. Puede consultar el estado de este en la barra de notificaciones")
+                                             .SetPositiveButton("Entendido!", (aa, fff) => { })
+                                             .Create()
+                                             .Show();
+                                            });
                                       
                                     }).Start();
                            
@@ -385,9 +391,11 @@ namespace App1
 
         public override void OnBackPressed()
         {
-         
-            clasesettings.preguntarsimenuosalir(this);
-   
+
+            ///  clasesettings.preguntarsimenuosalir(this);
+            ///  
+            this.Finish();
+            StartActivity(new Intent(this, typeof(actsplashscreen)));
            // clasesettings.preguntarsimenuosalir(this);
             // base.OnBackPressed();
         }
@@ -517,8 +525,8 @@ namespace App1
             switch (item.ItemId)
             {
                 case Android.Resource.Id.Home:
-                    StartActivity(typeof(actmenuprincipal));
                     this.Finish();
+                    StartActivity(new Intent(this, typeof(actsplashscreen)));
                     return true;
             }
             return base.OnOptionsItemSelected(item);

@@ -88,7 +88,7 @@ namespace App1
                     bool notienenada = false;
 
                     WebClient cliente = new WebClient();
-                    cliente.DownloadDataAsync(new Uri("https://gr3gorywolf.github.io/Multitubeweb/version.gr3v"));
+                    cliente.DownloadDataAsync(new Uri("https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/Updates/version.gr3v"));
                     cliente.DownloadDataCompleted += (aaa, aaaa) =>
                     {
                     string versionsinparsear = Encoding.UTF8.GetString(aaaa.Result);               
@@ -273,14 +273,14 @@ namespace App1
                 }
 
                 // Email/Password Auth
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDozWqE4WZwrY_VVutTTnIlzbG-NkEni_I"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<firebase auth key>"));
 
-                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<firebase email>", "<firebase password>");
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<firebase user>", "<firebase user pass>");
 
                 // The auth Object will contain auth.User and the Authentication Token from the request
                 var token = auth.FirebaseToken;
                 // System.Diagnostics.Debug.WriteLine();
-                var firebase = new FirebaseClient("https://dadass-d7a51.firebaseio.com");
+                var firebase = new FirebaseClient("<firebase proyect url>");
 
 
                 // Console.WriteLine($"Key for the new item: {item.Key}");

@@ -70,7 +70,11 @@ namespace App1
         public List<playlistelements> favoritos { get; set; }
     }
 
+    public class updateinfo {
+        public int Numero { get; set; }
+        public string Descripcion { get; set; }
 
+    }
     public class modelips
     {
         public string ipactual { get; set; }
@@ -89,7 +93,7 @@ namespace App1
         public static Activity context = null;
         public static Client<YouTubeVideo> youtubeclient = null;
         public static string rutacache = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache";
-
+        public static bool updateschecked = false;
 
         public static void guardarips(modelips model) {
 
@@ -146,7 +150,7 @@ namespace App1
             ad.SetTitle("Advertencia");
             ad.SetIcon(Resource.Drawable.alert);
             ad.SetMessage("Que desea hacer");
-            ad.SetNegativeButton("Ir al menu principal", si);
+            ad.SetNegativeButton("Ir a la pantalla de selección de modos", si);
             ad.SetNeutralButton("Salir de la aplicacion", no);
             ad.SetPositiveButton("Cancelar", no2);
             ad.Create();
@@ -259,7 +263,7 @@ namespace App1
         }
         public static void si(object sender, EventArgs e)
         {
-            context.StartActivity(new Intent(context, typeof(actmenuprincipal)));
+            context.StartActivity(new Intent(context, typeof(actsplashscreen)));
             recogerbasura();
             context.Finish();
             if (mainmenu.gettearinstancia() != null)
@@ -343,7 +347,7 @@ namespace App1
             }
             else {
                 lista.Add(elemento.link, elemento);
-                contexto.RunOnUiThread(() => { Toast.MakeText(contexto, "Elemento agregado a favoritos", ToastLength.Long).Show(); });
+                contexto.RunOnUiThread(() => { Toast.MakeText(contexto, "Elemento agregado a favoritos. Ahora aparecera en su pantalla de inicio", ToastLength.Long).Show(); });
             }
             var arch = File.CreateText(rutacache + "/favourites.json");
             arch.Write(JsonConvert.SerializeObject(lista));
@@ -901,6 +905,20 @@ namespace App1
 
             }
         }
+        public static string gettearserial() {
+
+            Random rondom = new Random();
+            char[] array = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
+            return rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                +
+                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                 +
+                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                 +
+                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
+                 +
+                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString();
+        }
         public static tituloydownloadurl gettearvideoid(string elink,bool videoabierto,int calidad)
         {
             string video2 = "";
@@ -971,11 +989,11 @@ namespace App1
                     papu.titulo = title;
                     return papu;
                 }
-            }
-            catch (Exception) {
+              }
+               catch (Exception) {
 
-                return null;
-            }
+                   return null;
+               }
 
 
         }

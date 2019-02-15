@@ -266,7 +266,14 @@ namespace App1
 
             StartActivity(new Intent( this, typeof(actividadinicio)));
             ///////////////////////////////#clicks#/////////////////////////////////
+            caratula2.Click += delegate
+            {
 
+                if (panel.IsExpanded)
+                    panel.CollapsePane();
+                else
+                    panel.ExpandPane();
+            };
             botonlike.Click += delegate
             {
 

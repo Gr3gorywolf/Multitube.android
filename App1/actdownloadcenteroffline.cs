@@ -144,7 +144,7 @@ namespace App1
             else
                 if (enporceso == false && rb6.Checked == true)
             {
-                quality = 0;
+                quality = -1;
                 Thread tree3 = new Thread(new ThreadStart(descmp3));
                 tree3.Start();
             }
@@ -189,16 +189,17 @@ namespace App1
             enporceso = true;
             string video2 = "";
             string title = "";
-
+            RunOnUiThread(() =>{
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-            dialogoprogreso = new ProgressDialog(this);
+                dialogoprogreso = new ProgressDialog(this);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
 
-            dialogoprogreso.SetCanceledOnTouchOutside(false);
-            dialogoprogreso.SetCancelable(false);
-            dialogoprogreso.SetTitle("Analizando video...");
-            dialogoprogreso.SetMessage("Por favor espere");
-            dialogoprogreso.Show();
+                dialogoprogreso.SetCanceledOnTouchOutside(false);
+                dialogoprogreso.SetCancelable(false);
+                dialogoprogreso.SetTitle("Analizando video...");
+                dialogoprogreso.SetMessage("Por favor espere");
+                dialogoprogreso.Show();
+            });
             using (var videito = Client.For(YouTube.Default))
             {
                 var video = videito.GetAllVideosAsync(linkvid);
@@ -210,35 +211,6 @@ namespace App1
 
 
 
-            /*
-            videoinfoss = DownloadUrlResolver.GetDownloadUrls(linkvid, false);
-
-            VideoInfo video2 = videoinfoss.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == quality);
-            /* WebClient webClient = new WebClient();
-             webClient.DownloadDataAsync(new Uri(video2.DownloadUrl));
-             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-             webClient.DownloadProgressChanged +=(sendel,easter)=>
-             {
-
-
-
-                 pv.Progress = easter.ProgressPercentage;
-             };
-             webClient.DownloadDataCompleted += (s, e) => {
-                 mostrarnotificacion(100, video2.Title, linkvid);
-                 RunOnUiThread(() => Toast.MakeText(this, "Descarga completada", ToastLength.Long).Show());
-                 var bytes = e.Result; // get the downloaded data
-
-                 var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
-                 string documentsPath = pathFile.AbsolutePath;
-
-                 string localFilename = video2.Title+".mp4";
-                 string localPath = Path.Combine(rutadedescarga, localFilename);
-                 archivocompleto = localPath;
-                 File.WriteAllBytes(localPath, bytes); // writes to local storage
-                 enporceso = false;
-                 pv.Progress = 0;
-             };*/
 
             var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
             string documentsPath = pathFile.AbsolutePath;
@@ -263,23 +235,25 @@ namespace App1
             }
             RunOnUiThread(() => this.Finish());
             RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-            dialogoprogreso.Dismiss();
+          RunOnUiThread(()=>  dialogoprogreso.Dismiss());
 
         }
         public void descmp3()
         {
             enporceso = true;
-
+            RunOnUiThread(() =>
+            {
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-            dialogoprogreso = new ProgressDialog(this);
+                dialogoprogreso = new ProgressDialog(this);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
 
-            dialogoprogreso.SetCanceledOnTouchOutside(false);
-            dialogoprogreso.SetCancelable(false);
-            dialogoprogreso.SetTitle("Analizando video...");
-            dialogoprogreso.SetMessage("Por favor espere");
-            dialogoprogreso.Show();
-
+                dialogoprogreso.SetCanceledOnTouchOutside(false);
+                dialogoprogreso.SetCancelable(false);
+                dialogoprogreso.SetTitle("Analizando video...");
+                dialogoprogreso.SetMessage("Por favor espere");
+                dialogoprogreso.Show();
+            }
+            );
             /*
             videoinfoss = DownloadUrlResolver.GetDownloadUrls(linkvid, false);
 
@@ -341,7 +315,7 @@ namespace App1
                     Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
                 });
             }
-            dialogoprogreso.Dismiss();
+            RunOnUiThread(() => dialogoprogreso.Dismiss());
 
         }
         public void cojerstream()

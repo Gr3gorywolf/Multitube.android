@@ -70,7 +70,10 @@ namespace App1
         public TcpListener oidor;
         public TcpListener oidorlistas;
         Thread threadstream;
+        public ProgressBar progresobuffering;
         Thread threadlistas;
+        public int previousprogress = 0;
+        public bool qualitychanged;
         public Android.Support.V7.Widget.RecyclerView listasugerencias;
         public bool fromotherinstance = false;
         //   public IEnumerable<VideoInfo> videoinfoss;
@@ -126,6 +129,7 @@ namespace App1
         public bool headeradded = false;
         public List<elementosugerencia> sugerenciasdeelemento = new List<elementosugerencia>();
         public List<YoutubeSearch.VideoInformation> sugerencias = new List<YoutubeSearch.VideoInformation>();
+        ImageView vervideo;
         public static mainmenu_Offline gettearinstancia()
         {
             return instance;
@@ -162,7 +166,7 @@ namespace App1
 
             }
 
-       
+
 
 
 
@@ -176,6 +180,8 @@ namespace App1
 
 
             ///////////////////////////////#Botones#////////////////////////////////
+            ///
+            progresobuffering = FindViewById<ProgressBar>(Resource.Id.progresobuffering);
             menuham = FindViewById<ScrollView>(Resource.Id.linearLayout9);
             ImageView botonabrirmenu = FindViewById<ImageView>(Resource.Id.imageView22);
             TextView estadomenu = FindViewById<TextView>(Resource.Id.textView9);
@@ -195,7 +201,7 @@ namespace App1
             var botonbusqueda = FindViewById<ImageView>(Resource.Id.imageView20);
             ImageView agregar = FindViewById<ImageView>(Resource.Id.imageView11);
             ImageView escuchar = FindViewById<ImageView>(Resource.Id.imageView15);
-            ImageView vervideo = FindViewById<ImageView>(Resource.Id.imageView6);
+            vervideo = FindViewById<ImageView>(Resource.Id.imageView6);
             blacksquare= FindViewById<ImageView>(Resource.Id.blacksquare);
             lineall2 = FindViewById<LinearLayout>(Resource.Id.linearLayout7);
             ImageView buscar = FindViewById<ImageView>(Resource.Id.imageView12);
@@ -261,6 +267,7 @@ namespace App1
             holder = video.Holder;
           
             videoquality = int.Parse(clasesettings.gettearvalor("video"));
+           
             botoncalidad.SetBackgroundResource(diccalidad[videoquality]);
             lineall2.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
             //   layoutbuttons.SetBackgroundColor(Color.ParseColor("#2b2e30"));
@@ -299,16 +306,30 @@ namespace App1
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.hambur);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.Title = "Reproductor";
-           
+
+
+
+
+           /* Drawable progressDrawable = porcientoreproduccion.ProgressDrawable.Mutate();
+            progressDrawable.SetColorFilter( Color.DarkGray, Android.Graphics.PorterDuff.Mode.SrcIn);*/
+            porcientoreproduccion.SecondaryProgressTintList=ColorStateList.ValueOf(Android.Graphics.Color.Gray);
+
+
             // SupportActionBar.SetBackgroundDrawable(new ColorDrawable(Color.ParseColor("#2b2e30")));
             /////////////////////////////////////////////////
+            ///
             var adaptadol = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new List<string> { "No hay elementos para mostrar.." });
+
             RunOnUiThread(() =>
             {
-                var parcelable = lista.OnSaveInstanceState();
+                var parcelable = lista.OnSaveInstanceState();             
                 lista.Adapter = adaptadol;
+                
                 lista.OnRestoreInstanceState(parcelable);
             });
+            ((ViewGroup)Layoutsugerencias.Parent).RemoveView(Layoutsugerencias);
+            lista.AddHeaderView(Layoutsugerencias, null, false);
+            lista.SetHeaderDividersEnabled(true);
             if (!restaurada)
             {
 
@@ -333,18 +354,13 @@ namespace App1
                 }).Start();
                 new Thread(() =>
                 {
-
                     iniciarservicio();
-                    ponerporciento();
-
-
-
+                    ponerporciento();                  
                 }).Start();
             
                 new Thread(() =>
                 {
-
-                    loadsuggestionslistener();
+                   loadsuggestionslistener();
                 }).Start();
 
             }
@@ -415,10 +431,18 @@ namespace App1
             clasesettings.recogerbasura();
             StartActivity(new Intent(this, typeof(actividadinicio)));
             OverridePendingTransition(0, 0);
+
             ///////////////////////////////#clicks#/////////////////////////////////
 
 
+            caratula2.Click += delegate
+            {
 
+                if (panel.IsExpanded)
+                    panel.CollapsePane();
+                else
+                    panel.ExpandPane();
+            };
             botonlike.Click += delegate
             {
                 animar(botonlike);
@@ -477,6 +501,9 @@ namespace App1
                         {
                             new Thread(() =>
                             {
+
+                                qualitychanged = true;
+                     
                                 buscarviddireckt(linkactual, true);
                             }).Start();
                         }
@@ -551,7 +578,7 @@ namespace App1
             searchview.QueryTextSubmit += delegate
             {
 
-                if (searchview.Query.Trim().Length > 3)
+                if (searchview.Query.Trim().Length >= 3)
                 {
                     new Thread(() =>
                     {
@@ -1126,7 +1153,35 @@ namespace App1
             StopService(new Intent(this, typeof(Clouding_serviceoffline)));
             StopService(new Intent(this, typeof(Clouding_service)));
             StopService(new Intent(this, typeof(serviciodownload)));
-            StartService(new Intent(this, typeof(Clouding_service)));         
+            StartService(new Intent(this, typeof(Clouding_service)));
+            if (videoquality > 0)
+            {
+              
+                RunOnUiThread(() =>
+                {
+                    videoon = true;
+                   
+                    solapa.Alpha = 1f;
+                    layoutbuttons.Alpha = 1f;
+                    video.Visibility = ViewStates.Visible;
+                    FindViewById<ImageView>(Resource.Id.bgimg).Visibility = ViewStates.Gone;
+                    blacksquare.Visibility = ViewStates.Gone;
+                    vervideo.SetBackgroundResource(Resource.Drawable.videooff);
+                    video.KeepScreenOn = true;
+                    if (!videoenholder)
+                    {
+                        // Clouding_service.gettearinstancia().musicaplayer.SetDisplay(holder);
+
+                        videoenholder = true;
+                    }
+
+
+                    Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+                    setVideoSize();
+                    clasesettings.modoinmersivo(this.Window, false);
+                });
+
+            }
         }
      
 
@@ -1206,8 +1261,9 @@ namespace App1
 
                         RunOnUiThread(() =>
                         {
-                            var parcelable = lista.OnSaveInstanceState();
+                            var parcelable = lista.OnSaveInstanceState();                         
                             lista.Adapter = adaptadol;
+                            
                             lista.OnRestoreInstanceState(parcelable);
                         });
 
@@ -1331,8 +1387,9 @@ namespace App1
                             adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                             RunOnUiThread(() =>
                             {
-                                var parcelable = lista.OnSaveInstanceState();
+                                var parcelable = lista.OnSaveInstanceState();                             
                                 lista.Adapter = adaptadol;
+                            
                                 lista.OnRestoreInstanceState(parcelable);
                             });
                             RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
@@ -1417,8 +1474,9 @@ namespace App1
                         adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                         RunOnUiThread(() =>
                         {
-                            var parcelable = lista.OnSaveInstanceState();
+                            var parcelable = lista.OnSaveInstanceState();                           
                             lista.Adapter = adaptadol;
+                          
                             lista.OnRestoreInstanceState(parcelable);
 
                         });
@@ -1445,10 +1503,12 @@ namespace App1
                         }
 
                         actualizartodo();
-                        var downloadurl = clasesettings.gettearvideoid(url, envideo, videoquality).downloadurl;
+                        var downloadurl = clasesettings.gettearvideoid(url, envideo, videoquality);
                         buscando = false;
-                        reproducir(downloadurl);
-
+                        if (downloadurl != null)
+                            reproducir(downloadurl.downloadurl);
+                        else
+                            reproducir(null);
                         /// actualizartodo();
 
                     }
@@ -1484,8 +1544,9 @@ namespace App1
                 adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                 RunOnUiThread(() =>
                 {
-                    var parcelable = lista.OnSaveInstanceState();
+                    var parcelable = lista.OnSaveInstanceState();                   
                     lista.Adapter = adaptadol;
+                   
                     lista.OnRestoreInstanceState(parcelable);
                 });
                 buscarvidth(termino, true);
@@ -1551,9 +1612,14 @@ namespace App1
                         adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                         RunOnUiThread(() =>
                         {
-                            var parcelable = lista.OnSaveInstanceState();
-                            lista.Adapter = adaptadol;
-                            lista.OnRestoreInstanceState(parcelable);
+                            try
+                            {
+                                var parcelable = lista.OnSaveInstanceState();
+                                lista.Adapter = adaptadol;
+                                lista.OnRestoreInstanceState(parcelable);
+                            }
+                            catch (Exception) {
+                            }
 
                         });
                         RunOnUiThread(() => label.Text = asdd);
@@ -1584,8 +1650,10 @@ namespace App1
                         actualizartodo();
                         var video = clasesettings.gettearvideoid(url, envideo, videoquality);
                         buscando = false;
-                        reproducir(video.downloadurl);
-
+                        if (video != null)
+                            reproducir(video.downloadurl);
+                        else
+                            reproducir(null);
                         //actualizartodo();
 
 
@@ -1634,8 +1702,9 @@ namespace App1
                             adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                             RunOnUiThread(() =>
                             {
-                                var parcelable = lista.OnSaveInstanceState();
+                                var parcelable = lista.OnSaveInstanceState();                              
                                 lista.Adapter = adaptadol;
+                               
                                 lista.OnRestoreInstanceState(parcelable);
                             });
                             RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
@@ -1686,14 +1755,17 @@ namespace App1
                             laparalinks.Add(urll);
                             lapara.Add(titulo);
                             listacaratulas.Add(lapara[lapara.Count - 1]);
-
+                        
                             adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                             RunOnUiThread(() =>
                             {
-                                var parcelable = lista.OnSaveInstanceState();
-                                lista.Adapter = adaptadol;
+                                var parcelable = lista.OnSaveInstanceState();                            
+                               lista.Adapter = adaptadol;
+                              
+                          
                                 lista.OnRestoreInstanceState(parcelable);
                             });
+                        
                             RunOnUiThread(() => Toast.MakeText(this, "Elemento agregado", ToastLength.Long).Show());
                             /* clasesettings.mostrarnotificacion(this, titulo, " Agregado a la cola!", urll, noticode);*/
                             actualizarlista();
@@ -1734,8 +1806,9 @@ namespace App1
                         adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                         RunOnUiThread(() =>
                         {
-                            var parcelable = lista.OnSaveInstanceState();
+                            var parcelable = lista.OnSaveInstanceState();                          
                             lista.Adapter = adaptadol;
+                            
                             lista.OnRestoreInstanceState(parcelable);
                         });
                         automated = true;
@@ -1807,68 +1880,68 @@ namespace App1
 
             if (downloadurl != null)
             {
+
                 try
                 {
-
                     contienevideo = false;
                     nombreactual = label.Text;
+
                     Clouding_service.gettearinstancia().tituloactual = label.Text;
                     Clouding_service.gettearinstancia().linkactual = linkactual;
+                    previousprogress = Clouding_service.gettearinstancia().musicaplayer.CurrentPosition;
                     Clouding_service.gettearinstancia().reproducir(downloadurl);
-                    string normalizedlink = linkactual.Replace("https", "http");
+                    if (videoquality > 0 && actividadinicio.gettearinstancia()!=null) {
 
+                        var instinicio = actividadinicio.gettearinstancia();
+                        instinicio.RunOnUiThread(() =>
+                        {
+                            if (instinicio.alertareproducirvideo != null)
+                            {
+                                if (instinicio.alertareproducirvideo.IsShowing)
+                                    instinicio.alertareproducirvideo.Dismiss();
+                            }
+                            instinicio.alertareproducirvideo = new Android.Support.V7.App.AlertDialog
+                                 .Builder(instinicio).SetTitle("Atencion")
+                                 .SetMessage("Se esta reproduciendo un video. Desea verlo en el reproductor?\n\n Nota:Al deslizar el video hacia abajo podra ver la cola de reproduccion")
+                                 .SetCancelable(false)
+                                 .SetPositiveButton("Si", (aaa, aaaaa) =>
+                                 {
+                                     instinicio.Finish();
+                                     mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                     {
+                                         mainmenu_Offline.gettearinstancia().solapa.PerformClick();
+                                     });
 
-                    objetohistorial.videos.RemoveAll(ax => ax.link == normalizedlink);
+                                 })
+                                 .SetNegativeButton("No", (aa, aaaa) =>
+                                 {
 
+                                 })
+                                 .Create();
 
-                    objetohistorial.videos.Add(new playlistelements
-                    {
-                        nombre = label.Text,
-                        link = normalizedlink
-
-                    });
-
-                    RunOnUiThread(() =>
-                    {
-                        if (!listafavoritos.ContainsKey(normalizedlink))
-                            botonlike.SetBackgroundResource(Resource.Drawable.heartoutline);
-                        else
-                            botonlike.SetBackgroundResource(Resource.Drawable.heartcomplete);
-                    });
-
-                    if (objetohistorial.links.ContainsKey(normalizedlink))
-                        objetohistorial.links[normalizedlink]++;
-                    else
-                    {
-
-                        objetohistorial.links.Add(normalizedlink, 1);
-
+                            instinicio.alertareproducirvideo.Show();
+                        });
                     }
 
-                    RunOnUiThread(() => { play.SetBackgroundResource(Resource.Drawable.pausebutton2); }); 
+                    RunOnUiThread(() => { play.SetBackgroundResource(Resource.Drawable.pausebutton2); });
                     new Thread(() =>
                     {
                         actualizartodo();
                     }).Start();
 
                     clasesettings.recogerbasura();
-                    new Thread(() =>
-                    {
-                        var archivo = File.CreateText(clasesettings.rutacache + "/history.json");
-                        archivo.Write(JsonConvert.SerializeObject(objetohistorial));
-                        archivo.Close();
-                    }).Start();
-                    if (actividadinicio.gettearinstancia() != null)
-                    {
-                        actividadinicio.gettearinstancia().recargarhistorial();
+                }
+                catch (Exception) {
+                    RunOnUiThread(() => Toast.MakeText(this, "Error al reproducir el elemento", ToastLength.Long).Show());
+                }
 
-                    }
-
-
+                try
+                {
+                    rechargestartmenu();
                 }
                 catch (Exception)
                 {
-                    RunOnUiThread(() => Toast.MakeText(this, "Ha ocurrido un error.", ToastLength.Long).Show());
+                    RunOnUiThread(() => Toast.MakeText(this, "Ha ocurrido un error al registrar el elemento en el historial.", ToastLength.Long).Show());
                 }
             }
             else {
@@ -1889,6 +1962,67 @@ namespace App1
 
 
 
+        }
+
+
+
+        public void rechargestartmenu() {
+
+            string normalizedlink = linkactual.Replace("https", "http");
+
+
+            objetohistorial.videos.RemoveAll(ax => ax.link == normalizedlink);
+
+
+            objetohistorial.videos.Add(new playlistelements
+            {
+                nombre = label.Text,
+                link = normalizedlink
+
+            });
+
+            RunOnUiThread(() =>
+            {
+                if (!listafavoritos.ContainsKey(normalizedlink))
+                    botonlike.SetBackgroundResource(Resource.Drawable.heartoutline);
+                else
+                    botonlike.SetBackgroundResource(Resource.Drawable.heartcomplete);
+            });
+
+            if (objetohistorial.links.ContainsKey(normalizedlink))
+                objetohistorial.links[normalizedlink]++;
+            else
+            {
+
+                objetohistorial.links.Add(normalizedlink, 1);
+
+            }
+            new Thread(() =>
+            {
+                savehistory();
+            }).Start();
+            if (actividadinicio.gettearinstancia() != null)
+            {
+                actividadinicio.gettearinstancia().recargarhistorial();
+
+            }
+
+
+
+        }
+        public void savehistory() {
+
+            try
+            {
+                var archivo = File.CreateText(clasesettings.rutacache + "/history.json");
+                archivo.Write(JsonConvert.SerializeObject(objetohistorial));
+                archivo.Close();
+            }
+            catch (Exception)
+            {
+                Thread.Sleep(5000);
+                savehistory();
+            }
         }
 
         public void ponerporciento()
@@ -1942,13 +2076,14 @@ namespace App1
                         {
 
                             barracarga.Visibility = ViewStates.Visible;
-
+                            if (videoon)
+                                progresobuffering.Visibility = ViewStates.Visible;
 
                         }
                         else
                         {
                             barracarga.Visibility = ViewStates.Gone;
-
+                            progresobuffering.Visibility = ViewStates.Gone;
                         }
 
 
@@ -2750,8 +2885,9 @@ namespace App1
                                     adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                                     RunOnUiThread(() =>
                                     {
-                                        var parcelable = lista.OnSaveInstanceState();
+                                        var parcelable = lista.OnSaveInstanceState();                                  
                                         lista.Adapter = adaptadol;
+                                     
                                         lista.OnRestoreInstanceState(parcelable);
                                     });
                                     buscarvidth(termino, true);
@@ -3069,10 +3205,12 @@ namespace App1
                 adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                 RunOnUiThread(() =>
                 {
-                    var parcelable = lista.OnSaveInstanceState();
+                    var parcelable = lista.OnSaveInstanceState();        
+                   
                     lista.Adapter = adaptadol;
+                    
                     lista.OnRestoreInstanceState(parcelable);
-
+          
                 });
 
 
@@ -3142,11 +3280,16 @@ namespace App1
             adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
             RunOnUiThread(() =>
             {
-                var parcelable = lista.OnSaveInstanceState();
+                try { 
+                var parcelable = lista.OnSaveInstanceState();            
                 lista.Adapter = adaptadol;
+               
                 lista.OnRestoreInstanceState(parcelable);
-
-            });
+                 }
+                            catch (Exception)
+                       {
+                     }
+        });
 
 
             buscarvidth(laparalinks[0], true);
@@ -3193,14 +3336,15 @@ namespace App1
                         laparalinks.RemoveAt(indice);
                         lapara.RemoveAt(indice);
                         listacaratulas.RemoveAt(indice);
-                        indiceactual = laparalinks.IndexOf(linkactual);
-                        locanterior = laparalinks.IndexOf(linkactual);
+                        indiceactual = laparalinks.FindIndex(x=>x.Split('=')[1].ToLower()==linkactual.Split('=')[1].ToLower());
+                        locanterior = indiceactual;
 
                         adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
                         RunOnUiThread(() =>
                         {
-                            var parcelable = lista.OnSaveInstanceState();
+                            var parcelable = lista.OnSaveInstanceState();                       
                             lista.Adapter = adaptadol;
+                           
                             lista.OnRestoreInstanceState(parcelable);
                         });
 
@@ -3412,7 +3556,7 @@ namespace App1
                         }
                         break;
                     }
-                    Thread.Sleep(2500);
+                    Thread.Sleep(60000);
                 }
             }
             catch (Exception)
@@ -3467,7 +3611,7 @@ namespace App1
         }
         public void loadsuggestionslistener() {
             var Innerlink = "";
-            while (detenedor) {
+            while (instance!=null) {
 
            
                     if (linkactual != Innerlink && linkactual.Trim()!="")
@@ -3505,9 +3649,7 @@ namespace App1
                                
                                 headeradded = true;
                             Layoutsugerencias.Visibility = ViewStates.Visible;
-                            ((ViewGroup)Layoutsugerencias.Parent).RemoveView(Layoutsugerencias);
-                           lista.AddHeaderView(Layoutsugerencias, null, false);
-                                lista.SetHeaderDividersEnabled(true);
+                          
                             }
                         });
                     }
@@ -3708,7 +3850,7 @@ namespace App1
             base.OnPause();
         }
 
-        private void setVideoSize()
+        public void setVideoSize()
         {
 
             try

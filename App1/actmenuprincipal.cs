@@ -16,18 +16,21 @@ using System.Net;
 using System.IO;
 using Android.Content.PM;
 using Android.Support.V4.Provider;
-
+using Newtonsoft.Json;
 namespace App1
 {
  
-    [Activity(Label = "Multitube", MainLauncher = true, Icon = "@drawable/icon" ,ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "Multitube" , Icon = "@drawable/icon" ,ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
     public class actmenuprincipal : Activity
     {
         ImageView fondito;
         List<Bitmap> bitmapeses = new List<Bitmap>();
         TextView tv3;
         public string ipanterior = "";
-
+        bool estaonline = false;
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
+      //  ProgressDialog dialogoprogreso;
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         ISharedPreferences prefs = Application.Context.GetSharedPreferences("Settings", FileCreationMode.Private);
         ISharedPreferencesEditor prefEditor;
 
@@ -36,18 +39,10 @@ namespace App1
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.perfectmainmenu);
-            List<string> arraydatos = new List<string>();
-            arraydatos.Add(Android.Manifest.Permission.Camera);
-            arraydatos.Add(Android.Manifest.Permission.ReadExternalStorage);
-            arraydatos.Add(Android.Manifest.Permission.WriteExternalStorage);
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
-            {
-                RequestPermissions(arraydatos.ToArray(), 0);
-
-
-
-            }
          
+
+ 
+
 
             fondito = FindViewById<ImageView>(Resource.Id.fondo1);
            
@@ -58,31 +53,11 @@ namespace App1
 
             var botoninfo = FindViewById<LinearLayout>(Resource.Id.linearLayout6);
             tv3 = FindViewById<TextView>(Resource.Id.textView3);
-            //bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondo1));
-           // bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondosparaminiaturasdeyoutubeminimalist1920x1080wallpaper203803));
-            tv3.Selected = true;
-            // tv3.Selected = true;
    
-            // bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondo3));
-            //  bitmapeses.Add(CreateBlurredImageoffline(this, 20, Resource.Drawable.fondo4));
-          //  RunOnUiThread(() => fondito.SetImageBitmap(bitmapeses[0]));
-          
+            tv3.Selected = true;
+ 
             ////////////////mimicv2//////////////////////
-            clasesettings.guardarsetting("comando", "");
-            clasesettings.guardarsetting("listaactual", "");
-            clasesettings.guardarsetting("videocerrado", "");
-            clasesettings.guardarsetting("musica", "");
-            clasesettings.guardarsetting("servicio", "");
-            clasesettings.guardarsetting("playerstatus", "");
-            clasesettings.guardarsetting("duracion", "");
-            clasesettings.guardarsetting("progreso", "");
-            clasesettings.guardarsetting("cquerry", "");
-            clasesettings.guardarsetting("acaboelplayer", "");
-            clasesettings.guardarsetting("patra", "");
-            clasesettings.guardarsetting("palante", "");
-            clasesettings.guardarsetting("videoactivo", "no");
-            clasesettings.guardarsetting("progresovideoactual", "");
-            clasesettings.guardarsetting("tapnumber", "");
+         
 
          
             animar4(botoncontrolremoto,500);
@@ -92,55 +67,45 @@ namespace App1
             animar4(botoninfo, 2500);
             animar4(FindViewById<ImageView>(Resource.Id.imageView1), 250);
             prefEditor = prefs.Edit();
-
-
-
-
-            try
+            if (Intent.GetBooleanExtra("fromsplash", false))
             {
+                estaonline = Intent.GetBooleanExtra("isonline", false);
+                if (Intent.GetStringExtra("updateinfo").Trim() != "")
+                {
 
-                StopService(new Intent(this, typeof(cloudingserviceonline)));
-                StopService(new Intent(this, typeof(Clouding_serviceoffline)));
-                StopService(new Intent(this, typeof(Clouding_service)));
-                StopService(new Intent(this, typeof(serviciodownload)));
+                    var info = JsonConvert.DeserializeObject<updateinfo>(Intent.GetStringExtra("updateinfo").Trim());
+                    if (info.Numero != 7)
+                    {
+                   new AlertDialog.Builder(this)
+                  .SetTitle("Atencion")
+                  .SetMessage("Hay una nueva version disponible de la aplicacion la cual tiene la siguiente descripcion:\n" + info.Descripcion)
+                  .SetCancelable(false)
+                  .SetPositiveButton("Ir a la descarga", (aa, aaa) =>
+                  {
+                      var uri = Android.Net.Uri.Parse("https://gr3gorywolf.github.io/getromdownload/youtubepc.html");
+                      var intent = new Intent(Intent.ActionView, uri);
+                      StartActivity(intent);
+                  })
+                  .SetNegativeButton("Cancelar", (aa, aaa) => { })
+                  .Create()
+                  .Show();
+                    }
+                }
 
             }
-            catch (Exception)
-            {
-
+            else {
+                estaonline = true;
             }
 
 
 
-
-
-            if (!clasesettings.probarsetting("color"))
-            {
-                clasesettings.guardarsetting("color", "black");
-            }
-            if (!clasesettings.probarsetting("mediacache"))
-            {
-                clasesettings.guardarsetting("mediacache", "");
-            }
-
-            if (!clasesettings.probarsetting("ordenalfabeto"))
-            {
-                clasesettings.guardarsetting("ordenalfabeto", "si");
-            }
-            if (!clasesettings.probarsetting("video"))
-            {
-                clasesettings.guardarsetting("video", "-1");
-            }
-            if (!clasesettings.probarsetting("automatica"))
-            {
-                clasesettings.guardarsetting("automatica", "si");
-            }
 
             botoninfo.Click += delegate
             {
 
 
-                 var intento = new Intent(this, typeof(actbio));
+                  var intento = new Intent(this, typeof(actbio));
+            
                 animar20(botoninfo, intento);            
                 clasesettings.recogerbasura();
 
@@ -177,7 +142,7 @@ namespace App1
             };
             botonserver.Click += delegate
             {
-                if (clasesettings.tieneconexion())
+                if (estaonline)
                 {
                     var intento = new Intent(this, typeof(mainmenu_Offline));
 
@@ -189,15 +154,16 @@ namespace App1
                     clasesettings.recogerbasura();
                 }
                 else {
-                    Toast.MakeText(this, "Error al conectar a youtube", ToastLength.Long).Show();
+
+                    Toast.MakeText(this, "No hay conexion a internet por favor conectese a internet y reincie la aplicacion", ToastLength.Long).Show();
                 }
+
             };
             botoncontrolremoto.Click += delegate
             {
 
                 // var intento = new Intent(this, typeof(mainmenu_Offline));
-                if (clasesettings.tieneconexion())
-                {
+                if (estaonline) { 
                     animar3(botonsettings);
                 animar3(botonserver);
                 animar3(botonplayer);
@@ -207,63 +173,18 @@ namespace App1
                 }
                 else
                 {
-                    Toast.MakeText(this, "Error al conectar a youtube", ToastLength.Long).Show();
+
+                    Toast.MakeText(this, "No hay conexion a internet por favor conectese a internet y reincie la aplicacion", ToastLength.Long).Show();
                 }
+
             };
 
 
 
 
          
-            string klk = "";
-            try {
-            if (!clasesettings.probarsetting("color"))
-            {
-                clasesettings.guardarsetting("color", "#000000");
-            }
-            if (!clasesettings.probarsetting("rutadescarga"))
-            {
-                if (Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads"))
-                {
-                    klk = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads";
-                    prefEditor.PutString("rutadescarga", klk);
-                    prefEditor.Commit();
-                }
-                else
-                {
-                    Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads");
-                    klk = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads";
-                    prefEditor.PutString("rutadescarga", klk);
-                    prefEditor.Commit();
-                }
-            }
-
-
-
-            if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache"))
-            {
-                Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache");
-            }
-
-            if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/portraits"))
-            {
-                Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/portraits");
-            }
-            if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/webbrowser"))
-            {
-                Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache/webbrowser");
-            }
-
-            if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist"))
-            {
-                Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist");
-            }
-
-            }
-            catch (Exception)
-            {
-
-            }
+        
+           
 
 
             // Create your application here
@@ -385,42 +306,7 @@ namespace App1
 
 
      
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
-        {
-            bool acepted = true;
-            foreach (var permi in grantResults)
-            {
-                if (permi == Permission.Denied)
-                {
-                    acepted = false;
-                }
-             
-            }
-            if (acepted) {
-               
-                    if (clasesettings.probarsetting("abrirserver"))
-                    {
-                        if (clasesettings.gettearvalor("abrirserver") == "si")
-                        {
-
-                            if (serviciostreaming.gettearinstancia() != null)
-                            {
-                                StopService(new Intent(this, typeof(serviciostreaming)));
-                                StartService(new Intent(this, typeof(serviciostreaming)));
-                            }
-                            else
-                            {
-                                StartService(new Intent(this, typeof(serviciostreaming)));
-                            }
-
-                        }
-                    }
-                
-           
-            }
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+     
 
 
 

@@ -82,7 +82,7 @@ namespace App1
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             int placeholder = 0;
-            var view = convertView;
+         
             adaptadorlistaremotoViewHolder holder = null;
             if (newplaceholder != 0) {
 
@@ -93,8 +93,8 @@ namespace App1
 
 
                 }
-            if (view != null)
-                holder = view.Tag as adaptadorlistaremotoViewHolder;
+            if (convertView != null)
+                holder = convertView.Tag as adaptadorlistaremotoViewHolder;
 
             if (holder == null)
             {
@@ -102,12 +102,12 @@ namespace App1
                 var inflater = context.GetSystemService(Context.LayoutInflaterService).JavaCast<LayoutInflater>();
                 //replace with your item and your holder items
                 //comment back in
-               view = inflater.Inflate(Resource.Layout.layoutlistaplayerindependiente, parent, false);
-               holder.Title = view.FindViewById<TextView>(Resource.Id.textView1);
-               holder.portrait = view.FindViewById<ImageView>(Resource.Id.imageView1);
+               convertView = inflater.Inflate(Resource.Layout.layoutlistaplayerindependiente, parent, false);
+               holder.Title = convertView.FindViewById<TextView>(Resource.Id.textView1);
+               holder.portrait = convertView.FindViewById<ImageView>(Resource.Id.imageView1);
 
               //  view.SetBackgroundResource(Resource.Drawable.drwaablegris);
-               view.Tag = holder;
+               convertView.Tag = holder;
                 /*   if (links.Contains(""))
                    {
                        links.Remove("");
@@ -138,7 +138,9 @@ namespace App1
                     {
                         
                         Glide.With(context)
-                   .Load("http://gr3gorywolf.github.io/Multitubeweb/playcircle.png")
+                         
+                   .Load("https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/Updates/playinganimation.gif")
+                  
                      .Apply(RequestOptions.NoTransformation().Placeholder(placeholder))
                   .Into(holder.portrait);
                     }
@@ -185,10 +187,12 @@ namespace App1
 
                         if (linkactual.Split('=')[1] == links[position].Split('=')[1])
                         {
+                         
                             Glide.With(context)
-                       .Load("http://gr3gorywolf.github.io/Multitubeweb/playcircle.png")
+                       .Load("https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/Updates/playinganimation.gif")
                         .Apply(RequestOptions.NoTransformation().Placeholder(placeholder))
                       .Into(holder.portrait);
+
                         }
                         else
                         {
@@ -211,7 +215,7 @@ namespace App1
            
             holder.Title.Text = nombres[position].Replace(">", "").Replace("<", "");
 
-            holder.animar3(view);
+          //  holder.animar3((View)convertView);
             holder.portrait.SetTag(Resource.Id.imageView1, links[position]);
 
 
@@ -221,7 +225,7 @@ namespace App1
 
 
            /// clasesettings.recogerbasura();
-            return view;
+            return convertView;
         }
 
         //Fill in cound here, currently 0
