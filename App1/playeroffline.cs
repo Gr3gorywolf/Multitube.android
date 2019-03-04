@@ -93,7 +93,7 @@ namespace App1
         Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout panel;
         CardView layoutbotones;
         PowerManager.WakeLock wake;
-
+        Android.Support.V7.Widget.CardView solapa;
         public static playeroffline gettearinstancia()
         {
             return instancia;
@@ -163,7 +163,7 @@ namespace App1
            
             panel.IsUsingDragViewTouchEvents = true;
             panel.DragView = FindViewById<RelativeLayout>(Resource.Id.scrollable);
-            var solapa = FindViewById<Android.Support.V7.Widget.CardView>(Resource.Id.solapita);
+           solapa = FindViewById<Android.Support.V7.Widget.CardView>(Resource.Id.solapita);
             solapa.Click += delegate
             {
 
@@ -232,7 +232,7 @@ namespace App1
             }
             else
             {
-                new Thread(() => { cargarmp3(); }).Start();
+                new Thread(() => { cargarmp3(); escaneartodo(); }).Start();
             }
             new Thread(() =>
             {
@@ -242,6 +242,8 @@ namespace App1
             {
                 ponerpostcache();
             }).Start();
+
+          
             Random brom = new Random();
             br = new broadcast_receiver();
             IntentFilter filtro = new IntentFilter(Intent.ActionMediaButton);
@@ -266,9 +268,23 @@ namespace App1
             {
 
             }
-      
+            
          
             botonborrar.Visibility = ViewStates.Gone;
+            if (!clasesettings.probarsetting("mensajetocarinfo"))
+            {
+                new Android.Support.V7.App.AlertDialog.Builder(this)
+                    .SetTitle("Información")
+                    .SetMessage("Al tocar la imagen de los elementos usted podrá obtener informacion acerca de ese elemento e incluso podra usar el reproductor flotante")
+                    .SetCancelable(false)
+                    .SetPositiveButton("Entendido!", (aa, dfff) =>
+                    {
+                        clasesettings.guardarsetting("mensajetocarinfo", "");
+                    })
+                    .Create()
+                    .Show();
+
+            }
             /***********************************************************************
              * 
              * 
@@ -887,8 +903,22 @@ namespace App1
                     lista.OnRestoreInstanceState(parcelable);
                 });
             }
+           
             listaordenado = new List<string>();
             todomezclado = "";
+            RunOnUiThread(() =>
+            {
+              
+                FindViewById<ImageView>(Resource.Id.bgimg).Visibility = ViewStates.Visible;
+                layoutbotones.Alpha = 1f;
+                solapa.Alpha = 1f;
+                video.Visibility = ViewStates.Invisible;
+                entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videorojo);
+                video.KeepScreenOn = false;
+                Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+                clasesettings.modoinmersivo(this.Window, true);
+
+            });
             clasesettings.recogerbasura();
         }
         public void cargarvideos()
@@ -958,6 +988,28 @@ namespace App1
             }
             listaordenado = new List<string>();
             todomezclado = "";
+            
+            RunOnUiThread(() =>
+            {
+                video.Visibility = ViewStates.Visible;
+                if (panel.IsExpanded)
+                {
+                    layoutbotones.Alpha = 0.7f;
+                    solapa.Alpha = 0.7f;
+                    clasesettings.modoinmersivo(this.Window, false);
+                }
+              
+                FindViewById<ImageView>(Resource.Id.bgimg).Visibility = ViewStates.Gone;
+                if (!videoenholder)
+                {
+                    holder.AddCallback(this);
+                    videoenholder = true;
+                }
+                entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videooff);
+                video.KeepScreenOn = true;
+                Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+               
+            });
             clasesettings.recogerbasura();
         }
 
@@ -995,18 +1047,22 @@ namespace App1
 
         protected override void OnDestroy()
         {
-
-
+            if (Clouding_serviceoffline.gettearinstancia().musicaplayer != null)
+                clasesettings.guardarsetting("posactual", Clouding_serviceoffline.gettearinstancia().musicaplayer.CurrentPosition.ToString());
             if (Clouding_serviceoffline.gettearinstancia() != null)
             {
                 Clouding_serviceoffline.gettearinstancia().musicaplayer.Reset();
             }
 
             wake.Release();
+            if (Clouding_serviceoffline.gettearinstancia() != null)
+               
+                  
             StopService(new Intent(this, typeof(Clouding_serviceoffline)));
             clasesettings.recogerbasura();
           //  UnregisterReceiver(br);
          //   instancia = null;
+        
             clasesettings.guardarsetting("offlineactivo", "no");
             base.OnDestroy();
         }
@@ -1096,8 +1152,9 @@ namespace App1
 
             if (postcachepath.Trim() != "")
             {
-                
-                reproducir(patheses.IndexOf(postcachepath),true);
+                var index = patheses.IndexOf(postcachepath);
+                    if(index>=0 )
+                          reproducir(index,true);
                 try
                 {
                     RunOnUiThread(() => dialogoprogreso.Dismiss());
@@ -1120,7 +1177,7 @@ namespace App1
         }
 
 
-        public void escaneartodo() {
+        public void escaneartodo() { 
 
             var media= new List<medialement>();
       
@@ -1495,10 +1552,14 @@ namespace App1
 
                     if (System.IO.Path.GetFileName(patheses[indice]).EndsWith(".mp4"))
                     {
-                        if (video.Visibility != ViewStates.Visible) {
-                        RunOnUiThread(() => entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videorojo));
-                        RunOnUiThread(() => entrarenmodovideo.Visibility = ViewStates.Visible);
-                         
+                        if (video.Visibility != ViewStates.Visible)
+                        {
+                            RunOnUiThread(() => entrarenmodovideo.SetBackgroundResource(Resource.Drawable.videorojo));
+                            RunOnUiThread(() => entrarenmodovideo.Visibility = ViewStates.Visible);
+
+                        }
+                        else {
+                            setVideoSize();
                         }
                     }
                     else
@@ -1547,22 +1608,10 @@ namespace App1
                     {
                         RunOnUiThread(() => playpause.SetBackgroundResource(Resource.Drawable.playbutton2));
                     }
+                    Clouding_serviceoffline.gettearinstancia().desdecache = desdecache;
                     Clouding_serviceoffline.gettearinstancia().reproducir(patheses[indice], desdecache);
-
-                    if (Clouding_serviceoffline.gettearinstancia() != null)
-                    {
-
-                        if (Clouding_serviceoffline.gettearinstancia().musicaplayer != null)
-                        {
-                            if (Clouding_serviceoffline.gettearinstancia().musicaplayer.IsPlaying)
-                            {
-                                clasesettings.guardarsetting("mediacache", patheses[indiceactual]);
-
-                            }
-
-
-                        }
-                    }
+                   
+                
 
 
                 }
@@ -1587,6 +1636,8 @@ namespace App1
 
                 }        
 
+
+                 clasesettings.guardarsetting("mediacache", patheses[indiceactual]);
                 clasesettings.recogerbasura();
             }
             catch (Exception) {
@@ -1710,37 +1761,42 @@ namespace App1
 
         private void setVideoSize()
         {
+            try
+            {
+                // // Get the dimensions of the video
+                int videoWidth = Clouding_serviceoffline.gettearinstancia().musicaplayer.VideoWidth;
+                int videoHeight = Clouding_serviceoffline.gettearinstancia().musicaplayer.VideoHeight;
+                float videoProportion = videoWidth / (float)videoHeight;
 
-            // // Get the dimensions of the video
-            int videoWidth = Clouding_serviceoffline.gettearinstancia().musicaplayer.VideoWidth;
-            int videoHeight = Clouding_serviceoffline.gettearinstancia().musicaplayer.VideoHeight;
-            float videoProportion = videoWidth / (float)videoHeight;
-
-            // Get the width of the screen
+                // Get the width of the screen
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-            int screenWidth = WindowManager.DefaultDisplay.Width;
+                int screenWidth = WindowManager.DefaultDisplay.Width;
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-            int screenHeight = WindowManager.DefaultDisplay.Height;
+                int screenHeight = WindowManager.DefaultDisplay.Height;
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
-            float screenProportion = screenWidth / (float)screenHeight;
+                float screenProportion = screenWidth / (float)screenHeight;
 
-            // Get the SurfaceView layout parameters
-            Android.Views.ViewGroup.LayoutParams lp = video.LayoutParameters;
-            if (videoWidth > videoHeight)
-            {
-                lp.Width = screenWidth;
-                lp.Height = screenWidth * videoHeight / videoWidth;
+                // Get the SurfaceView layout parameters
+                Android.Views.ViewGroup.LayoutParams lp = video.LayoutParameters;
+                if (videoWidth > videoHeight)
+                {
+                    lp.Width = screenWidth;
+                    lp.Height = screenWidth * videoHeight / videoWidth;
+                }
+                else
+                {
+                    lp.Width = screenHeight * videoWidth / videoHeight;
+                    lp.Height = screenHeight;
+                }
+                // Commit the layout parameters
+                var relative = new RelativeLayout.LayoutParams(lp.Width, lp.Height);
+                relative.AddRule(LayoutRules.CenterInParent);
+                video.LayoutParameters = relative;
             }
-            else
-            {
-                lp.Width = screenHeight * videoWidth / videoHeight;
-                lp.Height = screenHeight;
+            catch (Exception) {
+
             }
-            // Commit the layout parameters
-            var relative = new RelativeLayout.LayoutParams(lp.Width, lp.Height);
-            relative.AddRule(LayoutRules.CenterInParent);
-            video.LayoutParameters = relative;
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

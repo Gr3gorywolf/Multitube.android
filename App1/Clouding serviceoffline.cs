@@ -32,6 +32,7 @@ namespace App1
         public string linkactual = "";
         public  string tituloactual = "";
         public string ipactual = "";
+        public bool desdecache = true;
         public string ponerestado()
         {
             if (musicaplayer.IsPlaying)
@@ -146,7 +147,10 @@ namespace App1
                  
                     musicaplayer.Prepared += delegate
                     {
+                      
                         musicaplayer.Start();
+                        if (this.desdecache)
+                            musicaplayer.Pause();
                         if (playeroffline.gettearinstancia() != null)
                         {
                             if (playeroffline.gettearinstancia().video.Visibility == ViewStates.Visible)
@@ -156,6 +160,16 @@ namespace App1
                                 musicaplayer.SetDisplay(playeroffline.gettearinstancia().holder);
                             }
 
+                            if (clasesettings.probarsetting("posactual") && this.desdecache) {
+                                var posicion = 0;
+                                try
+                                {
+                                    posicion = int.Parse(clasesettings.gettearvalor("posactual"));
+                                    musicaplayer.SeekTo(posicion);
+                                }
+                                catch (Exception) { }
+                               
+                            }
 
                         }
 

@@ -240,7 +240,7 @@ namespace App1
             {
                 if (clasesettings.tieneconexion())
                 {
-                    var firebase = new FirebaseClient("<firebase database url>");
+                    var firebase = new FirebaseClient("<your firebase project url>");
                     string serial = clasesettings.gettearserial();
                     await firebase.Child("Descargas").Child(serial).PutAsync("Descargada@" + Android.OS.Build.Model + "@" + System.DateTime.Now);
                     var arch = File.CreateText(clasesettings.rutacache + "/verified");

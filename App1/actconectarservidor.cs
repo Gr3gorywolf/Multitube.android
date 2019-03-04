@@ -91,7 +91,7 @@ namespace App1
                 todasip = mode.ips.Keys.ToList();
                 misips = mode.ips.Keys.ToList().Where(aax => aax.StartsWith(ipheader)).ToList();
                 forscan = misips.Count;
-                foreach (string prro in misips)
+                foreach (string prro in new List<string>( misips))
                 {
                     new Thread(() =>
                     {

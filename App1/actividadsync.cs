@@ -303,8 +303,8 @@ namespace App1
             var writer = new ZXing.Mobile.BarcodeWriter();
             writer.Format = ZXing.BarcodeFormat.QR_CODE;
             writer.Options.Margin = 1;
-            writer.Options.Height = 300;
-            writer.Options.Width = 300;
+            writer.Options.Height = 500;
+            writer.Options.Width = 500;
 
 
 

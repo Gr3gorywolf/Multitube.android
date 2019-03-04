@@ -274,7 +274,7 @@ namespace App1
                         if (Clouding_service.gettearinstancia() != null)
                         {
 
-                            if (mainmenu_Offline.gettearinstancia() != null && clasesettings.gettearvalor("onlineactivo") == "si")
+                            if (mainmenu_Offline.gettearinstancia() != null)
                             {
                                 mainmenu_Offline.gettearinstancia().RunOnUiThread(() => mainmenu_Offline.gettearinstancia().play.SetBackgroundResource(Resource.Drawable.playbutton2));
                                 Clouding_service.gettearinstancia().musicaplayer.Pause();
@@ -284,7 +284,7 @@ namespace App1
                         else
                         if (Clouding_serviceoffline.gettearinstancia() != null)
                         {
-                            if (playeroffline.gettearinstancia() != null && clasesettings.gettearvalor("offlineactivo")=="si")
+                            if (playeroffline.gettearinstancia() != null)
                             {
                                 playeroffline.gettearinstancia().RunOnUiThread(() => playeroffline.gettearinstancia().playpause.SetBackgroundResource(Resource.Drawable.playbutton2));
                                 Clouding_serviceoffline.gettearinstancia().musicaplayer.Pause();
