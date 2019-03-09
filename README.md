@@ -1,7 +1,20 @@
 # Multitube.android
-Multitube android application  that can be also used as remote controller of multitube desktop and was written on xamarin.android 
-Features
-<ul>
+Multitube android is an application that allows you to stream,download videos from youtube. this app have 4 modes 
+
+<h3 align="center">Remote controller</h3> <br>
+allows you to control the media of another device that has multitube installed and are currently playing media. like youtube tv does 
+
+<h3 align="center">Streaming player</h3> <br>
+allows you to play videos from youtube natively like the youtube app does but this also allows you to play the media even if you have the phone blocked or have the app in background. this also has playlist feature, and autoplay and by the way alows you to download every media that is currently playing
+
+<h3 align="center">Offline player</h3> <br>
+once you have downloaded media you can play then in a custom player that have the sync feature that allow you to transfer your downloaded media to another device that has multitube installed and is currently 
+in the same network of your device.
+
+<h3 align="center">Streaming server</h3> <br>
+once you have downloaded media you can stream that media from a webbrowser. without download anything in the other device. all you need to do is enable that feature in the setting menu and then it will show you an notification that show you your ip+the port number just enter that in the webbrowser of any device connected in your network to start streaming or you can just enter to <a href="multitubeweb.tk">Multitubeweb.tk</a>, and connect following the instructions detailed in the notification description
+
+
 <li>Youtube audio/video streaming</li>
 <li>Youtube audio/video download</li>
 <li>Playlist that can be synced with other devices</li>

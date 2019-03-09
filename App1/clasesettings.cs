@@ -28,6 +28,13 @@ namespace App1
 {
 
 
+
+    public class backupplaylists {
+        public List<string> titles { get; set; }
+        public List<string> links { get; set; }
+        public List<string> listacaratulas { get; set; }
+        public int posactual { get; set; }
+    }
    public class elementosugerencia:playlistelements {
         public string portada { get; set; }
 

@@ -159,7 +159,33 @@ namespace App1
             adaptadorcartas adap = new adaptadorcartas(listafake, this);
 
             //   listafavoritos.SetAdapter(adap);
+            if (mainmenu_Offline.gettearinstancia() != null) {
+                if (System.IO.File.Exists(clasesettings.rutacache + "/backupplaylist.json") && !mainmenu_Offline.gettearinstancia().backupprompted)
+                {
+                    new Android.Support.V7.App.AlertDialog.Builder(this)
+                .SetTitle("Advertencia")
+                .SetMessage("Desea cargar los elementos que estaba reproduciendo la vez anterior?")
+                .SetPositiveButton("Si", (aa, aaa) =>
+                {
+                    mainmenu_Offline.gettearinstancia().loadbackupplaylist();
+                    mainmenu_Offline.gettearinstancia().backupprompted = true;
 
+                })
+                .SetNegativeButton("No", (afaa, aaffa) =>
+                {
+
+                    mainmenu_Offline.gettearinstancia().backupprompted = true;
+
+                })
+                .SetCancelable(false)
+                .Create()
+                .Show();
+
+                }
+                else {
+                    mainmenu_Offline.gettearinstancia().backupprompted = true;
+                }
+            }
 
             FindViewById<CardView>(Resource.Id.cartainicio).Click += delegate
             {

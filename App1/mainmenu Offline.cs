@@ -99,6 +99,7 @@ namespace App1
         public WebClient clientedelamusica = new WebClient();
         public string linkactual = "";
         ScrollView menuham;
+        public  bool backupprompted = false;
         public static mainmenu_Offline instance;
         public ImageView fondo;
         public Bitmap fondoblurreado;
@@ -362,6 +363,11 @@ namespace App1
                 {
                    loadsuggestionslistener();
                 }).Start();
+                new Thread(() =>
+                {
+                   
+                    listenplaylistchanges();
+                }).Start();
 
             }
 
@@ -410,6 +416,24 @@ namespace App1
             {
 
                 objetohistorial = JsonConvert.DeserializeObject<historial>(File.ReadAllText(clasesettings.rutacache + "/history.json"));
+                if (objetohistorial == null)
+                {
+                    objetohistorial = new historial();
+                    objetohistorial.videos = new List<playlistelements>();
+                    objetohistorial.links = new Dictionary<string, int>();
+                }
+                else {
+                    if (objetohistorial.videos == null)
+                    {
+                        objetohistorial.videos = new List<playlistelements>();
+
+                    }
+                    else
+                    if(objetohistorial.links==null)
+                    {
+                        objetohistorial.links = new Dictionary<string, int>();
+                    }
+                }
 
             }
             else {
@@ -1939,8 +1963,9 @@ namespace App1
                 {
                     rechargestartmenu();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    var ex = e;
                     RunOnUiThread(() => Toast.MakeText(this, "Ha ocurrido un error al registrar el elemento en el historial.", ToastLength.Long).Show());
                 }
             }
@@ -2585,7 +2610,20 @@ namespace App1
                         string capturado = System.Text.Encoding.UTF8.GetString(bites, 0, o);
                         if (capturado.Trim() == "fullscreen()")
                         {
+                            RunOnUiThread(() =>
+                            {
 
+                                if (panel.IsExpanded)
+                                {
+                                    panel.CollapsePane();
+                                }
+                                else
+                                {
+                                    panel.ExpandPane();
+                                }
+                                if (videoquality > 0 && !videoon)
+                                    vervideo.PerformClick();
+                            });
                         }
                         else
                       if (capturado.Trim() == "notificar()")
@@ -3179,11 +3217,84 @@ namespace App1
 
         }
 
+        public void loadbackupplaylist()
+        {
+            var back = JsonConvert.DeserializeObject<backupplaylists>(File.ReadAllText(clasesettings.rutacache + "/backupplaylist.json"));
+            lapara.Clear();
+            laparalinks.Clear();
+            listacaratulas.Clear();
+            lapara = back.titles;
+            laparalinks = back.links;
+            if (laparalinks[lapara.Count - 1].Trim() == "")
+            {
+                laparalinks.RemoveAt(lapara.Count - 1);
+            }
+            listacaratulas = new List<string>(lapara);
+            listacaratulas[back.posactual] = ">" + lapara[back.posactual] + "<";
+            locanterior = back.posactual;
+            indiceactual = back.posactual;
+            linkactual = laparalinks[back.posactual];
+
+
+            adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
+            RunOnUiThread(() =>
+            {
+                var parcelable = lista.OnSaveInstanceState();
+
+                lista.Adapter = adaptadol;
+
+                lista.OnRestoreInstanceState(parcelable);
+
+            });
+
+            new Thread(() =>
+            {
+                buscarvidth(laparalinks[back.posactual], true);
+            }).Start();
+
+        }
+        public void listenplaylistchanges() {
+            int currentcount = 0;
+            int currentpos = 0;
+            while (detenedor && instance!=null) {
+                if ((lapara.Count != currentcount  || indiceactual!=currentpos)&& lapara.Count > 0 && backupprompted)
+                {
+                    currentcount = lapara.Count;
+                    currentpos = indiceactual;
+                    savebackupplaylist();
+                }
+                else
+                if (lapara.Count == 0 && backupprompted)
+                {
+
+                    if (File.Exists(clasesettings.rutacache + "/backupplaylist.json"))
+                        File.Delete(clasesettings.rutacache + "/backupplaylist.json");
+                   
+                }
+                Thread.Sleep(3000);
+                
+            }
+
+        }
+        public void savebackupplaylist() {
+
+           
+            backupplaylists back = new backupplaylists() {
+                titles = lapara,
+                links = laparalinks,
+                posactual = indiceactual,
+                listacaratulas=listacaratulas
+            };
+         var archivo=File.CreateText(clasesettings.rutacache + "/backupplaylist.json");
+            archivo.Write(JsonConvert.SerializeObject(back));
+            archivo.Close();
+            
+            }
+
         public void reproducirlistaremota(playlist elementos)
         {
 
-
-
+          
 
 
             if (elementos.elementos.Count > 0)
@@ -3200,6 +3311,8 @@ namespace App1
                 listacaratulas = new List<string>(lapara);
                 listacaratulas[0] = ">" + lapara[0] + "<";
                 locanterior = 0;
+                indiceactual = 0;
+                linkactual = laparalinks[0];
 
 
                 adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
@@ -3275,7 +3388,8 @@ namespace App1
             listacaratulas = partes.ToList();
             listacaratulas[0] = ">" + lapara[0] + "<";
             locanterior = 0;
-
+            indiceactual = 0;
+            linkactual = laparalinks[0];
 
             adaptadol = new adapterlistaremoto(this, listacaratulas, laparalinks, linkactual);
             RunOnUiThread(() =>

@@ -24,7 +24,7 @@ namespace App1
     class serviciostreaming : Service
     {
      
-        SimpleHTTPServer servidor;
+     static   SimpleHTTPServer servidor;
         string ipadre = "";
 
 
@@ -115,6 +115,9 @@ namespace App1
                
                 }
             }).Start();
+            if (servidor != null)
+                servidor.Stop();
+
             servidor = new SimpleHTTPServer(Android.OS.Environment.ExternalStorageDirectory.ToString(), 12345, ipadre, this);
             var pelo = new Thread(() =>
             {
@@ -273,9 +276,9 @@ namespace App1
                 }
 
                 // Email/Password Auth
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<firebase auth provider id>"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<auth token>"));
 
-                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<username>", "<password>");
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<firebase user username>", "<firebase user password>");
 
                 // The auth Object will contain auth.User and the Authentication Token from the request
                 var token = auth.FirebaseToken;

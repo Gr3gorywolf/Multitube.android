@@ -148,14 +148,12 @@ namespace App1
         /// </summary>
         public void Stop()
         {
-            try
-            {
-                _serverThread.Abort();
-                _listener.Stop();
-            }
-            catch (Exception) {
-
-            }
+          
+                _listener.Abort();
+         
+              //  _serverThread.Abort();
+              
+          
         }
 
         private void Listen()
@@ -177,24 +175,28 @@ namespace App1
             _listener.IgnoreWriteExceptions = true;
             _listener.AuthenticationSchemes = AuthenticationSchemes.None;
             _listener.Start();
-            while (true)
+            while (_listener.IsListening)
             {
-
-                clasesettings.recogerbasura();
-                HttpListenerContext context = _listener.GetContext();
+                try
+                {
+                    clasesettings.recogerbasura();
+                    HttpListenerContext context = _listener.GetContext();
                     new Thread(() =>
                     {
 
-                        
+                        if (_listener.IsListening)
                             Process(context);
-                 
+
                     }).Start();
-                       
-                
+
+                }
+                catch (Exception) {
+
+                }
 
 
 
-              
+
             }
         }
 
