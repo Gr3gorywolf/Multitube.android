@@ -76,14 +76,14 @@ Once you have downloaded media you can stream that media from a webbrowser. with
 <li><a href="https://github.com/rlamasb/Firebase.Xamarin">Firebase.Xamarin</a></li> 
 </ul> 
 <br><h2 align="center" id="future">Gallery</h2>  
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/1.jpeg" width="30%"></img> 
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/2.jpeg" width="30%"></img>
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/3.jpeg" width="30%"></img> 
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/4.jpeg" width="30%"></img>
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/42.jpeg" width="30%"></img>
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/5.jpeg" width="30%"></img>    
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/6.jpeg" width="30%"></img>     
-<img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/7.jpeg" width="30%"></img>    
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/1.jpeg" width="35%" ></img></h5>
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/2.jpeg" width="35%" ></img></h5>
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/3.jpeg" width="35%" ></img></h5> 
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/4.jpg" width="35%" ></img></h5>
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/42.jpeg" width="35%" ></img></h5>
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/5.jpeg" width="35%" ></img> </h5>
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/6.jpeg" width="35%" ></img>  </h5>   
+<h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/7.jpeg" width="35%" ></img>  </h5>
 <br><h2 align="center" id="future">Future plans (ToDo)</h2>   
    <ul>
        <li><b>(Coming soon)</b>App userguide </li>
