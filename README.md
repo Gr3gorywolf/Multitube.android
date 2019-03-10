@@ -26,6 +26,7 @@ Once you have downloaded media you can stream that media from a webbrowser. with
 <h2 align="center" id="features">App KeyFeatures</h2>
 <ul>
 <li><b>You can play music/videos directly from youtube in background and even with the screen blocked</b></li>
+<li><b>Ad free!!&nbsp;</b> this app was created just for learning purposes<li>
 <li>Inspired in material design </li>
 <li>Fully native</li>
 <li>Youtube audio/video streaming</li>
@@ -36,6 +37,7 @@ Once you have downloaded media you can stream that media from a webbrowser. with
 <li>You can play the offline content that you previously downloaded from youtube with an built in custom media player</li>
 <li>Built in custom youtube searcher</li>
 <li>You can transfer media from one device with multitube to another</li>
+<li>Earphones buttons fully functional on the players</li>
 <li>You can play/download media from the youtube's official app just using the share button and selecting "Open with multitube" (to play videos from youtube official app you must have the streaming player/remote controller running in background)</li>
 <li>Autoplay function that plays the first suggested element just after the actual element finishes</li>
 <li>You can load/create/modify/transfer playlist of media elements </li>
