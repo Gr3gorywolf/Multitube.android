@@ -1,5 +1,5 @@
 <h6 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/App1/Resources/drawable/logo.png"><h6>
-<h5>Multitube android is an application that allows you to stream,download videos from youtube. This app have 4 modes<h5> 
+<h5>Multitube android is multi modules application that allows you to stream,download videos from youtube. This app have 4 main modules that are the following:<h5> 
 <br><h6 align="center"><img color="black" src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/remote.png"></h6>
 <h3 align="center">Remote controller</h3> <br>
 allows you to control the media of another device that has multitube installed and are currently playing media. like youtube tv does 
