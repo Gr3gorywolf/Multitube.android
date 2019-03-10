@@ -2,8 +2,10 @@
 <li><a href="#about">About multitube.android</a></li>
 <li><a href="#features">Key features</a></li>
 <li><a href="#tech">Technologies used</a></li>
+<li><a href="#gallery">App gallery</a></li>
 <li><a href="#future">Future plans</a></li>
 <li><a href="#download">App download</a></li>
+
 <h6 align="center" id="about"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/App1/Resources/drawable/logo.png"><h6>
 <h5 >Multitube android is a multi modules application that allows you to stream and download videos from youtube. This app have 4 main modules that are the following:<h5> 
 <br><h6 align="center"><img color="black" src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/remote.png" height:"128" width:"128"/></h6>
@@ -75,7 +77,7 @@ Once you have downloaded media you can stream that media from a webbrowser. with
  <ul>
 <li><a href="https://github.com/rlamasb/Firebase.Xamarin">Firebase.Xamarin</a></li> 
 </ul> 
-<br><h2 align="center" id="future">Gallery</h2>  
+<br><h2 align="center" id="gallery">Gallery</h2>  
 <h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/1.jpeg" width="35%" ></img></h5>
 <h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/2.jpeg" width="35%" ></img></h5>
 <h5 align="center"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/screenshots/3.jpeg" width="35%" ></img></h5> 
