@@ -167,6 +167,7 @@ namespace App1
                                 ListView lista = new ListView(this);
                                 adapterlistaremoto adapt = new adapterlistaremoto(this, listaelementos.Select(ax => ax.nombre).ToList(), listaelementos.Select(ax => ax.link).ToList());
                                 lista.Adapter = adapt;
+                                
                                 new AlertDialog.Builder(this)
                                 .SetTitle("Elementos de esta lista de reproducción")
                                 .SetView(lista).SetPositiveButton("Entendido!", (dd, fgf) => { })

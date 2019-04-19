@@ -11,10 +11,14 @@ using Android.Views;
 using Android.Support.Design.Widget;
 using System.Linq;
 using System;
+using YoutubeSearch;
+using System.Text.RegularExpressions;
+using Android.Speech;
+using Android.Runtime;
 
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true,WindowSoftInputMode = SoftInput.StateAlwaysHidden | SoftInput.AdjustResize)]
     public class actividadinicio :AppCompatActivity
     {
         bool isserver = false;
@@ -33,6 +37,7 @@ namespace App1
         TextView textonombreelemento;
         RecyclerView listafavoritos;
         bool detenedor = true;
+        TextView texto;
         public List<playlistelements> favoritos = new List<playlistelements>();
         public Android.Support.V7.App.AlertDialog alertareproducirvideo = null;
         public Dictionary<string,playlistelements>  Diccfavoritos = new Dictionary<string,playlistelements>();
@@ -56,6 +61,8 @@ namespace App1
                 SetContentView(Resource.Layout.layoutinicioremote);
             }
             ins = this;
+            ImageView botonreconocer = FindViewById<ImageView>(Resource.Id.imageView2);
+            texto = FindViewById<EditText>(Resource.Id.editText1);
             listamas = FindViewById<RecyclerView>(Resource.Id.listamas);
             listaultimos = FindViewById<RecyclerView>(Resource.Id.listaultimos);
          listafavoritos = FindViewById<RecyclerView>(Resource.Id.listafavoritos);
@@ -193,6 +200,48 @@ namespace App1
                 this.Finish();
             };
 
+
+
+            texto.KeyPress += (aaxx, e) =>
+            {
+                if (e.Event.Action == KeyEventActions.Down && e.KeyCode == Keycode.Enter)
+                {
+                    // Code executed when the enter key is pressed down
+
+                    new System.Threading.Thread(() =>
+                    {
+                        buscaryabrir(texto.Text);
+
+                    }).Start();
+                }
+                else
+                {
+                    e.Handled = false;
+                }
+            };
+
+
+
+            botonreconocer.Click += delegate
+            {
+                animar(botonreconocer);
+                try
+                {
+                    var voiceIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguageModel, RecognizerIntent.LanguageModelFreeForm);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputCompleteSilenceLengthMillis, 500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputPossiblyCompleteSilenceLengthMillis, 500);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraSpeechInputMinimumLengthMillis, 10000);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraMaxResults, 1);
+                    voiceIntent.PutExtra(RecognizerIntent.ExtraLanguage, Java.Util.Locale.Default);
+                    StartActivityForResult(voiceIntent, 7);
+                }
+                catch (Exception)
+                {
+
+                }
+
+            };
             itemsm.NavigationItemSelected += (sender, e) =>
             {
                 switch (e.MenuItem.TitleFormatted.ToString()) {
@@ -272,7 +321,33 @@ namespace App1
 
 
 
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        {
 
+            if (requestCode == 7)
+            {
+                if (resultCode == Result.Ok)
+                {
+
+
+                    var matches = data.GetStringArrayListExtra(RecognizerIntent.ExtraResults);
+                    if (matches.Count != 0)
+                    {
+
+                        texto.Text = matches[0];
+                        new System.Threading.Thread(() =>
+                        {
+                            buscaryabrir(texto.Text);
+                        }).Start();
+
+                    }
+
+                    else
+                        Toast.MakeText(this, "No se pudo escuchar nada", ToastLength.Long).Show();
+                }
+            }
+            base.OnActivityResult(requestCode, resultCode, data);
+        }
 
         public static actividadinicio gettearinstancia() {
 
@@ -435,6 +510,83 @@ namespace App1
             }
 
         }
+
+
+
+        public void buscaryabrir(string termino)
+        {
+
+
+            RunOnUiThread(() =>
+            {
+#pragma warning disable CS0618 // El tipo o el miembro est�n obsoletos
+              alerta = new ProgressDialog(this);
+#pragma warning restore CS0618 // El tipo o el miembro est�n obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro est�n obsoletos
+                alerta.SetCanceledOnTouchOutside(false);
+                alerta.SetCancelable(false);
+                alerta.SetTitle("Buscando resultados...");
+                alerta.SetMessage("Por favor espere");
+                alerta.Show();
+            });
+            try
+            {
+
+                //  RunOnUiThread(() => progreso.Progress = 50);
+                VideoSearch src = new VideoSearch();
+                var results = src.SearchQuery(termino, 1);
+                if (results.Count > 0)
+                {
+                    var listatitulos = results.Select(ax => WebUtility.HtmlDecode(RemoveIllegalPathCharacters(ax.Title.Replace("&quot;", "").Replace("&amp;", "")))).ToList();
+                    var listalinks = results.Select(ax => ax.Url).ToList();
+                    RunOnUiThread(() =>
+                    {
+                        ListView lista = new ListView(this);
+                        lista.ItemClick += (o, e) =>
+                        {
+                            var posicion = 0;
+                            posicion = e.Position;
+                            Intent intentoo = new Intent(this, typeof(customdialogact));
+
+                            intentoo.PutExtra("index", posicion.ToString());
+                            intentoo.PutExtra("color", "DarkGray");
+                            intentoo.PutExtra("titulo", listatitulos[posicion]);
+                            if(!isserver)
+                            intentoo.PutExtra("ipadress", mainmenu.gettearinstancia().ip);
+                            else
+                            intentoo.PutExtra("ipadress","localhost");
+
+                            intentoo.PutExtra("url", listalinks[posicion]);
+                            intentoo.PutExtra("imagen", @"https://i.ytimg.com/vi/" + listalinks[posicion].Split('=')[1] + "/mqdefault.jpg");
+                            StartActivity(intentoo);
+
+                        };
+                        adapterlistaremoto adapt = new adapterlistaremoto(this, listatitulos, listalinks);
+                        lista.Adapter = adapt;
+
+                        new Android.App.AlertDialog.Builder(this)
+                        .SetTitle("Resultados de la busqueda")
+                        .SetView(lista).SetPositiveButton("Cerrar", (dd, fgf) => { })
+                        .Create()
+                        .Show();
+                    });
+
+                }
+                RunOnUiThread(() =>
+                {
+                    alerta.Dismiss();
+                });
+            }
+            catch (Exception)
+            {
+                RunOnUiThread(() => Toast.MakeText(this, "No se encotraron resultados", ToastLength.Long).Show());
+                alerta.Dismiss();
+            }
+        }
+
+
+
+
         public void cargarresults()
         {
             try
@@ -631,6 +783,21 @@ namespace App1
             }
           
 
+        }
+        public void animar(Java.Lang.Object imagen)
+        {
+            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0.5f, 1f);
+            animacion.SetDuration(300);
+            animacion.Start();
+            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0.5f, 1f);
+            animacion2.SetDuration(300);
+            animacion2.Start();
+        }
+        private static string RemoveIllegalPathCharacters(string path)
+        {
+            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
+            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            return r.Replace(path, "");
         }
 
 

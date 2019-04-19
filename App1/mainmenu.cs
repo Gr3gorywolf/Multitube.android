@@ -1,4 +1,4 @@
-using Android.App;
+Ôªøusing Android.App;
 using Android.Widget;
 using Android.OS;
 using Android.Content;
@@ -26,13 +26,15 @@ using Android.Support.V4.Widget;
 using Android.Support.Design.Widget;
 using Newtonsoft.Json;
 using Android.Glide;
+using YoutubeSearch;
+using System.Text.RegularExpressions;
 
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize,  Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
-#pragma warning disable CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro est√°n obsoletos
     public class mainmenu : Android.Support.V7.App.AppCompatActivity
-#pragma warning restore CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro est√°n obsoletos
     {
         public bool nocomprobar = false;
         public TcpClient clientela;
@@ -52,9 +54,9 @@ namespace App1
         public string ip = "";
       public  List<string> lista2;
      public   List<string> listalinks;
-#pragma warning disable CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro est√°n obsoletos
         ProgressDialog dialogoprogreso;
-#pragma warning restore CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro est√°n obsoletos
         Thread actualizarlista;
         ScrollView menuham;
         public static mainmenu instancia;
@@ -495,7 +497,7 @@ namespace App1
                     animar6(menuham);
                     menuham.Visibility = ViewStates.Visible;
                     botonabrirmenu.SetBackgroundResource(Resource.Drawable.leftarrow);
-                    estadomenu.Text = "Cerrar men˙";
+                    estadomenu.Text = "Cerrar men√∫";
                     layoutvolumen.Visibility = ViewStates.Invisible;
                 }
                 else
@@ -870,9 +872,9 @@ namespace App1
 
             RunOnUiThread(() =>
             {
-#pragma warning disable CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro est√°n obsoletos
                 dialogoprogreso = new ProgressDialog(this);
-#pragma warning restore CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro est√°n obsoletos
                 dialogoprogreso.SetTitle("Sincronizando listas de reproduccion");
                 dialogoprogreso.SetMessage("Por favor espere");
                 dialogoprogreso.SetCancelable(false);
@@ -1316,63 +1318,75 @@ namespace App1
 
             RunOnUiThread(() =>
             {
-#pragma warning disable CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning disable CS0618 // El tipo o el miembro estÔøΩn obsoletos
                 dialogoprogreso = new ProgressDialog(this);
-#pragma warning restore CS0618 // El tipo o el miembro est·n obsoletos
-#pragma warning restore CS0618 // El tipo o el miembro est·n obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro estÔøΩn obsoletos
+#pragma warning restore CS0618 // El tipo o el miembro estÔøΩn obsoletos
                 dialogoprogreso.SetCanceledOnTouchOutside(false);
                 dialogoprogreso.SetCancelable(false);
                 dialogoprogreso.SetTitle("Buscando resultados...");
                 dialogoprogreso.SetMessage("Por favor espere");
                 dialogoprogreso.Show();
             });
-           
-                string url = getearurl(termino);
+            try
+            {
+
                 //  RunOnUiThread(() => progreso.Progress = 50);
-                if (url != "%%nulo%%")
+                VideoSearch src = new VideoSearch();
+                var results = src.SearchQuery(termino, 1);
+                if (results.Count > 0)
                 {
-
-
-                    var a = clasesettings.gettearvideoid(url, true, -1);
-                //    RunOnUiThread(() => progreso.Progress = 100);
-                if (a != null) { 
-                    Intent intentar = new Intent(this, typeof(customdialogact));
-
+                    var listatitulos = results.Select(ax => WebUtility.HtmlDecode(RemoveIllegalPathCharacters(ax.Title.Replace("&quot;", "").Replace("&amp;", "")))).ToList();
+                    var listalinks = results.Select(ax => ax.Url).ToList();
                     RunOnUiThread(() =>
                     {
-                        dialogoprogreso.Dismiss();
+                        ListView lista = new ListView(this);
+                        lista.ItemClick += (o, e) =>
+                        {
+                            var posicion = 0;
+                            posicion = e.Position;
+                            Intent intentoo = new Intent(this, typeof(customdialogact));
 
-                        intentar.PutExtra("ipadress", ip);
-                        intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
-                        intentar.PutExtra("url", url);
-                        intentar.PutExtra("titulo", a.titulo);
-                        intentar.PutExtra("color", "DarkGray");
-                        StartActivity(intentar);
+                            intentoo.PutExtra("index", posicion.ToString());
+                            intentoo.PutExtra("color", "DarkGray");
+                            intentoo.PutExtra("titulo", listatitulos[posicion]);
+                            intentoo.PutExtra("ipadress", ip);
+                            intentoo.PutExtra("url", listalinks[posicion]);
+                            intentoo.PutExtra("imagen", @"https://i.ytimg.com/vi/" + listalinks[posicion].Split('=')[1] + "/mqdefault.jpg");
+                            StartActivity(intentoo);
 
+                        };
+                        adapterlistaremoto adapt = new adapterlistaremoto(this, listatitulos, listalinks);
+                        lista.Adapter = adapt;
 
-
+                        new Android.App.AlertDialog.Builder(this)
+                        .SetTitle("Resultados de la busqueda")
+                        .SetView(lista).SetPositiveButton("Cerrar", (dd, fgf) => { })
+                        .Create()
+                        .Show();
                     });
+
                 }
-                else
+                RunOnUiThread(() =>
                 {
-                    RunOnUiThread(() =>
-                    {
-                        dialogoprogreso.Dismiss();
-                        Toast.MakeText(this, "Video no encontrado", ToastLength.Long).Show();
-                    });
-                }
+                    dialogoprogreso.Dismiss();
+                });
             }
-                else
-                {
-                    RunOnUiThread(() =>
-                    {
-                        dialogoprogreso.Dismiss();
-                    });
-                }
-        
+            catch (Exception)
+            {
+                RunOnUiThread(() => Toast.MakeText(this, "No se encotraron resultados", ToastLength.Long).Show());
+                dialogoprogreso.Dismiss();
+            }
         }
 
-       
+
+
+        private static string RemoveIllegalPathCharacters(string path)
+        {
+            string regexSearch = new string(System.IO.Path.GetInvalidFileNameChars()) + new string(System.IO.Path.GetInvalidPathChars());
+            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+            return r.Replace(path, "");
+        }
 
 
         public override bool OnOptionsItemSelected(IMenuItem item)

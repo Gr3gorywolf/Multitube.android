@@ -25,7 +25,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using YoutubeSearch;
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
@@ -3858,49 +3858,47 @@ namespace App1
             });
             try
             {
-                string url = getearurl(termino);
+
                 //  RunOnUiThread(() => progreso.Progress = 50);
-                if (url != "%%nulo%%")
+                VideoSearch src = new VideoSearch();
+               var results= src.SearchQuery(termino, 1);
+                if (results.Count>0)
                 {
-
-
-                    var a = clasesettings.gettearvideoid(url, true, -1);
-                    //    RunOnUiThread(() => progreso.Progress = 100);
-                    if (a != null) { 
-                    Intent intentar = new Intent(this, typeof(customdialogact));
-
-                    RunOnUiThread(() =>
+                    var listatitulos = results.Select(ax => WebUtility.HtmlDecode(RemoveIllegalPathCharacters(ax.Title.Replace("&quot;", "").Replace("&amp;", "")))).ToList();
+                    var listalinks = results.Select(ax =>ax.Url).ToList();
+                     RunOnUiThread(() =>
                     {
-                        dialogoprogreso.Dismiss();
-                   
-                        intentar.PutExtra("ipadress", ipadre);
-                        intentar.PutExtra("imagen", "https://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
-                        intentar.PutExtra("url", url);
-                        intentar.PutExtra("titulo", a.titulo);
-                        intentar.PutExtra("color", "DarkGray");
-                        StartActivity(intentar);
-
-
-
-                    });
-                    }
-                    else
-                    {
-                        RunOnUiThread(() =>
+                        ListView lista = new ListView(this);
+                        lista.ItemClick += (o, e) =>
                         {
-                            dialogoprogreso.Dismiss();
-                            Toast.MakeText(this, "Video no encontrado", ToastLength.Long).Show();
-                        });
-                    }
-              
-                }
-                else
-                {
-                    RunOnUiThread(() =>
-                    {
-                        dialogoprogreso.Dismiss();
+                            var posicion = 0;                       
+                            posicion = e.Position;
+                            Intent intentoo = new Intent(this, typeof(customdialogact));
+
+                            intentoo.PutExtra("index", posicion.ToString());
+                            intentoo.PutExtra("color", "DarkGray");
+                            intentoo.PutExtra("titulo", listatitulos[posicion]);
+                            intentoo.PutExtra("ipadress", ipadre);
+                            intentoo.PutExtra("url", listalinks[posicion]);
+                            intentoo.PutExtra("imagen", @"https://i.ytimg.com/vi/" + listalinks[posicion].Split('=')[1] + "/mqdefault.jpg");
+                            StartActivity(intentoo);
+
+                        };
+                        adapterlistaremoto adapt = new adapterlistaremoto(this,listatitulos, listalinks);
+                        lista.Adapter = adapt;
+                       
+                        new AlertDialog.Builder(this)
+                        .SetTitle("Resultados de la busqueda")
+                        .SetView(lista).SetPositiveButton("Cerrar", (dd, fgf) => { })
+                        .Create()
+                        .Show();
                     });
+
                 }
+                RunOnUiThread(() =>
+                {
+                    dialogoprogreso.Dismiss();
+                });
             }
             catch (Exception)
             {

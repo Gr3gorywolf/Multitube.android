@@ -276,14 +276,14 @@ namespace App1
                 }
 
                 // Email/Password Auth
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<auth token>"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<your firebase auth key>"));
 
-                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<firebase user username>", "<firebase user password>");
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<your firebase username>", "<your firebase password>");
 
                 // The auth Object will contain auth.User and the Authentication Token from the request
                 var token = auth.FirebaseToken;
                 // System.Diagnostics.Debug.WriteLine();
-                var firebase = new FirebaseClient("<your firebase url>");
+                var firebase = new FirebaseClient("<your firebase proyect url>");
 
 
                 // Console.WriteLine($"Key for the new item: {item.Key}");

@@ -21,7 +21,7 @@ using Android.Glide;
 
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", WindowSoftInputMode = SoftInput.StateAlwaysHidden | SoftInput.AdjustResize)]
     public class customsearcheract : Activity
     {
         public string ipadresss;
