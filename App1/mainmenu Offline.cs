@@ -1921,10 +1921,26 @@ namespace App1
                         {
                             if (instinicio.alertareproducirvideo != null)
                             {
-                                if (instinicio.alertareproducirvideo.IsShowing)
+                                if (instinicio.alertareproducirvideo.IsShown)
                                     instinicio.alertareproducirvideo.Dismiss();
                             }
-                            instinicio.alertareproducirvideo = new Android.Support.V7.App.AlertDialog
+
+
+
+                            instinicio.alertareproducirvideo = Snackbar.Make(instinicio.FindViewById<View>(Android.Resource.Id.Content), "Se esta reproduciendo un video", Snackbar.LengthIndefinite);
+                             instinicio.alertareproducirvideo.SetAction("Ver", (o) =>
+                            {
+                                instinicio.Finish();
+                                mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                {
+                                    mainmenu_Offline.gettearinstancia().solapa.PerformClick();
+                                });
+                            });
+                            instinicio.alertareproducirvideo.SetDuration(6000);
+                            instinicio.alertareproducirvideo.Show();
+
+
+                            /*= new Android.Support.V7.App.AlertDialog
                                  .Builder(instinicio).SetTitle("Atencion")
                                  .SetMessage("Se esta reproduciendo un video. Desea verlo en el reproductor?\n\n Nota:Al deslizar el video hacia abajo podra ver la cola de reproduccion")
                                  .SetCancelable(false)
@@ -1943,7 +1959,7 @@ namespace App1
                                  })
                                  .Create();
 
-                            instinicio.alertareproducirvideo.Show();
+                            instinicio.alertareproducirvideo.Show();*/
                         });
                     }
 

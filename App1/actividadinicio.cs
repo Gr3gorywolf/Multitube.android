@@ -15,6 +15,7 @@ using YoutubeSearch;
 using System.Text.RegularExpressions;
 using Android.Speech;
 using Android.Runtime;
+using System.Threading.Tasks;
 
 namespace App1
 {
@@ -39,7 +40,7 @@ namespace App1
         bool detenedor = true;
         TextView texto;
         public List<playlistelements> favoritos = new List<playlistelements>();
-        public Android.Support.V7.App.AlertDialog alertareproducirvideo = null;
+        public Android.Support.Design.Widget.Snackbar alertareproducirvideo = null;
         public Dictionary<string,playlistelements>  Diccfavoritos = new Dictionary<string,playlistelements>();
         /*
          0-mas reproducidos
@@ -169,7 +170,22 @@ namespace App1
             if (mainmenu_Offline.gettearinstancia() != null) {
                 if (System.IO.File.Exists(clasesettings.rutacache + "/backupplaylist.json") && !mainmenu_Offline.gettearinstancia().backupprompted)
                 {
-                    new Android.Support.V7.App.AlertDialog.Builder(this)
+                   
+                    var snack = Snackbar.Make(FindViewById<View>(Android.Resource.Id.Content), "Desea cargar los elementos que estaba reproduciendo la vez anterior?", Snackbar.LengthIndefinite);
+                        snack.SetAction("Cargar", (o) =>
+                        {
+                            mainmenu_Offline.gettearinstancia().loadbackupplaylist();
+                            mainmenu_Offline.gettearinstancia().backupprompted = true;
+                        });
+                       snack.SetDuration(6000);
+                        snack.Show();
+                    Task.Delay(6000).ContinueWith(delegate
+                    {
+                        mainmenu_Offline.gettearinstancia().backupprompted = true;
+                    });
+
+
+                   /* new Android.Support.V7.App.AlertDialog.Builder(this)
                 .SetTitle("Advertencia")
                 .SetMessage("Desea cargar los elementos que estaba reproduciendo la vez anterior?")
                 .SetPositiveButton("Si", (aa, aaa) =>
@@ -186,7 +202,7 @@ namespace App1
                 })
                 .SetCancelable(false)
                 .Create()
-                .Show();
+                .Show();*/
 
                 }
                 else {

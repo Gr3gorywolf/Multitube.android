@@ -74,7 +74,7 @@ namespace App1
                 {
 
                     var info = JsonConvert.DeserializeObject<updateinfo>(Intent.GetStringExtra("updateinfo").Trim());
-                    if (info.Numero != 8)
+                    if (info.Numero != 9)
                     {
                    new AlertDialog.Builder(this)
                   .SetTitle("Atencion")

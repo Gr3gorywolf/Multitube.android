@@ -1,4 +1,4 @@
 {
-"Numero":8,
-"Descripcion":"Parche numero 1 \nEsta version contiene las siguientes mejoras\n -Se agrego barra de busqueda a la pantalla de inicio \n -El buscador rapido ahora presenta una lista de elementos \n -Al iniciar se pueden recargar los elementos que se estaban reproduciendo la ultima vez que se cerro la app \n -Barras de progreso cuando el video esta buffereando"
+"Numero":9,
+"Descripcion":"Parche #2\n -Se parcheo el extractor de youtube \n -Se cambiaron algunos dialogos por snackbars\n -Se arreglo bug de splashcreen"
 }

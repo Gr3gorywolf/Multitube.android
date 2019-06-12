@@ -106,7 +106,7 @@ namespace App1
                         intento.PutExtra("isonline", isonline);
                         intento.PutExtra("updateinfo", updateinfo);
                         StartActivity(intento);
-
+                        this.Finish();
 
                     });
                   

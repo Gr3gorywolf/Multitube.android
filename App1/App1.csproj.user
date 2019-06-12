@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AndroidDesignerPreferredDevice>2.7in QVGA slider</AndroidDesignerPreferredDevice>
     <AndroidDesignerPreferredTheme>Base.Theme.DesignDemo</AndroidDesignerPreferredTheme>
-    <SelectedDevice>Amazon KFFOWI Player</SelectedDevice>
+    <SelectedDevice>LGE LG-US601</SelectedDevice>
     <DefaultDevice>Android_Accelerated_x86</DefaultDevice>
   </PropertyGroup>
 </Project>
