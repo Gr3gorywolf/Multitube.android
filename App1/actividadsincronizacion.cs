@@ -15,7 +15,7 @@ using System.Net;
 using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
-
+using App1.Utils;
 
 namespace App1
 {
@@ -161,13 +161,13 @@ namespace App1
             
             base.Finish();
             parador = false;
-            if (prueba_de_lista_generica.SocketExtensions.IsConnected(cliente) && !reiniciar)
+            if (SocketHelper.IsConnected(cliente) && !reiniciar)
             {
                 cliente.Client.Send(Encoding.UTF8.GetBytes("desconectarse$"));
                 cliente.Client.Disconnect(false);
             }
             else
-             if (prueba_de_lista_generica.SocketExtensions.IsConnected(cliente) && reiniciar)
+             if (SocketHelper.IsConnected(cliente) && reiniciar)
             {
                 cliente.Client.Send(Encoding.UTF8.GetBytes("desconectarse$"));
                 cliente.Client.Disconnect(false);
@@ -232,13 +232,13 @@ namespace App1
                 }
 
 
-                if (mainmenu_Offline.gettearinstancia() != null)
+                if (MainmenuOffline.gettearinstancia() != null)
                 {
-                    if (mainmenu_Offline.gettearinstancia().buscando == false)
+                    if (MainmenuOffline.gettearinstancia().buscando == false)
                     {
-                        if (mainmenu_Offline.gettearinstancia().label.Text.Trim() != ""
-                        && tvnombrecancion.Text != mainmenu_Offline.gettearinstancia().label.Text)
-                            RunOnUiThread(() => tvnombrecancion.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                        if (MainmenuOffline.gettearinstancia().label.Text.Trim() != ""
+                        && tvnombrecancion.Text != MainmenuOffline.gettearinstancia().label.Text)
+                            RunOnUiThread(() => tvnombrecancion.Text = MainmenuOffline.gettearinstancia().label.Text);
 
 
                     }
@@ -246,13 +246,13 @@ namespace App1
                         RunOnUiThread(() => tvnombrecancion.Text = "Buscando...");
                 }
                 else
-              if (mainmenu.gettearinstancia() != null)
+              if (Mainmenu.gettearinstancia() != null)
                 {
-                    if (mainmenu.gettearinstancia().buscando == false)
+                    if (Mainmenu.gettearinstancia().buscando == false)
                     {
-                        if (mainmenu.gettearinstancia().label.Text.Trim() != ""
-                       && tvnombrecancion.Text != mainmenu.gettearinstancia().label.Text)
-                            RunOnUiThread(() => tvnombrecancion.Text = mainmenu.gettearinstancia().label.Text);
+                        if (Mainmenu.gettearinstancia().label.Text.Trim() != ""
+                       && tvnombrecancion.Text != Mainmenu.gettearinstancia().label.Text)
+                            RunOnUiThread(() => tvnombrecancion.Text = Mainmenu.gettearinstancia().label.Text);
 
                     }
                     else {
@@ -454,7 +454,7 @@ namespace App1
         {
             string str = "";
             string str2 = "";
-            if (listanombres.Count > 0 && listalinks.Count > 0 && prueba_de_lista_generica.SocketExtensions.IsConnected(cliente))
+            if (listanombres.Count > 0 && listalinks.Count > 0 && SocketHelper.IsConnected(cliente))
             {
                 foreach (string prr2 in listanombres)
                 {

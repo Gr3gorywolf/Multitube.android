@@ -16,6 +16,7 @@ using Android.Graphics;
 using System.Net;
 using System.Net.Http;
 using System.IO;
+using App1.Utils;
 
 namespace App1
 {
@@ -52,9 +53,9 @@ namespace App1
             var aa = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + listaactual);
             aa.Write(parte1 + "$" + parte2);
             aa.Close();
-           
-            
-            clasesettings.guardarsetting("refrescarlistadatos", "ok");
+
+
+            SettingsHelper.SaveSetting("refrescarlistadatos", "ok");
             Toast.MakeText(context, "Elemento eliminado satisfactoriamente", ToastLength.Long).Show();
         }
         public void ok3(object sender, EventArgs e)

@@ -17,6 +17,8 @@ using Android.Graphics;
 using System.Net;
 using Android.Support.V13.App;
 using Android.Media.Session;
+using App1.Utils;
+
 namespace App1
 { 
     [Service(Exported = true)]
@@ -160,11 +162,11 @@ namespace App1
                                 musicaplayer.SetDisplay(playeroffline.gettearinstancia().holder);
                             }
 
-                            if (clasesettings.probarsetting("posactual") && this.desdecache) {
+                            if (SettingsHelper.HasKey("posactual") && this.desdecache) {
                                 var posicion = 0;
                                 try
                                 {
-                                    posicion = int.Parse(clasesettings.gettearvalor("posactual"));
+                                    posicion = int.Parse(SettingsHelper.GetSetting("posactual"));
                                     musicaplayer.SeekTo(posicion);
                                 }
                                 catch (Exception) { }
@@ -370,21 +372,21 @@ namespace App1
         }
         public List<PendingIntent> listapendingintents()
         {
-         ///   string[] querrys = { "playpause()", "siguiente()", "anterior()", "adelantar()", "atrazar()" };
-         ///   
-               List<PendingIntent> listapending = new List<PendingIntent>();
+            ///   string[] querrys = { "playpause()", "siguiente()", "anterior()", "adelantar()", "atrazar()" };
+            ///   
+            List<PendingIntent> listapending = new List<PendingIntent>();
             Random brandom = new Random();
-                /////1
+            /////1
 
-                Intent internado = new Intent(this, typeof(serviciointerpreter));
-            internado.PutExtra("querry1","si");
-            internado.PutExtra("querry2","");
-            internado.PutExtra("querry3","");
-            internado.PutExtra("querry4","");
+            Intent internado = new Intent(this, typeof(serviciointerpreter));
+            internado.PutExtra("querry1", "si");
+            internado.PutExtra("querry2", "");
+            internado.PutExtra("querry3", "");
+            internado.PutExtra("querry4", "");
             internado.PutExtra("querry5", "");
-         
-            var pendingIntent = PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado,0);
-                listapending.Add(pendingIntent);
+
+            var pendingIntent = PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado, 0);
+            listapending.Add(pendingIntent);
             /////2
             Intent internado2 = new Intent(this, typeof(serviciointerpreter));
             internado2.PutExtra("querry1", "");
@@ -425,24 +427,16 @@ namespace App1
             internado5.PutExtra("querry4", "");
             internado5.PutExtra("querry5", "si");
 
-            var pendingIntent5= PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado5, 0);
+            var pendingIntent5 = PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado5, 0);
             listapending.Add(pendingIntent5);
             /////6
             Intent internado6;
-            if (actvideo.gettearinstacia() != null)
-            {
-                internado6 = new Intent(this, typeof(actvideo));
 
+            internado6 = new Intent(this, typeof(playeroffline));
 
-            }
-            else {
-                internado6 = new Intent(this, typeof(playeroffline));
-            }
-         
-        
             var pendingIntent6 = PendingIntent.GetActivity(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado6, PendingIntentFlags.UpdateCurrent);
             listapending.Add(pendingIntent6);
-            
+
 
 
             return listapending;

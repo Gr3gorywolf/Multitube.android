@@ -100,109 +100,55 @@ namespace App1
             string cogida3 = intent.GetStringExtra("querry3");
             string cogida4 = intent.GetStringExtra("querry4");
             string cogida5 = intent.GetStringExtra("querry5");
-            if (cogida1 == "si" && !mainmenu_Offline.gettearinstancia().envideo)
+            if (cogida1 == "si" && !MainmenuOffline.gettearinstancia().envideo)
             {
                
-                mainmenu_Offline.gettearinstancia().RunOnUiThread(()=> {
-                    mainmenu_Offline.gettearinstancia().play.CallOnClick();
+                MainmenuOffline.gettearinstancia().RunOnUiThread(()=> {
+                    MainmenuOffline.gettearinstancia().play.CallOnClick();
                     
                     });
                 // clasesettings.guardarsetting("cquerry", "playpause()");
             }
             else
-            if (cogida2 == "si" && !mainmenu_Offline.gettearinstancia().envideo)
+            if (cogida2 == "si" && !MainmenuOffline.gettearinstancia().envideo)
             {
 
-                mainmenu_Offline.gettearinstancia().RunOnUiThread(() => {
-                    mainmenu_Offline.gettearinstancia().adelante.CallOnClick();
+                MainmenuOffline.gettearinstancia().RunOnUiThread(() => {
+                    MainmenuOffline.gettearinstancia().adelante.CallOnClick();
 
                 });
                 //  clasesettings.guardarsetting("cquerry", "siguiente()");
             }
             else
-            if (cogida3 == "si" && !mainmenu_Offline.gettearinstancia().envideo)
+            if (cogida3 == "si" && !MainmenuOffline.gettearinstancia().envideo)
             {
 
-                mainmenu_Offline.gettearinstancia().RunOnUiThread(() => {
-                    mainmenu_Offline.gettearinstancia().atras.CallOnClick();
+                MainmenuOffline.gettearinstancia().RunOnUiThread(() => {
+                    MainmenuOffline.gettearinstancia().atras.CallOnClick();
 
                 });
                 //  clasesettings.guardarsetting("cquerry", "anterior()");
             }
             else
-             if (cogida4 == "si" && !mainmenu_Offline.gettearinstancia().envideo)
+             if (cogida4 == "si" && !MainmenuOffline.gettearinstancia().envideo)
             {
 
-                mainmenu_Offline.gettearinstancia().RunOnUiThread(() => {
-                    mainmenu_Offline.gettearinstancia().adelantar.CallOnClick();
+                MainmenuOffline.gettearinstancia().RunOnUiThread(() => {
+                    MainmenuOffline.gettearinstancia().adelantar.CallOnClick();
 
                 });
                 /// clasesettings.guardarsetting("cquerry", "adelantar()");
             }
             else
-            if (cogida5 == "si" && !mainmenu_Offline.gettearinstancia().envideo)
+            if (cogida5 == "si" && !MainmenuOffline.gettearinstancia().envideo)
             {
 
-                mainmenu_Offline.gettearinstancia().RunOnUiThread(() => {
-                    mainmenu_Offline.gettearinstancia().atrazar.CallOnClick();
+                MainmenuOffline.gettearinstancia().RunOnUiThread(() => {
+                    MainmenuOffline.gettearinstancia().atrazar.CallOnClick();
 
                 });
                 ///  clasesettings.guardarsetting("cquerry", "atrazar()");
             }
-
-            ///////////////////////////////////////cuando esta en video
-            //////////////////////////////////////////////////////
-
-            if (cogida1 == "si" && mainmenu_Offline.gettearinstancia().envideo)
-            {
-
-                actvideo.gettearinstacia().RunOnUiThread(() => {
-                    actvideo.gettearinstacia().playpause.CallOnClick();
-
-                });
-                // clasesettings.guardarsetting("cquerry", "playpause()");
-            }
-            else
-          if (cogida2 == "si" && mainmenu_Offline.gettearinstancia().envideo)
-            {
-
-                actvideo.gettearinstacia().RunOnUiThread(() => {
-                    actvideo.gettearinstacia().siguiente.CallOnClick();
-
-                });
-                //  clasesettings.guardarsetting("cquerry", "siguiente()");
-            }
-            else
-          if (cogida3 == "si" && mainmenu_Offline.gettearinstancia().envideo)
-            {
-
-                actvideo.gettearinstacia().RunOnUiThread(() => {
-                    actvideo.gettearinstacia().anterior.CallOnClick();
-
-                });
-                //  clasesettings.guardarsetting("cquerry", "anterior()");
-            }
-            else
-           if (cogida4 == "si" && mainmenu_Offline.gettearinstancia().envideo)
-            {
-
-                actvideo.gettearinstacia().RunOnUiThread(() => {
-                    actvideo.gettearinstacia().adelantar.CallOnClick();
-
-                });
-                /// clasesettings.guardarsetting("cquerry", "adelantar()");
-            }
-            else
-          if (cogida5 == "si" && mainmenu_Offline.gettearinstancia().envideo)
-            {
-
-                actvideo.gettearinstacia().RunOnUiThread(() => {
-                    actvideo.gettearinstacia().atrazar.CallOnClick();
-
-                });
-                ///  clasesettings.guardarsetting("cquerry", "atrazar()");
-            }
-
 
 
 
@@ -394,41 +340,41 @@ namespace App1
             string cogida5 = intent.GetStringExtra("querry5");
             if (cogida1 == "si")
             {
-                mainmenu.gettearinstancia().RunOnUiThread(() =>
+                Mainmenu.gettearinstancia().RunOnUiThread(() =>
                 {
-                    mainmenu.gettearinstancia().play.CallOnClick();
+                    Mainmenu.gettearinstancia().play.CallOnClick();
                 });
             }
             else
             if (cogida2 == "si")
             {
-                mainmenu.gettearinstancia().RunOnUiThread(() =>
+                Mainmenu.gettearinstancia().RunOnUiThread(() =>
                 {
-                    mainmenu.gettearinstancia().adelante.CallOnClick();
+                    Mainmenu.gettearinstancia().adelante.CallOnClick();
                 });
             }
             else
             if (cogida3 == "si")
             {
-                mainmenu.gettearinstancia().RunOnUiThread(() =>
+                Mainmenu.gettearinstancia().RunOnUiThread(() =>
                 {
-                    mainmenu.gettearinstancia().atras.CallOnClick();
+                    Mainmenu.gettearinstancia().atras.CallOnClick();
                 });
             }
             else
              if (cogida4 == "si")
             {
-                mainmenu.gettearinstancia().RunOnUiThread(() =>
+                Mainmenu.gettearinstancia().RunOnUiThread(() =>
                 {
-                    mainmenu.gettearinstancia().adelantar.CallOnClick();
+                    Mainmenu.gettearinstancia().adelantar.CallOnClick();
                 });
             }
             else
             if (cogida5 == "si")
             {
-                mainmenu.gettearinstancia().RunOnUiThread(() =>
+                Mainmenu.gettearinstancia().RunOnUiThread(() =>
                 {
-                    mainmenu.gettearinstancia().atrazar.CallOnClick();
+                    Mainmenu.gettearinstancia().atrazar.CallOnClick();
                 });
             }
 

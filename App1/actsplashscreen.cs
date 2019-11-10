@@ -16,6 +16,8 @@ using Android.Widget;
 using System.IO;
 using Firebase.Xamarin.Database;
 using Firebase.Xamarin.Database.Query;
+using App1.Utils;
+
 namespace App1
 {
     [Activity(Label = "Multitube", MainLauncher = true, Icon = "@drawable/icon", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo")]
@@ -156,37 +158,37 @@ namespace App1
 
 
 
-                if (!clasesettings.probarsetting("color"))
+                if (!SettingsHelper.HasKey("color"))
                 {
-                    clasesettings.guardarsetting("color", "black");
+                    SettingsHelper.SaveSetting("color", "black");
                 }
-                if (!clasesettings.probarsetting("mediacache"))
+                if (!SettingsHelper.HasKey("mediacache"))
                 {
-                    clasesettings.guardarsetting("mediacache", "");
+                    SettingsHelper.SaveSetting("mediacache", "");
                 }
 
-                if (!clasesettings.probarsetting("ordenalfabeto"))
+                if (!SettingsHelper.HasKey("ordenalfabeto"))
                 {
-                    clasesettings.guardarsetting("ordenalfabeto", "si");
+                    SettingsHelper.SaveSetting("ordenalfabeto", "si");
                 }
-                if (!clasesettings.probarsetting("video"))
+                if (!SettingsHelper.HasKey("video"))
                 {
-                    clasesettings.guardarsetting("video", "360");
+                    SettingsHelper.SaveSetting("video", "360");
                 }
-                if (!clasesettings.probarsetting("automatica"))
+                if (!SettingsHelper.HasKey("automatica"))
                 {
-                    clasesettings.guardarsetting("automatica", "si");
+                    SettingsHelper.SaveSetting("automatica", "si");
                 }
-                if (!clasesettings.probarsetting("color"))
+                if (!SettingsHelper.HasKey("color"))
                 {
-                    clasesettings.guardarsetting("color", "#000000");
+                    SettingsHelper.SaveSetting("color", "#000000");
                 }
-                if (!clasesettings.probarsetting("rutadescarga"))
+                if (!SettingsHelper.HasKey("rutadescarga"))
                 {
                     if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads"))
                           Directory.CreateDirectory(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads");
 
-                    clasesettings.guardarsetting("rutadescarga", Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads");
+                    SettingsHelper.SaveSetting("rutadescarga", Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/YTDownloads");
                 }
 
                 if (!Directory.Exists(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache"))
@@ -219,9 +221,9 @@ namespace App1
         }
         public async void initial_boot() {
             setinitialsettings();
-            if (clasesettings.probarsetting("abrirserver"))
+            if (SettingsHelper.HasKey("abrirserver"))
             {
-                if (clasesettings.gettearvalor("abrirserver") == "si")
+                if (SettingsHelper.GetSetting("abrirserver") == "si")
                 {
 
                     if (serviciostreaming.gettearinstancia() != null)
@@ -236,14 +238,14 @@ namespace App1
 
                 }
             }
-            if (!File.Exists(clasesettings.rutacache + "/verified"))
+            if (!File.Exists(Constants.CachePath + "/verified"))
             {
                 if (clasesettings.tieneconexion())
                 {
-                    var firebase = new FirebaseClient("<your firebase url>");
-                    string serial = clasesettings.gettearserial();
+                    var firebase = new FirebaseClient(Constants.FirebaseSuggestionsUrl);
+                    string serial = StringsHelper.GenerateSerial();
                     await firebase.Child("Descargas").Child(serial).PutAsync("Descargada@" + Android.OS.Build.Model + "@" + System.DateTime.Now);
-                    var arch = File.CreateText(clasesettings.rutacache + "/verified");
+                    var arch = File.CreateText(Constants.CachePath + "/verified");
                     arch.Write(serial);
                     arch.Close();
 

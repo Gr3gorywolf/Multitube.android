@@ -7,39 +7,23 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
-namespace GR3_UiF
+namespace App1
 {
     class Geteartitulo
     {
 
-      public  string GetVideoTitle(JObject json)
+        public string GetVideoTitle(string url)
         {
-            JToken title = json["args"]["title"];
 
-            return title == null ? String.Empty : title.ToString();
+            var source=HttpHelper.DownloadString(url);
+           return Html.GetNode("title", source).Replace(" - YouTube","");
         }
-  public  JObject LoadJson(string url)
-        {
-            string pageSource = "";
-         
-                Thread.CurrentThread.IsBackground = true;
-               pageSource = HttpHelper.DownloadString(url);
-
-
-
-
-        
-            var dataRegex = new Regex(@"ytplayer\.config\s*=\s*(\{.+?\});", RegexOptions.Multiline);
-
-            string extractedJson = dataRegex.Match(pageSource).Result("$1");
-            
-            return JObject.Parse(extractedJson);
-        }
+    
 
     }
     internal static class HttpHelper
     {
-        public  static string DownloadString(string url)
+        public static string DownloadString(string url)
         {
 #if PORTABLE
             var request = WebRequest.Create(url);
@@ -59,5 +43,58 @@ namespace GR3_UiF
             }
 #endif
         }
+
+    }
+
+
+
+
+
+
+
+    internal static class Text
+    {
+        public static string StringBetween(string prefix, string suffix, string parent)
+        {
+            int start = parent.IndexOf(prefix) + prefix.Length;
+
+            if (start < prefix.Length)
+                return string.Empty;
+
+            int end = parent.IndexOf(suffix, start);
+
+            if (end == -1)
+                end = parent.Length;
+
+            return parent.Substring(start, end - start);
+        }
+
+
+    }
+
+
+    internal static class Html
+    {
+        // TODO: Refactor?
+        public static string GetNode(string name, string source) =>
+            WebUtility.HtmlDecode(
+                Text.StringBetween(
+                    '<' + name + '>', "</" + name + '>', source));
+
+        public static IEnumerable<string> GetUrisFromManifest(string source)
+        {
+            string opening = "<BaseURL>";
+            string closing = "</BaseURL>";
+            int start = source.IndexOf(opening);
+            if (start != -1)
+            {
+                string temp = source.Substring(start);
+                var uris = temp.Split(new string[] { opening }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(v => v.Substring(0, v.IndexOf(closing)));
+                return uris;
+            }
+            throw new NotSupportedException();
+        }
     }
 }
+

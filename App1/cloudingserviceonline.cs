@@ -12,6 +12,8 @@ using Android.Widget;
 using Android.Graphics;
 using System.Net;
 using System.Threading;
+using App1.Utils;
+
 namespace App1
 {
     [Service(Exported = true)]
@@ -31,17 +33,17 @@ namespace App1
         {
             while (activo)
             {
-                if (clasesettings.gettearvalor("servicio") == "matar")
+                if (SettingsHelper.GetSetting("servicio") == "matar")
                 {
-                    clasesettings.guardarsetting("servicio", "");
+                    SettingsHelper.SaveSetting("servicio", "");
                   activo = false;
                     StopSelf();
 
                 }
-                if (clasesettings.gettearvalor("cquerry").Trim() != "")
+                if (SettingsHelper.GetSetting("cquerry").Trim() != "")
                 {
-                    string qvalue = clasesettings.gettearvalor("cquerry").Trim();
-                    clasesettings.guardarsetting("cquerry", "");
+                    string qvalue = SettingsHelper.GetSetting("cquerry").Trim();
+                    SettingsHelper.SaveSetting("cquerry", "");
                     if (qvalue.StartsWith("data()"))
                     {
                         linkactual = (qvalue.Split('>')[2]);
@@ -68,7 +70,7 @@ namespace App1
             {
                 try
                 {
-                    contentView.SetImageViewBitmap(Resource.Id.imageView1,clasesettings.getRoundedShape( GetImageBitmapFromUrl(linkactual)));
+                    contentView.SetImageViewBitmap(Resource.Id.imageView1, ImageHelper.GetRoundedShape( GetImageBitmapFromUrl(linkactual)));
                     contentView.SetImageViewBitmap(Resource.Id.fondo1, clasesettings.CreateBlurredImageonline(this, 20, linkactual));
                 }
                 catch (Exception)
@@ -106,7 +108,7 @@ namespace App1
             var nBuilder = new Notification.Builder(this);
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
             Notification.MediaStyle estilo = new Notification.MediaStyle();
-            if (mainmenu.gettearinstancia() != null)
+            if (Mainmenu.gettearinstancia() != null)
             {
               //  estilo.SetMediaSession(mainmenu.gettearinstancia().mSession.SessionToken);
 
@@ -133,7 +135,7 @@ namespace App1
                 nBuilder.SetStyle(estilo);
                 nBuilder.SetLargeIcon(clasesettings.GetImageBitmapFromUrl(linkactual));
                 nBuilder.SetContentTitle(tituloactual);
-                nBuilder.SetContentText("Desde: "+mainmenu.gettearinstancia().devicename);
+                nBuilder.SetContentText("Desde: "+Mainmenu.gettearinstancia().devicename);
                 nBuilder.AddAction(accion5);
                 nBuilder.AddAction(accion3);
                 nBuilder.AddAction(accion1);
@@ -259,7 +261,7 @@ namespace App1
             var pendingIntent5 = PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado5, 0);
             listapending.Add(pendingIntent5);
             /////6
-            Intent internado6 = new Intent(this, typeof(mainmenu));
+            Intent internado6 = new Intent(this, typeof(Mainmenu));
 
             var pendingIntent6 = PendingIntent.GetActivity(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado6, PendingIntentFlags.UpdateCurrent);
             listapending.Add(pendingIntent6);

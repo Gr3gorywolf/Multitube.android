@@ -17,6 +17,8 @@ using System.IO;
 using Android.Content.PM;
 using Android.Support.V4.Provider;
 using Newtonsoft.Json;
+using App1.Models;
+
 namespace App1
 {
  
@@ -73,7 +75,7 @@ namespace App1
                 if (Intent.GetStringExtra("updateinfo").Trim() != "")
                 {
 
-                    var info = JsonConvert.DeserializeObject<updateinfo>(Intent.GetStringExtra("updateinfo").Trim());
+                    var info = JsonConvert.DeserializeObject<UpdateInfo>(Intent.GetStringExtra("updateinfo").Trim());
                     if (info.Numero != 9)
                     {
                    new AlertDialog.Builder(this)
@@ -144,7 +146,7 @@ namespace App1
             {
                 if (estaonline)
                 {
-                    var intento = new Intent(this, typeof(mainmenu_Offline));
+                    var intento = new Intent(this, typeof(MainmenuOffline));
 
                     animar3(botonsettings);
                     animar3(botoncontrolremoto);

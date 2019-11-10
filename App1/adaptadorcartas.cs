@@ -5,15 +5,17 @@ using Android.Widget;
 using Android.Support.V7.Widget;
 using System.Collections.Generic;
 using Android.Content;
+using App1.Models;
+
 namespace App1
 {
     class adaptadorcartas : RecyclerView.Adapter
     {
         public event EventHandler<adaptadorcartasClickEventArgs> ItemClick;
         public event EventHandler<adaptadorcartasClickEventArgs> ItemLongClick;
-       List<playlistelements> items;
+       List<PlaylistElement> items;
         Context contexto;
-        public adaptadorcartas(List<playlistelements> data,Context cont)
+        public adaptadorcartas(List<PlaylistElement> data,Context cont)
         {
             items = data;
             contexto = cont;
@@ -40,9 +42,9 @@ namespace App1
 
           
             var holder = viewHolder as adaptadorcartasViewHolder;
-            holder.texto.Text = items[position].nombre;
+            holder.texto.Text = items[position].Name;
             Glide.With(contexto)
-                .Load("http://i.ytimg.com/vi/" + items[position].link.Split('=')[1] + "/mqdefault.jpg")
+                .Load("http://i.ytimg.com/vi/" + items[position].Link.Split('=')[1] + "/mqdefault.jpg")
                 .Into(holder.imagen);
         }
 

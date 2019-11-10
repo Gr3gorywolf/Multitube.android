@@ -13,7 +13,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
+using App1.Utils;
 
 namespace App1
 {
@@ -491,7 +491,7 @@ namespace App1
                 }
             }
             else {
-                var ax = File.CreateText(clasesettings.rutacache + "/downloaded.gr3d");
+                var ax = File.CreateText(Constants.CachePath + "/downloaded.gr3d");
                 ax.Write("");
                 ax.Close();
                 verifiedmp3 = "none";
@@ -525,7 +525,7 @@ namespace App1
                 }
             }
             else {
-                var ax = File.CreateText(clasesettings.rutacache + "/downloaded.gr3d2");
+                var ax = File.CreateText(Constants.CachePath + "/downloaded.gr3d2");
                 ax.Write("");
                 ax.Close();
                 verifiedmp4 = "none";

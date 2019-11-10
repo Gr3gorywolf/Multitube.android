@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AndroidDesignerPreferredDevice>3.2in QVGA %28ADP2%29</AndroidDesignerPreferredDevice>
     <AndroidDesignerPreferredTheme>Base.Theme.DesignDemo</AndroidDesignerPreferredTheme>
-    <SelectedDevice>Amazon KFFOWI Player</SelectedDevice>
+    <SelectedDevice>LGE LG-US601</SelectedDevice>
     <DefaultDevice>Android_Accelerated_x86</DefaultDevice>
   </PropertyGroup>
 </Project>

@@ -30,7 +30,7 @@ namespace App1
         public override void OnReceive(Context context, Intent intent)
         {
 
-            if (playeroffline.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null || mainmenu.gettearinstancia() != null)
+            if (playeroffline.gettearinstancia() != null || MainmenuOffline.gettearinstancia() != null || Mainmenu.gettearinstancia() != null)
             {
 
                 if (intent.Action != Intent.ActionMediaButton && intent.Action != AudioManager.ActionAudioBecomingNoisy)
@@ -101,7 +101,7 @@ namespace App1
 
                                     }
                                     else
-                                        if (mainmenu_Offline.gettearinstancia() != null)
+                                        if (MainmenuOffline.gettearinstancia() != null)
                                     {
 
 
@@ -109,31 +109,31 @@ namespace App1
 
 
                                         Android.OS.Handler mHandler = new Android.OS.Handler();
-                                        mHandler.PostDelayed(new Action(() => { mainmenu_Offline.gettearinstancia().counter = 0; }), 500);
+                                        mHandler.PostDelayed(new Action(() => { MainmenuOffline.gettearinstancia().counter = 0; }), 500);
 
-                                        mainmenu_Offline.gettearinstancia().millis = SystemClock.CurrentThreadTimeMillis();
-
-
+                                        MainmenuOffline.gettearinstancia().millis = SystemClock.CurrentThreadTimeMillis();
 
 
 
-                                        if (mainmenu_Offline.gettearinstancia().counter < 1)
+
+
+                                        if (MainmenuOffline.gettearinstancia().counter < 1)
                                         {
-                                            mainmenu_Offline.gettearinstancia().counter++;
+                                            MainmenuOffline.gettearinstancia().counter++;
 
-                                            mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                            MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                             {
-                                                mainmenu_Offline.gettearinstancia().play.CallOnClick();
+                                                MainmenuOffline.gettearinstancia().play.CallOnClick();
 
                                             });
                                         }
                                         else
                                         {
 
-                                            mainmenu_Offline.gettearinstancia().counter = 0;
-                                            mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                            MainmenuOffline.gettearinstancia().counter = 0;
+                                            MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                             {
-                                                mainmenu_Offline.gettearinstancia().adelante.CallOnClick();
+                                                MainmenuOffline.gettearinstancia().adelante.CallOnClick();
 
 
 
@@ -165,12 +165,12 @@ namespace App1
                                         });
                                     }
                                     else
-                                    if (mainmenu_Offline.gettearinstancia() != null)
+                                    if (MainmenuOffline.gettearinstancia() != null)
                                     {
 
-                                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                        MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                         {
-                                            mainmenu_Offline.gettearinstancia().play.CallOnClick();
+                                            MainmenuOffline.gettearinstancia().play.CallOnClick();
 
                                         });
 
@@ -187,12 +187,12 @@ namespace App1
                                         });
                                     }
                                     else
-                                    if (mainmenu_Offline.gettearinstancia() != null)
+                                    if (MainmenuOffline.gettearinstancia() != null)
                                     {
 
-                                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                        MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                         {
-                                            mainmenu_Offline.gettearinstancia().adelante.CallOnClick();
+                                            MainmenuOffline.gettearinstancia().adelante.CallOnClick();
 
                                         });
 
@@ -209,12 +209,12 @@ namespace App1
                                         });
                                     }
                                     else
-                                  if (mainmenu_Offline.gettearinstancia() != null)
+                                  if (MainmenuOffline.gettearinstancia() != null)
                                     {
 
-                                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                        MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                         {
-                                            mainmenu_Offline.gettearinstancia().play.CallOnClick();
+                                            MainmenuOffline.gettearinstancia().play.CallOnClick();
 
                                         });
 
@@ -231,12 +231,12 @@ namespace App1
                                         });
                                     }
                                     else
-                            if (mainmenu_Offline.gettearinstancia() != null)
+                            if (MainmenuOffline.gettearinstancia() != null)
                                     {
 
-                                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                        MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                         {
-                                            mainmenu_Offline.gettearinstancia().play.CallOnClick();
+                                            MainmenuOffline.gettearinstancia().play.CallOnClick();
 
                                         });
 
@@ -252,12 +252,12 @@ namespace App1
                                         });
                                     }
                                     else
-                                    if (mainmenu_Offline.gettearinstancia() != null)
+                                    if (MainmenuOffline.gettearinstancia() != null)
                                     {
 
-                                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                                        MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                                         {
-                                            mainmenu_Offline.gettearinstancia().atras.CallOnClick();
+                                            MainmenuOffline.gettearinstancia().atras.CallOnClick();
 
                                         });
 
@@ -274,9 +274,9 @@ namespace App1
                         if (Clouding_service.gettearinstancia() != null)
                         {
 
-                            if (mainmenu_Offline.gettearinstancia() != null)
+                            if (MainmenuOffline.gettearinstancia() != null)
                             {
-                                mainmenu_Offline.gettearinstancia().RunOnUiThread(() => mainmenu_Offline.gettearinstancia().play.SetBackgroundResource(Resource.Drawable.playbutton2));
+                                MainmenuOffline.gettearinstancia().RunOnUiThread(() => MainmenuOffline.gettearinstancia().play.SetBackgroundResource(Resource.Drawable.playbutton2));
                                 Clouding_service.gettearinstancia().musicaplayer.Pause();
                               
                             }

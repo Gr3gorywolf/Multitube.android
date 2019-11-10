@@ -19,6 +19,8 @@ using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
+using App1.Models;
+using App1.Utils;
 
 namespace App1
 {
@@ -30,7 +32,7 @@ namespace App1
       
         public List<string> todasip = new List<string>();
         public List<string> misips = new List<string>();
-        public modelips mode;
+        public IpData mode;
        FloatingActionButton  botonscan;
    
         string ultimaipescaneada = "";
@@ -57,12 +59,12 @@ namespace App1
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             //SupportActionBar.SetBackgroundDrawable(new ColorDrawable(Color.ParseColor("#2b2e30")));
 
-            if (Directory.Exists(clasesettings.rutacache))
-                Directory.CreateDirectory(clasesettings.rutacache);
+            if (Directory.Exists(Constants.CachePath))
+                Directory.CreateDirectory(Constants.CachePath);
 
 
 
-            clasesettings.animarfab(botonscan);
+            AnimationHelper.AnimateFAB(botonscan);
 
 
 
@@ -70,7 +72,7 @@ namespace App1
             ///
 
 
-            if (File.Exists(clasesettings.rutacache + "/ips.json"))
+            if (File.Exists(Constants.CachePath + "/ips.json"))
             {
 
 
@@ -82,14 +84,23 @@ namespace App1
 
                 var ipheader = clasesettings.settearipsp().Split('.')[0];
 
-                mode = JsonConvert.DeserializeObject<modelips>(File.ReadAllText(clasesettings.rutacache + "/ips.json"));
-                if (estaon(mode.ipactual))
+           
+                try
                 {
-                    ultimaipescaneada = mode.ipactual;
+                    mode = JsonConvert.DeserializeObject<IpData>(File.ReadAllText(Constants.CachePath + "/ips.json"));
+                }
+                catch (Exception)
+                {
+                    File.Delete(Constants.CachePath + "/ips.json");
+                   mode = new IpData("", new Dictionary<string, string>());
+                }
+                if (estaon(mode.Ip))
+                {
+                    ultimaipescaneada = mode.Ip;
                    
                 }
-                todasip = mode.ips.Keys.ToList();
-                misips = mode.ips.Keys.ToList().Where(aax => aax.StartsWith(ipheader)).ToList();
+                todasip = mode.Ips.Keys.ToList();
+                misips = mode.Ips.Keys.ToList().Where(aax => aax.StartsWith(ipheader)).ToList();
                 forscan = misips.Count;
                 foreach (string prro in new List<string>( misips))
                 {
@@ -119,7 +130,7 @@ namespace App1
             }
             else {
 
-                mode = new modelips("", new Dictionary<string, string>());
+                mode = new IpData("", new Dictionary<string, string>());
             }
          
                 /*  textboxl.Text = prefs.GetString("ipanterior", null);
@@ -139,10 +150,10 @@ namespace App1
 
 
                             //SetActionBar(null);
-                            mode.ipactual = misips[aasd.Position];
-                            clasesettings.guardarips(mode);
+                            mode.Ip = misips[aasd.Position];
+                            SocketHelper.SaveIps(mode);
 
-                            Intent activity2 = new Intent(this, typeof(mainmenu));
+                            Intent activity2 = new Intent(this, typeof(Mainmenu));
 
                             activity2.PutExtra("MyData", misips[aasd.Position]);
                             StartActivity(activity2);
@@ -347,14 +358,14 @@ namespace App1
 
                 try
                 {
-                    if (mode.ips[ax] == "")
+                    if (mode.Ips[ax] == "")
                     {
                         presentacion.Add(ax);
 
                     }
                     else
                     {
-                        presentacion.Add(mode.ips[ax]);
+                        presentacion.Add(mode.Ips[ax]);
                     }
                     dummylist.Add("=dummyxcfdfd");
                 }
@@ -417,16 +428,16 @@ namespace App1
                      
 
                         
-                        mode.ipactual = ultimaipescaneada;
+                        mode.Ip = ultimaipescaneada;
                        if(!todasip.Contains(ultimaipescaneada))
                           todasip.Add(ultimaipescaneada);
 
-                        if (!mode.ips.ContainsKey(ultimaipescaneada))
-                            mode.ips.Add(ultimaipescaneada, "");
+                        if (!mode.Ips.ContainsKey(ultimaipescaneada))
+                            mode.Ips.Add(ultimaipescaneada, "");
 
 
-                        clasesettings.guardarips(mode);
-                        Intent activity2 = new Intent(this, typeof(mainmenu));
+                        SocketHelper.SaveIps(mode);
+                        Intent activity2 = new Intent(this, typeof(Mainmenu));
 
                         activity2.PutExtra("MyData", pasasion);
                     

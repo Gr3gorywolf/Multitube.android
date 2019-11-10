@@ -12,6 +12,8 @@ using Android.Widget;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading;
+using App1.Models;
+
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
@@ -45,7 +47,7 @@ namespace App1
                 textoaccion.Text = "Enviar lista";
 
             }
-            var arch= File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].nombre);
+            var arch= File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].Name);
             var counter = arch.Split('$')[1].Split(';').ToList();
             if (counter.Count > 0) {
                 if (counter[0].Trim() == "") {
@@ -67,7 +69,7 @@ namespace App1
                     if (query == "Fromlocal")
                     {
                       
-                            mainmenu.gettearinstancia().playlistreceived = false;
+                            Mainmenu.gettearinstancia().playlistreceived = false;
                         RunOnUiThread(() =>
                         {
                             new Android.Support.V7.App.AlertDialog.Builder(this)
@@ -79,8 +81,8 @@ namespace App1
                                     {
 
                                         var elementos = inst.listasremotas[inst.playlistidx];
-                                        var nombreses = string.Join(";", elementos.elementos.Select(axx => axx.nombre).ToArray()) + ";";
-                                        var linkeses = string.Join(";", elementos.elementos.Select(axx => axx.link).ToArray()) + ";";
+                                        var nombreses = string.Join(";", elementos.MediaElements.Select(axx => axx.Name).ToArray()) + ";";
+                                        var linkeses = string.Join(";", elementos.MediaElements.Select(axx => axx.Link).ToArray()) + ";";
                                         var archi = File.CreateText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + Intent.GetStringExtra("nombrelista"));
                                         archi.Write(nombreses + "$" + linkeses);
                                         archi.Close();
@@ -98,27 +100,27 @@ namespace App1
 
 
                        
-                        var listilla = new List<playlistelements>();
-                        var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].nombre);
+                        var listilla = new List<PlaylistElement>();
+                        var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].Name);
                         var nombreses = texto.Split('$')[0].Split(';').ToList();
                         var links = texto.Split('$')[1].Split(';').ToList();
 
-                        var listaelementos = new List<playlistelements>();
+                        var listaelementos = new List<PlaylistElement>();
                         for (int i = 0; i < nombreses.Count; i++)
                         {
 
                             if (nombreses[i].Trim() != "" && links[i].Trim() != "")
                             {
-                                var elemento = new playlistelements()
+                                var elemento = new PlaylistElement()
                                 {
-                                    nombre = nombreses[i],
-                                    link = links[i]
+                                    Name = nombreses[i],
+                                    Link = links[i]
                                 };
                                 listaelementos.Add(elemento);
                             }
                         }
-                        inst.listaslocales[inst.playlistidx].elementos = listaelementos;
-                        mainmenu.gettearinstancia()
+                        inst.listaslocales[inst.playlistidx].MediaElements = listaelementos;
+                        Mainmenu.gettearinstancia()
                             .clientelalistas
                             .Client
                             .Send(Encoding.UTF8.GetBytes("Receive__==__==__" + JsonConvert.SerializeObject(inst.listaslocales[inst.playlistidx])));
@@ -143,21 +145,21 @@ namespace App1
                         {
 
 
-                            var listilla = new List<playlistelements>();
-                            var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].nombre);
+                            var listilla = new List<PlaylistElement>();
+                            var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].Name);
                             var nombreses = texto.Split('$')[0].Split(';').ToList();
                             var links = texto.Split('$')[1].Split(';').ToList();
 
-                            var listaelementos = new List<playlistelements>();
+                            var listaelementos = new List<PlaylistElement>();
                             for (int i = 0; i < nombreses.Count; i++)
                             {
 
                                 if (nombreses[i].Trim() != "" || links[i].Trim() != "")
                                 {
-                                    var elemento = new playlistelements()
+                                    var elemento = new PlaylistElement()
                                     {
-                                        nombre = nombreses[i],
-                                        link = links[i]
+                                        Name = nombreses[i],
+                                        Link = links[i]
                                     };
                                     listaelementos.Add(elemento);
                                 }
@@ -165,7 +167,7 @@ namespace App1
                             RunOnUiThread(() =>
                             {
                                 ListView lista = new ListView(this);
-                                adapterlistaremoto adapt = new adapterlistaremoto(this, listaelementos.Select(ax => ax.nombre).ToList(), listaelementos.Select(ax => ax.link).ToList());
+                                adapterlistaremoto adapt = new adapterlistaremoto(this, listaelementos.Select(ax => ax.Name).ToList(), listaelementos.Select(ax => ax.Link).ToList());
                                 lista.Adapter = adapt;
                                 
                                 new AlertDialog.Builder(this)
@@ -189,7 +191,7 @@ namespace App1
                            RunOnUiThread(() =>
                             {
                                 ListView lista = new ListView(this);
-                                adapterlistaremoto adapt = new adapterlistaremoto(this, elementos.elementos.Select(ax => ax.nombre).ToList(), elementos.elementos.Select(ax => ax.link).ToList());
+                                adapterlistaremoto adapt = new adapterlistaremoto(this, elementos.MediaElements.Select(ax => ax.Name).ToList(), elementos.MediaElements.Select(ax => ax.Link).ToList());
                                 lista.Adapter = adapt;
                                 new AlertDialog.Builder(this)
                                 .SetTitle("Elementos de esta lista de reproducción")
@@ -224,27 +226,27 @@ namespace App1
                     {
 
 
-                        var listilla = new List<playlistelements>();
-                        var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].nombre);
+                        var listilla = new List<PlaylistElement>();
+                        var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + inst.listaslocales[inst.playlistidx].Name);
                         var nombreses = texto.Split('$')[0].Split(';').ToList();
                         var links = texto.Split('$')[1].Split(';').ToList();
 
-                        var listaelementos = new List<playlistelements>();
+                        var listaelementos = new List<PlaylistElement>();
                         for (int i = 0; i < nombreses.Count; i++)
                         {
 
                             if (nombreses[i].Trim() != "" && links[i].Trim() != "")
                             {
-                                var elemento = new playlistelements()
+                                var elemento = new PlaylistElement()
                                 {
-                                    nombre = nombreses[i],
-                                    link = links[i]
+                                    Name = nombreses[i],
+                                    Link = links[i]
                                 };
                                 listaelementos.Add(elemento);
                             }
                         }
-                        inst.listaslocales[inst.playlistidx].elementos = listaelementos;
-                        mainmenu.gettearinstancia()
+                        inst.listaslocales[inst.playlistidx].MediaElements = listaelementos;
+                        Mainmenu.gettearinstancia()
                              .clientelalistas
                              .Client
                              .Send(Encoding.UTF8.GetBytes(query + "__==__==__" + JsonConvert.SerializeObject(inst.listaslocales[inst.playlistidx])));
@@ -259,7 +261,7 @@ namespace App1
 
                     if (inst.listasremotas.Count > 0)
                     {
-                        mainmenu.gettearinstancia()
+                        Mainmenu.gettearinstancia()
                             .clientelalistas
                             .Client
                             .Send(Encoding.UTF8.GetBytes(query + "__==__==__" + JsonConvert.SerializeObject(inst.listasremotas[inst.playlistidx])));

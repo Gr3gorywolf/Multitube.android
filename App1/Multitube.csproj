@@ -118,7 +118,6 @@
     <Compile Include="actmenuprincipal.cs" />
     <Compile Include="actmenuvolumen.cs" />
     <Compile Include="actsplashscreen.cs" />
-    <Compile Include="actvideo.cs" />
     <Compile Include="adaptadorcartas.cs" />
     <Compile Include="adaptadorlista.cs" />
     <Compile Include="adaptadorsugerencias.cs" />
@@ -128,9 +127,7 @@
     <Compile Include="adapterlistaoffline.cs" />
     <Compile Include="agregarlistaoffline.cs" />
     <Compile Include="broadcast receiver.cs" />
-    <Compile Include="clasenotificacion.cs" />
     <Compile Include="clasesettings.cs" />
-    <Compile Include="clasesync.cs" />
     <Compile Include="Clouding serviceoffline.cs" />
     <Compile Include="Clouding service.cs" />
     <Compile Include="cloudingserviceonline.cs" />
@@ -145,17 +142,28 @@
     <Compile Include="customhttpserver.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="intentoplayer.cs" />
-    <Compile Include="la clase.cs" />
     <Compile Include="launcheeer.cs" />
     <Compile Include="menulistaoffline.cs" />
+    <Compile Include="Models\BackupPlaylist.cs" />
+    <Compile Include="Models\History.cs" />
+    <Compile Include="Models\HomeData.cs" />
+    <Compile Include="Models\IpData.cs" />
+    <Compile Include="Models\MediaElement.cs" />
+    <Compile Include="Models\PlayList.cs" />
+    <Compile Include="Models\PlaylistElement.cs" />
+    <Compile Include="Models\Suggestion.cs" />
+    <Compile Include="Models\UpdateInfo.cs" />
+    <Compile Include="Models\Video.cs" />
+    <Compile Include="Models\VideoImage.cs" />
+    <Compile Include="Models\VideoShortInfo.cs" />
     <Compile Include="playeroffline.cs" />
     <Compile Include="qrcodigoact.cs" />
     <Compile Include="customdialogact.cs" />
     <Compile Include="customsearcheract.cs" />
     <Compile Include="Geteartitulo.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="mainmenu Offline.cs" />
-    <Compile Include="mainmenu.cs" />
+    <Compile Include="MainmenuOffline.cs" />
+    <Compile Include="Mainmenu.cs" />
     <Compile Include="Reproducirlistaact.cs" />
     <Compile Include="Reproducirlistadialog.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -164,7 +172,13 @@
     <Compile Include="serviciodownload.cs" />
     <Compile Include="serviciointerpreter.cs" />
     <Compile Include="serviciostreaming.cs" />
-    <Compile Include="Videos.cs" />
+    <Compile Include="Utils\AnimationHelper.cs" />
+    <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\ImageHelper.cs" />
+    <Compile Include="Utils\SettingsHelper.cs" />
+    <Compile Include="Utils\SocketHelper.cs" />
+    <Compile Include="Utils\StringsHelper.cs" />
+    <Compile Include="Utils\SuggestionsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

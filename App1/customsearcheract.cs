@@ -18,6 +18,8 @@ using Android.Speech;
 using System.Net.Sockets;
 using Android.Graphics;
 using Android.Glide;
+using Bitmap = Android.Graphics.Bitmap;
+using App1.Models;
 
 namespace App1
 {
@@ -27,9 +29,9 @@ namespace App1
         public string ipadresss;
         public bool buscando = false;
         public int index = 0;
-        public List<Videos> viddeos;
+        public List<Video> viddeos;
         public bool parar = true;
-        public List<Videosimage> listaimagen;
+        public List<VideoImage> listaimagen;
         public string termino;
         public ListView listbox;
         public List<Android.Graphics.Bitmap> imagelist;
@@ -43,7 +45,7 @@ namespace App1
         string color = "none";
         public Thread procc;
         public TextView tv1;
-        public Videosimage videoimagen;
+        public VideoImage videoimagen;
         public LinearLayout lineaa;
       //  public ProgressBar progresooo;
         public LinearLayout lineall2;
@@ -63,8 +65,8 @@ namespace App1
            
             string ip = Intent.GetStringExtra("ipadre").Trim();
            
-            listaimagen = new List<Videosimage>();
-            viddeos = new List<Videos>();
+            listaimagen = new List<VideoImage>();
+            viddeos = new List<Video>();
             imagelist = new List<Android.Graphics.Bitmap>();
          
             texto = FindViewById<EditText>(Resource.Id.editText1);
@@ -164,11 +166,11 @@ namespace App1
             playpause.Click += delegate
             {
                 animar(playpause);
-                if (mainmenu.gettearinstancia() != null)
-                    mainmenu.gettearinstancia().play.PerformClick();
+                if (Mainmenu.gettearinstancia() != null)
+                    Mainmenu.gettearinstancia().play.PerformClick();
                 else
-                if (mainmenu_Offline.gettearinstancia() != null)
-                   mainmenu_Offline.gettearinstancia().play.PerformClick();
+                if (MainmenuOffline.gettearinstancia() != null)
+                   MainmenuOffline.gettearinstancia().play.PerformClick();
              
             };
 
@@ -510,17 +512,17 @@ namespace App1
         {
             while (!this.IsDestroyed)
             {
-                if (mainmenu_Offline.gettearinstancia() != null)
+                if (MainmenuOffline.gettearinstancia() != null)
                 {
 
-                    if (mainmenu_Offline.gettearinstancia().buscando != true)
+                    if (MainmenuOffline.gettearinstancia().buscando != true)
                     {
-                        if (mainmenu_Offline.gettearinstancia().label.Text != tv1.Text
-                            && mainmenu_Offline.gettearinstancia().label.Text.Trim() != "")
+                        if (MainmenuOffline.gettearinstancia().label.Text != tv1.Text
+                            && MainmenuOffline.gettearinstancia().label.Text.Trim() != "")
                         {
 
 
-                            RunOnUiThread(() => tv1.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                            RunOnUiThread(() => tv1.Text = MainmenuOffline.gettearinstancia().label.Text);
                         }
                     }
                     else {
@@ -530,15 +532,15 @@ namespace App1
 
                 }
                 else
-                if (mainmenu.gettearinstancia() != null)
+                if (Mainmenu.gettearinstancia() != null)
                 {
 
-                    if (mainmenu.gettearinstancia().buscando != true)
+                    if (Mainmenu.gettearinstancia().buscando != true)
                     {
-                        if (mainmenu.gettearinstancia().label.Text != tv1.Text
-                        && mainmenu.gettearinstancia().label.Text.Trim() != "")
+                        if (Mainmenu.gettearinstancia().label.Text != tv1.Text
+                        && Mainmenu.gettearinstancia().label.Text.Trim() != "")
                         {
-                            RunOnUiThread(() => tv1.Text = mainmenu.gettearinstancia().label.Text);
+                            RunOnUiThread(() => tv1.Text = Mainmenu.gettearinstancia().label.Text);
                         }
                     }
                     else {
@@ -563,9 +565,9 @@ namespace App1
         }
         protected override void OnDestroy()
         {
-            listaimagen = new List<Videosimage>();
+            listaimagen = new List<VideoImage>();
             nombreses = new List<string>();
-            viddeos = new List<Videos>();
+            viddeos = new List<Video>();
             linkeses = new List<string>();
             imageneses = new List<Bitmap>();
             imagenesesblur = new List<Bitmap>();

@@ -124,19 +124,19 @@ namespace App1
             playpause.Click += delegate
             {
                 animar(playpause);
-               mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("playpause()"));
+               Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("playpause()"));
             };
             iv1.Click += delegate
                 {
                     animar(iv1);
                     if (rb1.Checked == true)
-                    { mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("descvid360()")); }
+                    { Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("descvid360()")); }
                     else
-                      if (rb2.Checked == true) { mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("descvid720()")); }
+                      if (rb2.Checked == true) { Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("descvid720()")); }
                     else
                           if (rb3.Checked == true)
                     {
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("descmp3()"));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.ASCII.GetBytes("descmp3()"));
                     }
 
 
@@ -466,14 +466,14 @@ namespace App1
           
             while (!this.IsDestroyed)
             {
-                if (mainmenu_Offline.gettearinstancia() != null)
+                if (MainmenuOffline.gettearinstancia() != null)
                 {
-                    if (mainmenu_Offline.gettearinstancia().buscando != true)
+                    if (MainmenuOffline.gettearinstancia().buscando != true)
                     {
-                        if (mainmenu_Offline.gettearinstancia().label.Text != tv4.Text
-                           && mainmenu_Offline.gettearinstancia().label.Text.Trim() != "")
+                        if (MainmenuOffline.gettearinstancia().label.Text != tv4.Text
+                           && MainmenuOffline.gettearinstancia().label.Text.Trim() != "")
                         {
-                            RunOnUiThread(() => tv4.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                            RunOnUiThread(() => tv4.Text = MainmenuOffline.gettearinstancia().label.Text);
                         }
                     }
                     else
@@ -483,15 +483,15 @@ namespace App1
 
                 }
                 else
-                if (mainmenu.gettearinstancia() != null)
+                if (Mainmenu.gettearinstancia() != null)
                 {
-                    if (mainmenu.gettearinstancia().buscando == false)
+                    if (Mainmenu.gettearinstancia().buscando == false)
                     {
-                        if (mainmenu.gettearinstancia().label.Text != tv4.Text
-                           && mainmenu.gettearinstancia().label.Text.Trim() != ""
+                        if (Mainmenu.gettearinstancia().label.Text != tv4.Text
+                           && Mainmenu.gettearinstancia().label.Text.Trim() != ""
                           )
                         {
-                            RunOnUiThread(() => tv4.Text = mainmenu.gettearinstancia().label.Text);
+                            RunOnUiThread(() => tv4.Text = Mainmenu.gettearinstancia().label.Text);
                         }
                     }else
                         RunOnUiThread(() => tv4.Text = "Buscando...");

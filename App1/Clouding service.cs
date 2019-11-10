@@ -18,6 +18,8 @@ using System.Net;
 using Android.Support.V13.App;
 using Android.Media.Session;
 using Android.Media;
+using App1.Utils;
+
 namespace App1
 {
     [Service(Exported = true)]
@@ -47,7 +49,7 @@ namespace App1
 
             // musicaplayer.SetDataSource(downloadurl);
           
-            if (mainmenu_Offline.gettearinstancia() != null) {
+            if (MainmenuOffline.gettearinstancia() != null) {
 
 
 
@@ -86,7 +88,7 @@ namespace App1
 
                musicaplayer.Info += (aa, aaa) =>
                 {
-                    var instancia = mainmenu_Offline.gettearinstancia();
+                    var instancia = MainmenuOffline.gettearinstancia();
                     if (instancia != null)
                     {
                         switch (aaa.What)
@@ -112,30 +114,30 @@ namespace App1
                
                 musicaplayer.Prepared += delegate
                 {
-                    if (mainmenu_Offline.gettearinstancia().videoon)
+                    if (MainmenuOffline.gettearinstancia().videoon)
                     {
-                        mainmenu_Offline.gettearinstancia().RunOnUiThread(() =>
+                        MainmenuOffline.gettearinstancia().RunOnUiThread(() =>
                         {
                             try
                             {
                                 musicaplayer.SetDisplay(null);
-                                musicaplayer.SetDisplay(mainmenu_Offline.gettearinstancia().holder);
+                                musicaplayer.SetDisplay(MainmenuOffline.gettearinstancia().holder);
                             }
                             catch (Exception) {
 
                             }
 
                        
-                            mainmenu_Offline.gettearinstancia().setVideoSize();
+                            MainmenuOffline.gettearinstancia().setVideoSize();
                         });
                     }
                         musicaplayer.Start();
-                    if (mainmenu_Offline.gettearinstancia().qualitychanged)
+                    if (MainmenuOffline.gettearinstancia().qualitychanged)
                     {
                         try
                         {
-                         mainmenu_Offline.gettearinstancia().qualitychanged = false;
-                         musicaplayer.SeekTo(mainmenu_Offline.gettearinstancia().previousprogress);
+                         MainmenuOffline.gettearinstancia().qualitychanged = false;
+                         musicaplayer.SeekTo(MainmenuOffline.gettearinstancia().previousprogress);
                         }
                         catch (Exception) { }
                     }
@@ -148,7 +150,7 @@ namespace App1
                 {
                     new Thread(() =>
                     {
-                        mainmenu_Offline.gettearinstancia().siguiente();
+                        MainmenuOffline.gettearinstancia().siguiente();
                     }).Start();
                 }
             };
@@ -177,8 +179,8 @@ namespace App1
         }
         public override void OnCreate()
         {
-            if (mainmenu_Offline.gettearinstancia() != null) { 
-                 mainmenu_Offline.gettearinstancia().holder.AddCallback(mainmenu_Offline.gettearinstancia());
+            if (MainmenuOffline.gettearinstancia() != null) { 
+                 MainmenuOffline.gettearinstancia().holder.AddCallback(MainmenuOffline.gettearinstancia());
        
             }
             audioManager = (AudioManager)GetSystemService(AudioService);
@@ -212,7 +214,7 @@ namespace App1
             {
                 try
                 {
-                    contentView.SetImageViewBitmap(Resource.Id.imageView1, clasesettings.getRoundedShape(GetImageBitmapFromUrl("https://i.ytimg.com/vi/" + linkactual.Split('=')[1] + "/mqdefault.jpg")));
+                    contentView.SetImageViewBitmap(Resource.Id.imageView1, ImageHelper.GetRoundedShape(GetImageBitmapFromUrl("https://i.ytimg.com/vi/" + linkactual.Split('=')[1] + "/mqdefault.jpg")));
                     contentView.SetImageViewBitmap(Resource.Id.fondo1, clasesettings.CreateBlurredImageonline(this, 20, linkactual));
                 }
                 catch (Exception)
@@ -236,9 +238,9 @@ namespace App1
             Notification.Action accion5 = new Notification.Action(Resource.Drawable.skipbackward, "atrazar", listapending[4]);
 
             Notification.MediaStyle estilo = new Notification.MediaStyle();
-            if (mainmenu_Offline.gettearinstancia() != null)
+            if (MainmenuOffline.gettearinstancia() != null)
             {
-                estilo.SetMediaSession(mainmenu_Offline.gettearinstancia().mSession.SessionToken);
+                estilo.SetMediaSession(MainmenuOffline.gettearinstancia().mSession.SessionToken);
 
                 estilo.SetShowActionsInCompactView(1, 2, 3);
 
@@ -377,7 +379,7 @@ namespace App1
             var pendingIntent5= PendingIntent.GetService(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado5, 0);
             listapending.Add(pendingIntent5);
             /////6
-            Intent internado6 = new Intent(this, typeof(mainmenu_Offline));
+            Intent internado6 = new Intent(this, typeof(MainmenuOffline));
 
             var pendingIntent6 = PendingIntent.GetActivity(ApplicationContext, brandom.Next(2000, 50000) + brandom.Next(2000, 50000), internado6, PendingIntentFlags.UpdateCurrent);
             listapending.Add(pendingIntent6);

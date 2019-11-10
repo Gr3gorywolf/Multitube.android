@@ -14,7 +14,7 @@ using System.Net;
 using System.Threading;
 using System.IO;
 using mooftpserv;
-
+using App1.Utils;
 
 namespace App1
 {
@@ -121,8 +121,8 @@ namespace App1
                
             }
 
-            if (!clasesettings.probarsetting("notificosync?")) {
-                clasesettings.guardarsetting("notificosync?", "Si");
+            if (!SettingsHelper.HasKey("notificosync?")) {
+                SettingsHelper.SaveSetting("notificosync?", "Si");
                 new AlertDialog.Builder(this).SetTitle("Como se usa?")
                     .SetMessage("Para sincronizar con otro dispositivo uno de los dispositivos debe escanear el código qr de el otro.\n luego le aparecerá un menú con toda la media que usted tenga descargada.\n al tocar un elemento se le enviara a la persona\nNOTA:Si se cierra el menú de sinconización mientras se envía un elemento puede que se cancelen las descargas locales.")
                     .SetPositiveButton("Entendido!",(aa,aaa)=> { }).Create().Show();
@@ -310,12 +310,12 @@ namespace App1
 
 
 
-            return writer.Write(miip+ "¤" + mipuertoquerry+ "¤" + mipuertoarchivo+ "¤" + clasesettings.gettearvalor("rutadescarga") + "¤" + Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/");
+            return writer.Write(miip+ "¤" + mipuertoquerry+ "¤" + mipuertoarchivo+ "¤" + SettingsHelper.GetSetting("rutadescarga") + "¤" + Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/");
         }
         public void sincronizar()
         {
 
-           clientequerry.Client.Send(Encoding.UTF8.GetBytes("dataserver()¤" + miip + "¤" + mipuertoquerry + "¤" + mipuertoarchivo+ "¤" + clasesettings.gettearvalor("rutadescarga")+ "¤" +mipathimagenes));
+           clientequerry.Client.Send(Encoding.UTF8.GetBytes("dataserver()¤" + miip + "¤" + mipuertoquerry + "¤" + mipuertoarchivo+ "¤" + SettingsHelper.GetSetting("rutadescarga")+ "¤" +mipathimagenes));
         }
         public void enviararchivo(string nombrearchivo,string linkarchivo,string patharchivo)
         {
@@ -517,11 +517,11 @@ namespace App1
                       
 
          
-                    escribirenregistro(Path.Combine(clasesettings.gettearvalor("rutadescarga"), nombrearchivo), linkarchivo);
+                    escribirenregistro(Path.Combine(SettingsHelper.GetSetting("rutadescarga"), nombrearchivo), linkarchivo);
                     Intent intentssdd = new Intent(this, typeof(actividadadinfooffline));
                     intentssdd.PutExtra("nombre", Path.GetFileName(nombrearchivo));
                     intentssdd.PutExtra("link", linkarchivo);
-                    intentssdd.PutExtra("path", Path.Combine(clasesettings.gettearvalor("rutadescarga"), nombrearchivo));
+                    intentssdd.PutExtra("path", Path.Combine(SettingsHelper.GetSetting("rutadescarga"), nombrearchivo));
 
 
 
@@ -560,10 +560,10 @@ namespace App1
                 };
             if (patharchivo.StartsWith("/"))
             {
-                cliente.DownloadFileAsync(new Uri(@"ftp://" + ipdelotro + ":" + puertoarchivosdelotro + patharchivo), Path.Combine(clasesettings.gettearvalor("rutadescarga"), nombrearchivo));
+                cliente.DownloadFileAsync(new Uri(@"ftp://" + ipdelotro + ":" + puertoarchivosdelotro + patharchivo), Path.Combine(SettingsHelper.GetSetting("rutadescarga"), nombrearchivo));
             }else
             {
-                cliente.DownloadFileAsync(new Uri(@"ftp://" + ipdelotro + ":" + puertoarchivosdelotro + "/" + getteardisco( patharchivo)), Path.Combine(clasesettings.gettearvalor("rutadescarga"), nombrearchivo));
+                cliente.DownloadFileAsync(new Uri(@"ftp://" + ipdelotro + ":" + puertoarchivosdelotro + "/" + getteardisco( patharchivo)), Path.Combine(SettingsHelper.GetSetting("rutadescarga"), nombrearchivo));
             }
                  
              

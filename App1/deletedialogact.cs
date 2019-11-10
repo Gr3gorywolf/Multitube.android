@@ -13,6 +13,8 @@ using System.Net;
 using System.Net.Sockets;
 using Android.Graphics;
 using System.Threading;
+using App1.Utils;
+
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
@@ -96,13 +98,13 @@ namespace App1
 
 
 
-                if (mainmenu_Offline.gettearinstancia() == null)
+                if (MainmenuOffline.gettearinstancia() == null)
                 {
-                    if (mainmenu.gettearinstancia().clientela.Connected == true)
+                    if (Mainmenu.gettearinstancia().clientela.Connected == true)
                     {
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("eliminarelemento()"));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("eliminarelemento()"));
                         Thread.Sleep(250);
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(posicion));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(posicion));
 
 
 
@@ -112,7 +114,7 @@ namespace App1
                 {
                     new Thread(() =>
                     {
-                        mainmenu_Offline.gettearinstancia().eliminarelementodireckt(int.Parse(posicion));
+                        MainmenuOffline.gettearinstancia().eliminarelementodireckt(int.Parse(posicion));
                     }).Start();
 
                 }
@@ -141,13 +143,13 @@ namespace App1
 
 
 
-                if (mainmenu_Offline.gettearinstancia() == null)
+                if (MainmenuOffline.gettearinstancia() == null)
                 {
-                    if (mainmenu.gettearinstancia().clientela.Connected == true)
+                    if (Mainmenu.gettearinstancia().clientela.Connected == true)
                     {
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("pedirindice()"));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("pedirindice()"));
                         Thread.Sleep(250);
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(posicion));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(posicion));
 
 
 
@@ -157,7 +159,7 @@ namespace App1
                 {
                     new Thread(() =>
                     {
-                        mainmenu_Offline.gettearinstancia().reproddelistadireckt(int.Parse( posicion));
+                        MainmenuOffline.gettearinstancia().reproddelistadireckt(int.Parse( posicion));
                     }).Start();
 
                 }
@@ -190,7 +192,7 @@ namespace App1
           byte[]losbits=  clienteweb.DownloadData("http://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
             Bitmap imagen = BitmapFactory.DecodeByteArray(losbits, 0, losbits.Length);
 
-            RunOnUiThread(() =>imagenview.SetImageBitmap(clasesettings.getRoundedShape( imagen)));
+            RunOnUiThread(() =>imagenview.SetImageBitmap(ImageHelper.GetRoundedShape( imagen)));
             RunOnUiThread(() => fondo.SetImageBitmap( imagen));
             RunOnUiThread(() => animar4(imagenview));
 

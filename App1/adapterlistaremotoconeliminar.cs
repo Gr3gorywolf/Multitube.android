@@ -17,6 +17,7 @@ using System.Threading;
 using Android.Graphics.Drawables;
 using Android.Glide;
 using Android.Glide.Request;
+using App1.Utils;
 
 namespace App1
 {
@@ -62,7 +63,7 @@ namespace App1
             aa.Close();
 
 
-            clasesettings.guardarsetting("refrescarlistadatos", "ok");
+            SettingsHelper.SaveSetting("refrescarlistadatos", "ok");
             Toast.MakeText(context, "Elemento eliminado satisfactoriamente", ToastLength.Long).Show();
         }
         public void ok3(object sender, EventArgs e)

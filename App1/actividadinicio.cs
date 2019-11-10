@@ -16,11 +16,13 @@ using System.Text.RegularExpressions;
 using Android.Speech;
 using Android.Runtime;
 using System.Threading.Tasks;
+using App1.Models;
+using App1.Utils;
 
 namespace App1
 {
-    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true,WindowSoftInputMode = SoftInput.StateAlwaysHidden | SoftInput.AdjustResize)]
-    public class actividadinicio :AppCompatActivity
+    [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true, WindowSoftInputMode = SoftInput.StateAlwaysHidden | SoftInput.AdjustResize)]
+    public class actividadinicio : AppCompatActivity
     {
         bool isserver = false;
         RecyclerView listasugerencias;
@@ -29,19 +31,19 @@ namespace App1
         Android.App.ProgressDialog alerta;
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         NavigationView itemsm;
-        historial objetohistorial;
+        History objetohistorial;
         RecyclerView listaultimos;
         RecyclerView listamas;
-       public static actividadinicio ins;
+        public static actividadinicio ins;
         TextView textoserver;
         TextView textolista;
         TextView textonombreelemento;
         RecyclerView listafavoritos;
         bool detenedor = true;
         TextView texto;
-        public List<playlistelements> favoritos = new List<playlistelements>();
+        public List<PlaylistElement> favoritos = new List<PlaylistElement>();
         public Android.Support.Design.Widget.Snackbar alertareproducirvideo = null;
-        public Dictionary<string,playlistelements>  Diccfavoritos = new Dictionary<string,playlistelements>();
+        public Dictionary<string, PlaylistElement> Diccfavoritos = new Dictionary<string, PlaylistElement>();
         /*
          0-mas reproducidos
          1-reproducidos ultimamente
@@ -53,11 +55,12 @@ namespace App1
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-          
-          
-            if (mainmenu_Offline.gettearinstancia() != null)
+
+
+            if (MainmenuOffline.gettearinstancia() != null)
                 SetContentView(Resource.Layout.layoutinicio);
-            else {
+            else
+            {
 
                 SetContentView(Resource.Layout.layoutinicioremote);
             }
@@ -66,13 +69,13 @@ namespace App1
             texto = FindViewById<EditText>(Resource.Id.editText1);
             listamas = FindViewById<RecyclerView>(Resource.Id.listamas);
             listaultimos = FindViewById<RecyclerView>(Resource.Id.listaultimos);
-         listafavoritos = FindViewById<RecyclerView>(Resource.Id.listafavoritos);
+            listafavoritos = FindViewById<RecyclerView>(Resource.Id.listafavoritos);
             listasugerencias = FindViewById<RecyclerView>(Resource.Id.listasugerencias);
-            List<playlistelements> listafake = new List<playlistelements>();
+            List<PlaylistElement> listafake = new List<PlaylistElement>();
             var imagentipoconex = FindViewById<ImageView>(Resource.Id.tipoconexion);
             textoserver = FindViewById<TextView>(Resource.Id.textoconexion);
             textonombreelemento = FindViewById<TextView>(Resource.Id.textoreprodactual);
-           textolista = FindViewById<TextView>(Resource.Id.textoencola);
+            textolista = FindViewById<TextView>(Resource.Id.textoencola);
             SetSupportActionBar(FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.my_toolbar));
             secciones = new List<LinearLayout>()
             {
@@ -86,7 +89,7 @@ namespace App1
             foreach (var ax in secciones)
                 ax.Visibility = ViewStates.Gone;
 
-           
+
             SupportActionBar.Title = "Inicio";
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             itemsm = FindViewById<NavigationView>(Resource.Id.content_frame);
@@ -95,65 +98,66 @@ namespace App1
             textolista.Selected = true;
             textoserver.Selected = true;
             textonombreelemento.Selected = true;
-            if (mainmenu_Offline.gettearinstancia() != null)
+            if (MainmenuOffline.gettearinstancia() != null)
             {
-                
+
                 isserver = true;
-                Diccfavoritos = mainmenu_Offline.gettearinstancia().listafavoritos;
+                Diccfavoritos = MainmenuOffline.gettearinstancia().listafavoritos;
                 favoritos = Diccfavoritos.Values.ToList();
-               
-                objetohistorial = mainmenu_Offline.gettearinstancia().objetohistorial;
+
+                objetohistorial = MainmenuOffline.gettearinstancia().objetohistorial;
                 imagentipoconex.SetBackgroundResource(Resource.Drawable.remotecontrolbuttons);
             }
-            else {
+            else
+            {
                 isserver = false;
-                Diccfavoritos = mainmenu.gettearinstancia().listafavoritos;
+                Diccfavoritos = Mainmenu.gettearinstancia().listafavoritos;
                 favoritos = Diccfavoritos.Values.ToList();
                 imagentipoconex.SetBackgroundResource(Resource.Drawable.antena);
-                objetohistorial = mainmenu.gettearinstancia().objetohistorial;
+                objetohistorial = Mainmenu.gettearinstancia().objetohistorial;
             }
 
-            if (objetohistorial == null) 
-                objetohistorial = new historial()
+            if (objetohistorial == null)
+                objetohistorial = new History()
                 {
-                    videos = new List<playlistelements>(),
-                    links = new Dictionary<string, int>()
+                    Videos = new List<PlaylistElement>(),
+                    Links = new Dictionary<string, int>()
 
                 };
 
             if (favoritos == null)
-                 favoritos = new List<playlistelements>();
+                favoritos = new List<PlaylistElement>();
 
             if (Diccfavoritos == null)
-                Diccfavoritos = new Dictionary<string, playlistelements>();
-            
-            
+                Diccfavoritos = new Dictionary<string, PlaylistElement>();
+
+
 
             favoritos.Reverse();
             recargarhistorial();
-          
+
             new System.Threading.Thread(() =>
             {
 
                 seteartexto();
             }).Start();
-             
 
-         
 
-        /*    for (int i = 0; i < 20; i++)
-            {
 
-                listafake.Add(new playlistelements
+
+            /*    for (int i = 0; i < 20; i++)
                 {
-                    nombre = "klk wawawa",
-                    link = "https://www.youtube.com/watch?v=4G40N0G6lzE"
-                });
-            }
-            */
 
- 
-                 
+                    listafake.Add(new playlistelements
+                    {
+                        nombre = "klk wawawa",
+                        link = "https://www.youtube.com/watch?v=4G40N0G6lzE"
+                    });
+                }
+                */
+
+
+
 
             LinearLayoutManager enlinea = new LinearLayoutManager(this, LinearLayoutManager.Horizontal, false);
             listamas.SetLayoutManager(enlinea);
@@ -167,46 +171,48 @@ namespace App1
             adaptadorcartas adap = new adaptadorcartas(listafake, this);
 
             //   listafavoritos.SetAdapter(adap);
-            if (mainmenu_Offline.gettearinstancia() != null) {
-                if (System.IO.File.Exists(clasesettings.rutacache + "/backupplaylist.json") && !mainmenu_Offline.gettearinstancia().backupprompted)
+            if (MainmenuOffline.gettearinstancia() != null)
+            {
+                if (System.IO.File.Exists(Constants.CachePath + "/backupplaylist.json") && !MainmenuOffline.gettearinstancia().backupprompted)
                 {
-                   
+
                     var snack = Snackbar.Make(FindViewById<View>(Android.Resource.Id.Content), "Desea cargar los elementos que estaba reproduciendo la vez anterior?", Snackbar.LengthIndefinite);
-                        snack.SetAction("Cargar", (o) =>
-                        {
-                            mainmenu_Offline.gettearinstancia().loadbackupplaylist();
-                            mainmenu_Offline.gettearinstancia().backupprompted = true;
-                        });
-                       snack.SetDuration(6000);
-                        snack.Show();
+                    snack.SetAction("Cargar", (o) =>
+                    {
+                        MainmenuOffline.gettearinstancia().loadbackupplaylist();
+                        MainmenuOffline.gettearinstancia().backupprompted = true;
+                    });
+                    snack.SetDuration(6000);
+                    snack.Show();
                     Task.Delay(6000).ContinueWith(delegate
                     {
-                        mainmenu_Offline.gettearinstancia().backupprompted = true;
+                        MainmenuOffline.gettearinstancia().backupprompted = true;
                     });
 
 
-                   /* new Android.Support.V7.App.AlertDialog.Builder(this)
-                .SetTitle("Advertencia")
-                .SetMessage("Desea cargar los elementos que estaba reproduciendo la vez anterior?")
-                .SetPositiveButton("Si", (aa, aaa) =>
-                {
-                    mainmenu_Offline.gettearinstancia().loadbackupplaylist();
-                    mainmenu_Offline.gettearinstancia().backupprompted = true;
+                    /* new Android.Support.V7.App.AlertDialog.Builder(this)
+                 .SetTitle("Advertencia")
+                 .SetMessage("Desea cargar los elementos que estaba reproduciendo la vez anterior?")
+                 .SetPositiveButton("Si", (aa, aaa) =>
+                 {
+                     mainmenu_Offline.gettearinstancia().loadbackupplaylist();
+                     mainmenu_Offline.gettearinstancia().backupprompted = true;
 
-                })
-                .SetNegativeButton("No", (afaa, aaffa) =>
-                {
+                 })
+                 .SetNegativeButton("No", (afaa, aaffa) =>
+                 {
 
-                    mainmenu_Offline.gettearinstancia().backupprompted = true;
+                     mainmenu_Offline.gettearinstancia().backupprompted = true;
 
-                })
-                .SetCancelable(false)
-                .Create()
-                .Show();*/
+                 })
+                 .SetCancelable(false)
+                 .Create()
+                 .Show();*/
 
                 }
-                else {
-                    mainmenu_Offline.gettearinstancia().backupprompted = true;
+                else
+                {
+                    MainmenuOffline.gettearinstancia().backupprompted = true;
                 }
             }
 
@@ -260,7 +266,8 @@ namespace App1
             };
             itemsm.NavigationItemSelected += (sender, e) =>
             {
-                switch (e.MenuItem.TitleFormatted.ToString()) {
+                switch (e.MenuItem.TitleFormatted.ToString())
+                {
 
                     case "Reproductor":
                         this.Finish();
@@ -270,31 +277,32 @@ namespace App1
                         break;
                     case "Navegador personalizado":
                         Intent intento = new Intent(this, typeof(customsearcheract));
-                        intento.PutExtra("ipadre","localhost");
+                        intento.PutExtra("ipadre", "localhost");
                         intento.PutExtra("color", "black");
-                        StartActivity(intento);                     
+                        StartActivity(intento);
                         break;
                     case "Conectar clientes":
-                       
-                           
-                            Intent intetno = new Intent(this, typeof(qrcodigoact));
-                            intetno.PutExtra("ipadre", "localhost");
-                            StartActivity(intetno);
 
-                     
-                            break;
+
+                        Intent intetno = new Intent(this, typeof(qrcodigoact));
+                        intetno.PutExtra("ipadre", "localhost");
+                        StartActivity(intetno);
+
+
+                        break;
                     case "Listas de reproduccion":
 
-                        if (mainmenu_Offline.gettearinstancia() != null)
+                        if (MainmenuOffline.gettearinstancia() != null)
                         {
                             Intent elint = new Intent(this, typeof(menulistaoffline));
                             elint.PutExtra("ipadre", "localhost");
                             StartActivity(elint);
                         }
-                        else {
+                        else
+                        {
 
 
-                            var con = mainmenu.gettearinstancia();
+                            var con = Mainmenu.gettearinstancia();
                             if (con.compatible)
                             {
                                 if (con.jsonlistasremotas.Trim() != "")
@@ -302,7 +310,7 @@ namespace App1
                                     Intent intentoo = new Intent(this, typeof(Reproducirlistaact));
                                     intentoo.PutExtra("ip", "localhost");
                                     StartActivity(intentoo);
-                                  
+
                                 }
                                 else
                                 {
@@ -329,7 +337,7 @@ namespace App1
             };
 
 
-            }
+        }
 
 
 
@@ -365,7 +373,8 @@ namespace App1
             base.OnActivityResult(requestCode, resultCode, data);
         }
 
-        public static actividadinicio gettearinstancia() {
+        public static actividadinicio gettearinstancia()
+        {
 
             return ins;
         }
@@ -373,13 +382,13 @@ namespace App1
         {
             try
             {
-                var linksorted = objetohistorial.links.OrderBy(x => x.Value).ToList();
+                var linksorted = objetohistorial.Links.OrderBy(x => x.Value).ToList();
                 linksorted.Reverse();
-                var elemsorted = new List<playlistelements>();
+                var elemsorted = new List<PlaylistElement>();
 
                 foreach (var elem in linksorted)
                 {
-                    elemsorted.Add(objetohistorial.videos.FirstOrDefault(x => x.link == elem.Key));
+                    elemsorted.Add(objetohistorial.Videos.FirstOrDefault(x => x.Link == elem.Key));
 
                 }
                 RunOnUiThread(() =>
@@ -392,9 +401,9 @@ namespace App1
                             var elemento = elemsorted[aaa.Position];
                             Intent intento = new Intent(this, typeof(customdialogact));
 
-                            intento.PutExtra("url", elemento.link);
-                            intento.PutExtra("titulo", elemento.nombre);
-                            intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
+                            intento.PutExtra("url", elemento.Link);
+                            intento.PutExtra("titulo", elemento.Name);
+                            intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.Link.Split('=')[1] + "/mqdefault.jpg");
                             StartActivity(intento);
                         });
                     };
@@ -405,44 +414,48 @@ namespace App1
                         secciones[0].Visibility = ViewStates.Gone;
                 });
             }
-            catch (Exception) {
-
-            }
-        }
-
-
-        public void cargarhistorial() {
-            try { 
-            var elementos = objetohistorial.videos;
-            elementos.Reverse();
-            var historyelements = elementos.Take(30).ToList();
-       
-            adaptadorcartas adap = new adaptadorcartas(historyelements, this);
-            adap.ItemClick += (aa, aaa) =>
+            catch (Exception)
             {
-                RunOnUiThread(() =>
-                {
-                    var elemento = historyelements[aaa.Position];
-                    Intent intento = new Intent(this, typeof(customdialogact));
-
-                    intento.PutExtra("url", elemento.link);
-                    intento.PutExtra("titulo", elemento.nombre);
-                    intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
-                    StartActivity(intento);
-                });
-            };
-            listaultimos.SetAdapter(adap);
-            if (historyelements.Count > 0)
-                secciones[1].Visibility = ViewStates.Visible;
-            else
-                secciones[1].Visibility = ViewStates.Gone;
-
-
-        }
-            catch (Exception) {
 
             }
-}
+        }
+
+
+        public void cargarhistorial()
+        {
+            try
+            {
+                var elementos = objetohistorial.Videos;
+                elementos.Reverse();
+                var historyelements = elementos.Take(30).ToList();
+
+                adaptadorcartas adap = new adaptadorcartas(historyelements, this);
+                adap.ItemClick += (aa, aaa) =>
+                {
+                    RunOnUiThread(() =>
+                    {
+                        var elemento = historyelements[aaa.Position];
+                        Intent intento = new Intent(this, typeof(customdialogact));
+
+                        intento.PutExtra("url", elemento.Link);
+                        intento.PutExtra("titulo", elemento.Name);
+                        intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.Link.Split('=')[1] + "/mqdefault.jpg");
+                        StartActivity(intento);
+                    });
+                };
+                listaultimos.SetAdapter(adap);
+                if (historyelements.Count > 0)
+                    secciones[1].Visibility = ViewStates.Visible;
+                else
+                    secciones[1].Visibility = ViewStates.Gone;
+
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
 
 
 
@@ -461,9 +474,9 @@ namespace App1
                         var elemento = favoritos[aaa.Position];
                         Intent intento = new Intent(this, typeof(customdialogact));
 
-                        intento.PutExtra("url", elemento.link);
-                        intento.PutExtra("titulo", elemento.nombre);
-                        intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
+                        intento.PutExtra("url", elemento.Link);
+                        intento.PutExtra("titulo", elemento.Name);
+                        intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.Link.Split('=')[1] + "/mqdefault.jpg");
                         StartActivity(intento);
                     });
                 };
@@ -493,7 +506,7 @@ namespace App1
                     if (favoritos.Count > 0)
                     {
                         secciones[2].Visibility = ViewStates.Visible;
-                        if (!clasesettings.probarsetting("dialogofavoritos"))
+                        if (!SettingsHelper.HasKey("dialogofavoritos"))
                         {
                             RunOnUiThread(() =>
                             {
@@ -504,7 +517,7 @@ namespace App1
                                  .SetPositiveButton("Entendido", (aa, fddggfd) => { })
                                  .Create()
                                  .Show();
-                                clasesettings.guardarsetting("dialogofavoritos", "si");
+                                SettingsHelper.SaveSetting("dialogofavoritos", "si");
                             });
 
                         }
@@ -522,7 +535,8 @@ namespace App1
                 });
 
             }
-            catch (Exception) {
+            catch (Exception)
+            {
             }
 
         }
@@ -536,7 +550,7 @@ namespace App1
             RunOnUiThread(() =>
             {
 #pragma warning disable CS0618 // El tipo o el miembro est�n obsoletos
-              alerta = new ProgressDialog(this);
+                alerta = new ProgressDialog(this);
 #pragma warning restore CS0618 // El tipo o el miembro est�n obsoletos
 #pragma warning restore CS0618 // El tipo o el miembro est�n obsoletos
                 alerta.SetCanceledOnTouchOutside(false);
@@ -567,10 +581,10 @@ namespace App1
                             intentoo.PutExtra("index", posicion.ToString());
                             intentoo.PutExtra("color", "DarkGray");
                             intentoo.PutExtra("titulo", listatitulos[posicion]);
-                            if(!isserver)
-                            intentoo.PutExtra("ipadress", mainmenu.gettearinstancia().ip);
+                            if (!isserver)
+                                intentoo.PutExtra("ipadress", Mainmenu.gettearinstancia().ip);
                             else
-                            intentoo.PutExtra("ipadress","localhost");
+                                intentoo.PutExtra("ipadress", "localhost");
 
                             intentoo.PutExtra("url", listalinks[posicion]);
                             intentoo.PutExtra("imagen", @"https://i.ytimg.com/vi/" + listalinks[posicion].Split('=')[1] + "/mqdefault.jpg");
@@ -626,35 +640,35 @@ namespace App1
 
                 YoutubeSearch.VideoSearch buscar = new YoutubeSearch.VideoSearch();
                 List<YoutubeSearch.VideoInformation> results = new List<YoutubeSearch.VideoInformation>();
-                if (mainmenu_Offline.gettearinstancia() != null)
-                    if (mainmenu_Offline.gettearinstancia().sugerencias.Count > 0)
-                        results = mainmenu_Offline.gettearinstancia().sugerencias;
+                if (MainmenuOffline.gettearinstancia() != null)
+                    if (MainmenuOffline.gettearinstancia().sugerencias.Count > 0)
+                        results = MainmenuOffline.gettearinstancia().sugerencias;
                     else
                     {
                         results = buscar.SearchQuery("", 1);
-                        mainmenu_Offline.gettearinstancia().sugerencias = results;
+                        MainmenuOffline.gettearinstancia().sugerencias = results;
                     }
                 else
-                if (mainmenu.gettearinstancia() != null)
-                    if (mainmenu.gettearinstancia().sugerencias.Count > 0)
-                        results = mainmenu.gettearinstancia().sugerencias;
+                if (Mainmenu.gettearinstancia() != null)
+                    if (Mainmenu.gettearinstancia().sugerencias.Count > 0)
+                        results = Mainmenu.gettearinstancia().sugerencias;
                     else
                     {
                         results = buscar.SearchQuery("", 1);
-                        mainmenu.gettearinstancia().sugerencias = results;
+                        Mainmenu.gettearinstancia().sugerencias = results;
                     }
 
 
 
 
-                List<playlistelements> listafake = new List<playlistelements>();
+                List<PlaylistElement> listafake = new List<PlaylistElement>();
                 foreach (var data in results)
                 {
 
-                    listafake.Add(new playlistelements
+                    listafake.Add(new PlaylistElement
                     {
-                        nombre = WebUtility.HtmlDecode(data.Title),
-                        link = data.Url
+                        Name = WebUtility.HtmlDecode(data.Title),
+                        Link = data.Url
                     });
 
 
@@ -670,9 +684,9 @@ namespace App1
                             var elemento = listafake[aaa.Position];
                             Intent intento = new Intent(this, typeof(customdialogact));
 
-                            intento.PutExtra("url", elemento.link);
-                            intento.PutExtra("titulo", elemento.nombre);
-                            intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.link.Split('=')[1] + "/mqdefault.jpg");
+                            intento.PutExtra("url", elemento.Link);
+                            intento.PutExtra("titulo", elemento.Name);
+                            intento.PutExtra("imagen", "http://i.ytimg.com/vi/" + elemento.Link.Split('=')[1] + "/mqdefault.jpg");
                             StartActivity(intento);
                         });
                     };
@@ -686,11 +700,13 @@ namespace App1
 
                 });
             }
-            catch (Exception) {
-               RunOnUiThread(()=>alerta.Dismiss());
+            catch (Exception)
+            {
+                RunOnUiThread(() => alerta.Dismiss());
             }
         }
-        public void recargarhistorial() {
+        public void recargarhistorial()
+        {
 
 
             new System.Threading.Thread(() =>
@@ -698,8 +714,8 @@ namespace App1
                 cargarfavoritos();
 
             }).Start();
-           
-            if (objetohistorial.videos.Count > 0)
+
+            if (objetohistorial.Videos.Count > 0)
             {
 
                 new System.Threading.Thread(() =>
@@ -729,45 +745,51 @@ namespace App1
             }
             return base.OnOptionsItemSelected(item);
         }
-        public void seteartexto() {
-            
-            while (detenedor) {
-                if (mainmenu.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null) { 
-                if (isserver) {
+        public void seteartexto()
+        {
 
-                    RunOnUiThread(() =>
-                    {
-                        textolista.Text = mainmenu_Offline.gettearinstancia().lapara.Count + " Elementos en cola";
-                        textoserver.Text = mainmenu_Offline.gettearinstancia().clienteses.Count + " Clientes conectados";
-                        if (mainmenu_Offline.gettearinstancia().label.Text.Trim() != "") { 
-
-                            if(textonombreelemento.Text != mainmenu_Offline.gettearinstancia().label.Text)
-                                   textonombreelemento.Text = mainmenu_Offline.gettearinstancia().label.Text;
-                        }
-                        else
-                            textonombreelemento.Text = "Ningún elemento el reproducción";
-                    });
-                }
-                else
-
+            while (detenedor)
+            {
+                if (Mainmenu.gettearinstancia() != null || MainmenuOffline.gettearinstancia() != null)
                 {
-                    RunOnUiThread(() =>
+                    if (isserver)
                     {
-                        textolista.Text = mainmenu.gettearinstancia().lista.Count + " Elementos en cola";
-                        textoserver.Text ="Conectado a "+  mainmenu.gettearinstancia().devicename;
-                        if (mainmenu.gettearinstancia().label.Text.Trim() != "") {
-                            if (textonombreelemento.Text != mainmenu.gettearinstancia().label.Text)
-                                textonombreelemento.Text = mainmenu.gettearinstancia().label.Text;
-                        }                           
-                        else
-                            textonombreelemento.Text = "Ningún elemento el reproducción";
-                    });
 
-                }
-              
+                        RunOnUiThread(() =>
+                        {
+                            textolista.Text = MainmenuOffline.gettearinstancia().lapara.Count + " Elementos en cola";
+                            textoserver.Text = MainmenuOffline.gettearinstancia().clienteses.Count + " Clientes conectados";
+                            if (MainmenuOffline.gettearinstancia().label.Text.Trim() != "")
+                            {
+
+                                if (textonombreelemento.Text != MainmenuOffline.gettearinstancia().label.Text)
+                                    textonombreelemento.Text = MainmenuOffline.gettearinstancia().label.Text;
+                            }
+                            else
+                                textonombreelemento.Text = "Ningún elemento el reproducción";
+                        });
+                    }
+                    else
+
+                    {
+                        RunOnUiThread(() =>
+                        {
+                            textolista.Text = Mainmenu.gettearinstancia().lista.Count + " Elementos en cola";
+                            textoserver.Text = "Conectado a " + Mainmenu.gettearinstancia().devicename;
+                            if (Mainmenu.gettearinstancia().label.Text.Trim() != "")
+                            {
+                                if (textonombreelemento.Text != Mainmenu.gettearinstancia().label.Text)
+                                    textonombreelemento.Text = Mainmenu.gettearinstancia().label.Text;
+                            }
+                            else
+                                textonombreelemento.Text = "Ningún elemento el reproducción";
+                        });
+
+                    }
 
 
-           
+
+
                 }
                 System.Threading.Thread.Sleep(3000);
             }
@@ -782,22 +804,22 @@ namespace App1
         public override void Finish()
         {
             ins = null;
-        
+
             base.Finish();
             OverridePendingTransition(0, 0);
         }
         public override void OnBackPressed()
         {
-           
+
             if (sidem.IsDrawerOpen(Android.Support.V4.View.GravityCompat.Start))
                 RunOnUiThread(() => { sidem.CloseDrawers(); });
             else
             {
-               
-                    clasesettings.preguntarsimenuosalir(this);
-        
+
+                clasesettings.preguntarsimenuosalir(this);
+
             }
-          
+
 
         }
         public void animar(Java.Lang.Object imagen)
@@ -818,8 +840,4 @@ namespace App1
 
 
     }
-
-
-
-
 }

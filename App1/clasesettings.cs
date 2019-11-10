@@ -24,111 +24,39 @@ using Android.Support.V7.Graphics;
 using System.IO.Compression;
 using Newtonsoft.Json;
 using HtmlAgilityPack;
+using Bitmap = Android.Graphics.Bitmap;
+using App1.Models;
+using App1.Utils;
+
 namespace App1
 {
 
 
 
-    public class backupplaylists {
-        public List<string> titles { get; set; }
-        public List<string> links { get; set; }
-        public List<string> listacaratulas { get; set; }
-        public int posactual { get; set; }
-    }
-   public class elementosugerencia:playlistelements {
-        public string portada { get; set; }
-
-    }
-    class medialement {
-        public string nombre { get; set; }
-        public string path { get; set; }
-        public string link { get; set; }
-
-    }
-    class tituloydownloadurl
-    {
-      public  string titulo { get; set; }
-       public string downloadurl { get; set; }
-    //    public string titulo { get; set; }
-    }
-    public class playlistelements {
-       public string nombre { get; set; }
-       public string link { get; set; }  
-    }
-
-
-    public class playlist {
-       public string nombre { get; set; }
-        public string portrait {
-            get;set;
-        }
-        public List<playlistelements> elementos { get; set; }
-    }
    
-    public class historial {
+   
+ 
 
-        public List<playlistelements> videos { get; set; }
-    public Dictionary<string,int> links  { get; set; }
-    }
-    public class Jsoninicio {
+
+   
+
     
-        public List<playlistelements> ultimos_videos { get; set; }
-        public List<playlistelements> suggestions { get; set; }
-        public List<playlistelements> favoritos { get; set; }
-    }
-
-    public class updateinfo {
-        public int Numero { get; set; }
-        public string Descripcion { get; set; }
-
-    }
-    public class modelips
-    {
-        public string ipactual { get; set; }
-        public Dictionary<string, string> ips { get; set; }
-        public modelips(string ipact, Dictionary<string, string> ipss)
-        {
-            this.ipactual = ipact;
-            this.ips = ipss;
-        }
-        
-    }
-  class clasesettings
+  
+  
+   
+    class clasesettings
     {
 
 
         public static Activity context = null;
         public static Client<YouTubeVideo> youtubeclient = null;
-        public static string rutacache = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/.gr3cache";
+       
         public static bool updateschecked = false;
 
-        public static void guardarips(modelips model) {
+    
 
-            var jsons = JsonConvert.SerializeObject(model);
-            var axc = File.CreateText(rutacache + "/ips.json");
-            axc.Write(jsons);
-            axc.Close();
-        }
-
-        public static string gettearip() {
-
-
-            string inneripadress = "localhost";
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress ip in localIPs)
-            {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && ip.ToString().ToLower() != "localhost")
-                {
-                    inneripadress = ip.ToString();
-
-                }
-            }
-            return inneripadress;
-        }
-        public static modelips gettearips() {
-          return  JsonConvert.DeserializeObject<modelips>(File.ReadAllText(rutacache + "/ips.json"));
-        }
-
+       
+     
         public static string settearipsp()
         {
             string ipa = "";
@@ -146,12 +74,12 @@ namespace App1
         }
 
 
-       
+
 
         public static void preguntarsimenuosalir(Context ctx)
         {
 
-            context =(Activity) ctx;
+            context = (Activity)ctx;
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             ad.SetCancelable(false);
             ad.SetTitle("Advertencia");
@@ -169,10 +97,11 @@ namespace App1
 
 
 
-        public static string serializarmedia(List<medialement> elementos) {
+        public static string serializarmedia(List<MediaElement> elementos)
+        {
             string serialized = "";
             foreach (var elem in elementos)
-                serialized += elem.nombre + "²" + elem.link + "²" + elem.path + "¤";
+                serialized += elem.Name + "²" + elem.Link + "²" + elem.Path + "¤";
 
             return serialized;
         }
@@ -202,28 +131,31 @@ namespace App1
                 return false;
             }
         }
-        public static List<medialement> obtenermedia(string path) {
+        public static List<MediaElement> obtenermedia(string path)
+        {
 
-            List<medialement> intmedia = new List<medialement>();
-            if (File.Exists(path)) { 
+            List<MediaElement> intmedia = new List<MediaElement>();
+            if (File.Exists(path))
+            {
                 foreach (var parts in File.ReadAllText(path).Split('¤'))
                 {
-                    if (parts.Trim().Length > 0) {
-                        intmedia.Add(new medialement()
+                    if (parts.Trim().Length > 0)
+                    {
+                        intmedia.Add(new MediaElement()
                         {
-                            nombre = parts.Split('²')[0],
-                            link = parts.Split('²')[1],
-                            path = parts.Split('²')[2]
+                            Name = parts.Split('²')[0],
+                            Link = parts.Split('²')[1],
+                            Path = parts.Split('²')[2]
                         });
 
-                    } 
+                    }
 
-                   
+
                 }
                 return intmedia;
             }
             else
-                return new List<medialement>();
+                return new List<MediaElement>();
 
 
 
@@ -236,12 +168,14 @@ namespace App1
 
 
 
-        public static bool tieneelementos() {
-            var elementlist = obtenermedia(rutacache + "/downloaded.gr3d")
-                .Concat(obtenermedia(rutacache + "/downloaded.gr3d2")).ToList();
+        public static bool tieneelementos()
+        {
+            var elementlist = obtenermedia(Constants.CachePath + "/downloaded.gr3d")
+                .Concat(obtenermedia(Constants.CachePath + "/downloaded.gr3d2")).ToList();
             var counter = 0;
-            foreach (var elem in elementlist) {
-                if (File.Exists(elem.path))
+            foreach (var elem in elementlist)
+            {
+                if (File.Exists(elem.Path))
                     counter++;
             }
             if (counter > 0)
@@ -253,19 +187,22 @@ namespace App1
 
 
 
-        public static string gettearid() {
+        public static string gettearid()
+        {
 
-          
 
-            if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/uid")) {
+
+            if (File.Exists(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/uid"))
+            {
                 return File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/uid").Trim();
             }
-            else {
+            else
+            {
 
-               
+
                 return null;
-                }
-            
+            }
+
 
         }
         public static void si(object sender, EventArgs e)
@@ -273,10 +210,10 @@ namespace App1
             context.StartActivity(new Intent(context, typeof(actsplashscreen)));
             recogerbasura();
             context.Finish();
-            if (mainmenu.gettearinstancia() != null)
-                mainmenu.gettearinstancia().Finish();
-            if (mainmenu_Offline.gettearinstancia() != null)
-                mainmenu_Offline.gettearinstancia().Finish();
+            if (Mainmenu.gettearinstancia() != null)
+                Mainmenu.gettearinstancia().Finish();
+            if (MainmenuOffline.gettearinstancia() != null)
+                MainmenuOffline.gettearinstancia().Finish();
 
             if (actividadinicio.gettearinstancia() != null)
                 actividadinicio.gettearinstancia().Finish();
@@ -285,10 +222,10 @@ namespace App1
         public static void no(object sender, EventArgs e)
         {
             context.Finish();
-            if (mainmenu.gettearinstancia() != null)
-                mainmenu.gettearinstancia().Finish();
-            if (mainmenu_Offline.gettearinstancia() != null)
-                mainmenu_Offline.gettearinstancia().Finish();
+            if (Mainmenu.gettearinstancia() != null)
+                Mainmenu.gettearinstancia().Finish();
+            if (MainmenuOffline.gettearinstancia() != null)
+                MainmenuOffline.gettearinstancia().Finish();
 
             if (actividadinicio.gettearinstancia() != null)
                 actividadinicio.gettearinstancia().Finish();
@@ -296,11 +233,11 @@ namespace App1
         }
         public static void no2(object sender, EventArgs e)
         {
-            
+
         }
         public static void agregaracoladescarga()
         {
-          
+
         }
 
 
@@ -346,17 +283,20 @@ namespace App1
 
         }
 
-        public static Dictionary<string,playlistelements> agregarfavoritos(Activity contexto, Dictionary<string, playlistelements> lista, playlistelements elemento) {
+        public static Dictionary<string, PlaylistElement> agregarfavoritos(Activity contexto, Dictionary<string, PlaylistElement> lista, PlaylistElement elemento)
+        {
 
-            if (lista.ContainsKey(elemento.link)) {
-                lista.Remove(elemento.link);
+            if (lista.ContainsKey(elemento.Link))
+            {
+                lista.Remove(elemento.Link);
                 contexto.RunOnUiThread(() => { Toast.MakeText(contexto, "Elemento eliminado de favoritos", ToastLength.Long).Show(); });
             }
-            else {
-                lista.Add(elemento.link, elemento);
+            else
+            {
+                lista.Add(elemento.Link, elemento);
                 contexto.RunOnUiThread(() => { Toast.MakeText(contexto, "Elemento agregado a favoritos. Ahora aparecera en su pantalla de inicio", ToastLength.Long).Show(); });
             }
-            var arch = File.CreateText(rutacache + "/favourites.json");
+            var arch = File.CreateText(Constants.CachePath + "/favourites.json");
             arch.Write(JsonConvert.SerializeObject(lista));
             arch.Close();
 
@@ -366,7 +306,7 @@ namespace App1
             return lista;
         }
 
-        public static int  gettearcolorprominente(Bitmap bmp)
+        public static int gettearcolorprominente(Android.Graphics.Bitmap bmp)
         {
             var p = Palette.From(bmp).Generate();
             return p.MutedSwatch.Rgb;
@@ -375,7 +315,7 @@ namespace App1
         public static void ponerfondoyactualizar(Activity instancia)
         {
 
-            if (mainmenu_Offline.gettearinstancia() != null)
+            if (MainmenuOffline.gettearinstancia() != null)
             {
                 var prro = new Thread(() =>
                 {
@@ -385,95 +325,95 @@ namespace App1
                 prro.Start();
             }
             else
-            if (mainmenu.gettearinstancia() != null)
-           
+            if (Mainmenu.gettearinstancia() != null)
+
             {
                 var prro = new Thread(() =>
                   {
-                    
+
                       iractualizandofondo("online", instancia);
                   });
                 prro.IsBackground = true;
                 prro.Start();
-              
+
             }
 
         }
 
-        public static void iractualizandofondo(string onlineoofline,Activity instancia)
+        public static void iractualizandofondo(string onlineoofline, Activity instancia)
         {
             ImageView fondin = instancia.FindViewById<ImageView>(Resource.Id.fondo1);
             if (onlineoofline == "online")
             {
-             /*   while (instancia!=null)
-                {*/
-                    instancia.RunOnUiThread(() =>
-                    {
-                      //  if (mainmenu.gettearinstancia().fondoblurreado != null)
-                      //  {
+                /*   while (instancia!=null)
+                   {*/
+                instancia.RunOnUiThread(() =>
+                {
+                        //  if (mainmenu.gettearinstancia().fondoblurreado != null)
+                        //  {
 
 
-                            // fondin.SetBackgroundColor(new Android.Graphics.Color(gettearcolorprominente(mainmenu.gettearinstancia().fondoblurreado)));
-                            fondin.SetBackgroundColor(Android.Graphics.Color.ParseColor("#353535"));
+                        // fondin.SetBackgroundColor(new Android.Graphics.Color(gettearcolorprominente(mainmenu.gettearinstancia().fondoblurreado)));
+                        fondin.SetBackgroundColor(Android.Graphics.Color.ParseColor("#353535"));
 
-                    //    }
-                       
+                        //    }
+
 
                     });
                 recogerbasura();
-              /*      if (instancia.IsFinishing)
-                    {
-                        break;
-                    }
-                   // Thread.Sleep(5000);
-                    recogerbasura();
+                /*      if (instancia.IsFinishing)
+                      {
+                          break;
+                      }
+                     // Thread.Sleep(5000);
+                      recogerbasura();
 
-                }*/
-               
+                  }*/
+
             }
             else
             {
 
-            //    while (instancia!=null)
-              //  {
-                    
-                    instancia.RunOnUiThread(() =>
-                    {
-                      //  if (mainmenu_Offline.gettearinstancia().fondoblurreado != null)
-                      //  {
+                //    while (instancia!=null)
+                //  {
 
-                            // fondin.SetBackgroundColor(new Android.Graphics.Color(gettearcolorprominente(mainmenu_Offline.gettearinstancia().fondoblurreado)));
-                            fondin.SetBackgroundColor(Android.Graphics.Color.ParseColor("#353535"));
-                     //   }
-                       
+                instancia.RunOnUiThread(() =>
+                {
+                        //  if (mainmenu_Offline.gettearinstancia().fondoblurreado != null)
+                        //  {
+
+                        // fondin.SetBackgroundColor(new Android.Graphics.Color(gettearcolorprominente(mainmenu_Offline.gettearinstancia().fondoblurreado)));
+                        fondin.SetBackgroundColor(Android.Graphics.Color.ParseColor("#353535"));
+                        //   }
+
                     });
                 //    Thread.Sleep(5000);
-                    recogerbasura();
-                  /*  if (instancia.IsFinishing)
-                    {
-                        break;
-                    }
-                }*/
-            
+                recogerbasura();
+                /*  if (instancia.IsFinishing)
+                  {
+                      break;
+                  }
+              }*/
+
             }
         }
 
 
 
 
-        
-
-   
 
 
-        public static Bitmap CreateBlurredImageoffline(Context contexto,int radius, string link)
+
+
+
+        public static Bitmap CreateBlurredImageoffline(Context contexto, int radius, string link)
         {
 
             // Load a clean bitmap and work from that.
             Bitmap originalBitmap;
             if (link.ToLower().Contains("youtube.com"))
             {
-                originalBitmap = BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/"+link.Split('=')[1]);
+                originalBitmap = BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + link.Split('=')[1]);
             }
             else
             {
@@ -484,35 +424,36 @@ namespace App1
             {
 
                 // Create another bitmap that will hold the results of the filter.
-                try { 
-                Bitmap blurredBitmap;
-                blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
+                try
+                {
+                    Bitmap blurredBitmap;
+                    blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
 
-                // Create the Renderscript instance that will do the work.
-                RenderScript rs = RenderScript.Create(contexto);
+                    // Create the Renderscript instance that will do the work.
+                    RenderScript rs = RenderScript.Create(contexto);
 
-                // Allocate memory for Renderscript to work with
-                Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
-                Allocation output = Allocation.CreateTyped(rs, input.Type);
+                    // Allocate memory for Renderscript to work with
+                    Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
+                    Allocation output = Allocation.CreateTyped(rs, input.Type);
 
-                // Load up an instance of the specific script that we want to use.
-                ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
-                script.SetInput(input);
+                    // Load up an instance of the specific script that we want to use.
+                    ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
+                    script.SetInput(input);
 
-                // Set the blur radius
-                script.SetRadius(radius);
+                    // Set the blur radius
+                    script.SetRadius(radius);
 
-                // Start the ScriptIntrinisicBlur
-                script.ForEach(output);
+                    // Start the ScriptIntrinisicBlur
+                    script.ForEach(output);
 
-                // Copy the output to the blurred bitmap
-                output.CopyTo(blurredBitmap);
-                output.Dispose();
-                //originalBitmap.Dispose();
-                script.Dispose();
-                input.Dispose();
-                rs.Dispose();
-                return blurredBitmap;
+                    // Copy the output to the blurred bitmap
+                    output.CopyTo(blurredBitmap);
+                    output.Dispose();
+                    //originalBitmap.Dispose();
+                    script.Dispose();
+                    input.Dispose();
+                    rs.Dispose();
+                    return blurredBitmap;
                 }
                 catch (Exception)
                 {
@@ -527,16 +468,18 @@ namespace App1
 
 
 
-        public static void modoinmersivo(Window ventana,bool visible) {
+        public static void modoinmersivo(Window ventana, bool visible)
+        {
             int uiOptions = 0;
             uiOptions = (int)ventana.DecorView.SystemUiVisibility;
-            if (!visible) { 
-         
+            if (!visible)
+            {
 
-            uiOptions |= (int)SystemUiFlags.LowProfile;
-            uiOptions |= (int)SystemUiFlags.Fullscreen;
-            uiOptions |= (int)SystemUiFlags.HideNavigation;
-            uiOptions |= (int)SystemUiFlags.ImmersiveSticky;
+
+                uiOptions |= (int)SystemUiFlags.LowProfile;
+                uiOptions |= (int)SystemUiFlags.Fullscreen;
+                uiOptions |= (int)SystemUiFlags.HideNavigation;
+                uiOptions |= (int)SystemUiFlags.ImmersiveSticky;
             }
             else
             {
@@ -555,46 +498,47 @@ namespace App1
             Bitmap originalBitmap;
             if (link.ToLower().Contains("youtube.com"))
             {
-                originalBitmap =Bitmap.CreateScaledBitmap( BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + link.Split('=')[1]),150,150,false);
+                originalBitmap = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeFile(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/portraits/" + link.Split('=')[1]), 150, 150, false);
             }
             else
             {
-                originalBitmap = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeFile(link),150,150,false);
+                originalBitmap = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeFile(link), 150, 150, false);
             }
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
             {
 
                 // Create another bitmap that will hold the results of the filter.
-                try { 
-                Bitmap blurredBitmap;
-                blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
+                try
+                {
+                    Bitmap blurredBitmap;
+                    blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
 
-                // Create the Renderscript instance that will do the work.
-                RenderScript rs = RenderScript.Create(contexto);
+                    // Create the Renderscript instance that will do the work.
+                    RenderScript rs = RenderScript.Create(contexto);
 
-                // Allocate memory for Renderscript to work with
-                Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
-                Allocation output = Allocation.CreateTyped(rs, input.Type);
+                    // Allocate memory for Renderscript to work with
+                    Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
+                    Allocation output = Allocation.CreateTyped(rs, input.Type);
 
-                // Load up an instance of the specific script that we want to use.
-                ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
-                script.SetInput(input);
+                    // Load up an instance of the specific script that we want to use.
+                    ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
+                    script.SetInput(input);
 
-                // Set the blur radius
-                script.SetRadius(radius);
+                    // Set the blur radius
+                    script.SetRadius(radius);
 
-                // Start the ScriptIntrinisicBlur
-                script.ForEach(output);
+                    // Start the ScriptIntrinisicBlur
+                    script.ForEach(output);
 
-                // Copy the output to the blurred bitmap
-                output.CopyTo(blurredBitmap);
-                output.Dispose();
-                //originalBitmap.Dispose();
-                script.Dispose();
-                input.Dispose();
-                rs.Dispose();
-                return blurredBitmap;
+                    // Copy the output to the blurred bitmap
+                    output.CopyTo(blurredBitmap);
+                    output.Dispose();
+                    //originalBitmap.Dispose();
+                    script.Dispose();
+                    input.Dispose();
+                    rs.Dispose();
+                    return blurredBitmap;
                 }
                 catch (Exception)
                 {
@@ -613,41 +557,42 @@ namespace App1
 
             // Load a clean bitmap and work from that.
             Bitmap originalBitmap = imagen;
-         
+
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
             {
 
                 // Create another bitmap that will hold the results of the filter.
-                try { 
-                Bitmap blurredBitmap;
-                blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
+                try
+                {
+                    Bitmap blurredBitmap;
+                    blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
 
-                // Create the Renderscript instance that will do the work.
-                RenderScript rs = RenderScript.Create(contexto);
+                    // Create the Renderscript instance that will do the work.
+                    RenderScript rs = RenderScript.Create(contexto);
 
-                // Allocate memory for Renderscript to work with
-                Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
-                Allocation output = Allocation.CreateTyped(rs, input.Type);
+                    // Allocate memory for Renderscript to work with
+                    Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
+                    Allocation output = Allocation.CreateTyped(rs, input.Type);
 
-                // Load up an instance of the specific script that we want to use.
-                ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
-                script.SetInput(input);
+                    // Load up an instance of the specific script that we want to use.
+                    ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
+                    script.SetInput(input);
 
-                // Set the blur radius
-                script.SetRadius(radius);
+                    // Set the blur radius
+                    script.SetRadius(radius);
 
-                // Start the ScriptIntrinisicBlur
-                script.ForEach(output);
+                    // Start the ScriptIntrinisicBlur
+                    script.ForEach(output);
 
-                // Copy the output to the blurred bitmap
-                output.CopyTo(blurredBitmap);
-                output.Dispose();
-                //originalBitmap.Dispose();
-                script.Dispose();
-                input.Dispose();
-                rs.Dispose();
-                return blurredBitmap;
+                    // Copy the output to the blurred bitmap
+                    output.CopyTo(blurredBitmap);
+                    output.Dispose();
+                    //originalBitmap.Dispose();
+                    script.Dispose();
+                    input.Dispose();
+                    rs.Dispose();
+                    return blurredBitmap;
                 }
                 catch (Exception)
                 {
@@ -663,7 +608,7 @@ namespace App1
 
 
 
-        public static Bitmap GetImageBitmapFromUrl( string url)
+        public static Bitmap GetImageBitmapFromUrl(string url)
         {
 
             Bitmap imageBitmap = null;
@@ -678,7 +623,7 @@ namespace App1
                         if (imageBytes != null && imageBytes.Length > 0)
                         {
                             imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
-                         
+
 
                         }
 
@@ -688,7 +633,7 @@ namespace App1
             catch (Exception) { }
 
 
-        
+
 
             return imageBitmap;
         }
@@ -705,48 +650,49 @@ namespace App1
 
             if (!link.StartsWith("https://i.ytimg.com/vi/"))
             {
-                 aa = cliente.DownloadData("https://i.ytimg.com/vi/" + link.Split('=')[1] + "/mqdefault.jpg");
+                aa = cliente.DownloadData("https://i.ytimg.com/vi/" + link.Split('=')[1] + "/mqdefault.jpg");
             }
             else
             {
                 aa = cliente.DownloadData(link);
             }
-       
+
             Bitmap originalBitmap = BitmapFactory.DecodeByteArray(aa, 0, aa.Length);
             if (Build.VERSION.SdkInt >= BuildVersionCodes.JellyBeanMr1)
             {
                 // Create another bitmap that will hold the results of the filter.
-                try { 
-                Bitmap blurredBitmap;
-                blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
+                try
+                {
+                    Bitmap blurredBitmap;
+                    blurredBitmap = Bitmap.CreateBitmap(originalBitmap);
 
-                // Create the Renderscript instance that will do the work.
-                RenderScript rs = RenderScript.Create(contexto);
+                    // Create the Renderscript instance that will do the work.
+                    RenderScript rs = RenderScript.Create(contexto);
 
-                // Allocate memory for Renderscript to work with
-                Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
-                Allocation output = Allocation.CreateTyped(rs, input.Type);
+                    // Allocate memory for Renderscript to work with
+                    Allocation input = Allocation.CreateFromBitmap(rs, originalBitmap, Allocation.MipmapControl.MipmapFull, AllocationUsage.Script);
+                    Allocation output = Allocation.CreateTyped(rs, input.Type);
 
-                // Load up an instance of the specific script that we want to use.
-                ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
-                script.SetInput(input);
+                    // Load up an instance of the specific script that we want to use.
+                    ScriptIntrinsicBlur script = ScriptIntrinsicBlur.Create(rs, Element.U8_4(rs));
+                    script.SetInput(input);
 
-                // Set the blur radius
-                script.SetRadius(radius);
+                    // Set the blur radius
+                    script.SetRadius(radius);
 
-                // Start the ScriptIntrinisicBlur
-                script.ForEach(output);
+                    // Start the ScriptIntrinisicBlur
+                    script.ForEach(output);
 
-                // Copy the output to the blurred bitmap
-                output.CopyTo(blurredBitmap);
-               output.Destroy();
+                    // Copy the output to the blurred bitmap
+                    output.CopyTo(blurredBitmap);
+                    output.Destroy();
 
-                // originalBitmap.Dispose();
-                script.Destroy();
-                input.Destroy();
-                rs.Destroy();
-                aa = new byte[0];
-                return blurredBitmap;
+                    // originalBitmap.Dispose();
+                    script.Destroy();
+                    input.Destroy();
+                    rs.Destroy();
+                    aa = new byte[0];
+                    return blurredBitmap;
                 }
                 catch (Exception)
                 {
@@ -756,54 +702,27 @@ namespace App1
             }
             else
             {
-             
+
                 return originalBitmap;
             }
         }
 
-        public static bool probarsetting(string nombrekey)
-        {
-            try
-            {
-               string prro = gettearvalor(nombrekey);
-                if (prro != null && prro.Length >= 0)
-                    return true;
-                else
-                    return false;
-              
-            }
-            catch(Exception)
-            {
-                return false;
-            }
-        }
-        public static void guardarsetting(string nombrekey,string valor)
-        {
-
-            ISharedPreferences prefs = Application.Context.GetSharedPreferences("Settings", FileCreationMode.Private);
-            ISharedPreferencesEditor prefEditor = prefs.Edit();
-            prefEditor.PutString(nombrekey, valor);
-            prefEditor.Commit();
-
-        }
-        public static string gettearvalor(string nombrekey)
-        {
-            ISharedPreferences prefs = Application.Context.GetSharedPreferences("Settings", FileCreationMode.Private);
-          return  prefs.GetString(nombrekey, null);
-        }
+    
+       
+       
 
         public static void recogerbasura()
         {
             try
             {
 
-           
-            if (true)
-            {
-            
-               
-                GC.Collect();
-            }
+
+                if (true)
+                {
+
+
+                    GC.Collect();
+                }
             }
             catch (Exception)
             {
@@ -813,31 +732,8 @@ namespace App1
         }
 
 
-        public static Bitmap getRoundedShape(Bitmap scaleBitmapImage)
-        {
-            int targetWidth = 480;
-            int targetHeight = 360;
-            Bitmap targetBitmap = Bitmap.CreateBitmap(targetWidth,
-                targetHeight, Bitmap.Config.Argb8888);
-
-            Canvas canvas = new Canvas(targetBitmap);
-            Android.Graphics.Path path = new Android.Graphics.Path();
-            path.AddCircle(((float)targetWidth - 1) / 2,
-                ((float)targetHeight - 1) / 2,
-                (Math.Min(((float)targetWidth),
-                    ((float)targetHeight)) / 2),
-                Android.Graphics.Path.Direction.Ccw);
-
-            canvas.ClipPath(path);
-            Bitmap sourceBitmap = scaleBitmapImage;
-            canvas.DrawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.Width,
-                    sourceBitmap.Height),
-                new Rect(0, 0, targetWidth, targetHeight), null);
-            return targetBitmap;
-        }
-
-        public static void deciralbroadcast(Context contexto,string mensaje)
+       
+        public static void deciralbroadcast(Context contexto, string mensaje)
         {
             Intent intento = new Intent(contexto, typeof(broadcast_receiver));
             Bundle bdl = new Bundle();
@@ -845,19 +741,10 @@ namespace App1
             intento.PutExtra("prro", bdl);
             contexto.SendBroadcast(intento);
         }
-        public static void animarfab(Java.Lang.Object imagen)
+       
+
+        public static void mostrarnotificacion(Activity contexto, string titulo, string mensaje, string link, int codigo)
         {
-
-            Android.Animation.ObjectAnimator animacion = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleX", 0f, 1f);
-            animacion.SetDuration(510);
-            animacion.Start();
-            Android.Animation.ObjectAnimator animacion2 = Android.Animation.ObjectAnimator.OfFloat(imagen, "scaleY", 0f, 1f);
-            animacion2.SetDuration(510);
-            animacion2.Start();
-
-        }
-
-        public static void mostrarnotificacion(Activity contexto, string titulo, string mensaje,string link, int codigo) {
 
             contexto.RunOnUiThread(() =>
             {
@@ -872,7 +759,7 @@ namespace App1
                 nBuilder.SetColor(Android.Graphics.Color.ParseColor("#ce2c2b"));
                 nBuilder.SetSmallIcon(Resource.Drawable.list);
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-                nBuilder.SetSound( Android.Media.RingtoneManager.GetDefaultUri(Android.Media.RingtoneType.Notification));
+                nBuilder.SetSound(Android.Media.RingtoneManager.GetDefaultUri(Android.Media.RingtoneType.Notification));
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
                 Notification notification = nBuilder.Build();
                 NotificationManager notificationManager =
@@ -882,106 +769,56 @@ namespace App1
 
 
         }
-        public static List<elementosugerencia> gettearsugerencias(string link,List<string> excludedvideos) {
-            try { 
-            if (excludedvideos == null)
-                excludedvideos = new List<string>();
-            var innerlist = new List<elementosugerencia>();
-            var Document = new HtmlWeb();
-            var Html = Document.LoadFromWebAsync(link).Result;
-            var alldivs = Html.DocumentNode.SelectNodes("//*[contains(@class,' content-link spf-link  yt-uix-sessionlink      spf-link ')]").ToList();
-            foreach (var elem in alldivs) {
-                var videourl = "https://www.youtube.com" + elem.Attributes["href"].Value;
-                if (excludedvideos.IndexOf(videourl) == -1) { 
-                innerlist.Add(new elementosugerencia()
-                {
-                    nombre = WebUtility.HtmlDecode(elem.Attributes["title"].Value),
-                    link = "https://www.youtube.com" + elem.Attributes["href"].Value,
-                    portada = "https://i.ytimg.com/vi/" + elem.Attributes["href"].Value.Split('=')[1] + "/mqdefault.jpg"
-
-
-                });
-                }
-            }
-          
-            return innerlist;
-            }
-            catch (Exception)
-            {
-                return new List<elementosugerencia>();
-
-            }
-        }
-        public static string gettearserial() {
-
-            Random rondom = new Random();
-            char[] array = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
-            return rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                 +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                 +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                 +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString();
-        }
-        public static tituloydownloadurl gettearvideoid(string elink,bool videoabierto,int calidad)
+       
+       
+        public static VideoShortInfo gettearvideoid(string elink, bool videoabierto, int calidad)
         {
             string video2 = "";
             string title = "";
             try
             {
-                    if (youtubeclient == null)
-                        youtubeclient= Client.For(YouTube.Default);
-                    var video = youtubeclient.GetAllVideosAsync(elink);
-                    var resultados = video.Result;
-                    title = resultados.First().Title.Replace("- YouTube", "");
-                    if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
-                    {
+                if (youtubeclient == null)
+                    youtubeclient = Client.For(YouTube.Default);
+                var video = youtubeclient.GetAllVideosAsync(elink);
+                var resultados = video.Result;
+                title = resultados.First().Title.Replace("- YouTube", "");
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
+                {
 
 
-                        var results = resultados.Where(info => info.Resolution == calidad && info.AudioFormat == AudioFormat.Aac);
+                    var results = resultados.Where(info => info.Resolution == calidad && info.AudioFormat == AudioFormat.Aac);
 
-                        if (results.Count() == 0)
-                            while (results.Count() == 0)
+                    if (results.Count() == 0)
+                        while (results.Count() == 0)
+                        {
+                            if (calidad == 360 && results.Count() == 0)
                             {
-                                if (calidad == 360 && results.Count() == 0)
-                                {
-                                    results = resultados.Where(info => info.Resolution == 240 && info.AudioFormat == AudioFormat.Aac);
-                                }
-                                else
-                                if (calidad == 720 && results.Count() == 0)
-                                {
-                                    results = resultados.Where(info => info.Resolution == 360 && info.AudioFormat == AudioFormat.Aac);
-                                }
-                                if (calidad == 240 && results.Count() == 0)
-                                {
-                                    results = resultados.Where(info => info.Resolution == -1 && info.AudioFormat == AudioFormat.Aac);
-                                }
-
+                                results = resultados.Where(info => info.Resolution == 240 && info.AudioFormat == AudioFormat.Aac);
                             }
-                        video2 = results.First().GetUriAsync().Result;
+                            else
+                            if (calidad == 720 && results.Count() == 0)
+                            {
+                                results = resultados.Where(info => info.Resolution == 360 && info.AudioFormat == AudioFormat.Aac);
+                            }
+                            if (calidad == 240 && results.Count() == 0)
+                            {
+                                results = resultados.Where(info => info.Resolution == -1 && info.AudioFormat == AudioFormat.Aac);
+                            }
+
+                        }
+                    video2 = results.First().GetUriAsync().Result;
 
 
-                    }
-                    else
-                    {
-                        video2 = resultados.First(info => info.Resolution == 240 && info.AudioFormat == AudioFormat.Aac).GetUriAsync().Result;
-                    }
-
-
-          
-
-
-
-
-
+                }
+                else
+                {
+                    video2 = resultados.First(info => info.Resolution == 240 && info.AudioFormat == AudioFormat.Aac).GetUriAsync().Result;
+                }
 
                 if (!videoabierto)
                 {
 
-                    tituloydownloadurl papu = new tituloydownloadurl();
+                    VideoShortInfo papu = new VideoShortInfo();
                     papu.downloadurl = video2;
                     papu.titulo = title;
                     return papu;
@@ -991,16 +828,17 @@ namespace App1
 
 
 
-                    tituloydownloadurl papu = new tituloydownloadurl();
+                    VideoShortInfo papu = new VideoShortInfo();
                     papu.downloadurl = "";
                     papu.titulo = title;
                     return papu;
                 }
-              }
-               catch (Exception) {
+            }
+            catch (Exception)
+            {
 
-                   return null;
-               }
+                return null;
+            }
 
 
         }

@@ -28,12 +28,14 @@ using Newtonsoft.Json;
 using Android.Glide;
 using YoutubeSearch;
 using System.Text.RegularExpressions;
+using App1.Models;
+using App1.Utils;
 
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize,  Theme = "@style/Theme.DesignDemo", LaunchMode = Android.Content.PM.LaunchMode.SingleTask, AlwaysRetainTaskState = true)]
 #pragma warning disable CS0618 // El tipo o el miembro están obsoletos
-    public class mainmenu : Android.Support.V7.App.AppCompatActivity
+    public class Mainmenu : Android.Support.V7.App.AppCompatActivity
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
     {
         public bool nocomprobar = false;
@@ -59,7 +61,7 @@ namespace App1
 #pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         Thread actualizarlista;
         ScrollView menuham;
-        public static mainmenu instancia;
+        public static Mainmenu instancia;
         public ImageView fondo;
         public Bitmap fondoblurreado;
         public bool buscando = false;
@@ -74,7 +76,7 @@ namespace App1
         public  ImageView voldown;
         public  ImageView volup;
         public ProgressBar barrap;
-        public modelips modeloip;
+        public IpData modeloip;
         DrawerLayout sidem;
         NavigationView itemsm;
         ImageView botonaccion;
@@ -83,15 +85,15 @@ namespace App1
         public string jsonlistasremotas = "";
         public TcpClient clientelalistas;
         public bool playlistreceived = false;
-        public Dictionary<string, playlistelements> listafavoritos = new Dictionary<string, playlistelements>();
+        public Dictionary<string, PlaylistElement> listafavoritos = new Dictionary<string, PlaylistElement>();
         public bool compatible = true;
         public int volact = 0;
         Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout panel;
-        public historial objetohistorial = new historial();
+        public History objetohistorial = new History();
         ImageView botonlike;
         public List<YoutubeSearch.VideoInformation> sugerencias = new List<YoutubeSearch.VideoInformation>();
         PowerManager.WakeLock wake;
-        public static mainmenu gettearinstancia()
+        public static Mainmenu gettearinstancia()
         {
             return instancia;
         }
@@ -173,7 +175,7 @@ namespace App1
             itemsm = FindViewById<NavigationView>(Resource.Id.content_frame);
             barrap = FindViewById<ProgressBar>(Resource.Id.progresoind);
             var searchview = FindViewById<Android.Support.V7.Widget.SearchView>(Resource.Id.searchView);
-            modeloip = clasesettings.gettearips();
+            modeloip = SocketHelper.GetIps();
             botonlike = FindViewById<ImageView>(Resource.Id.imglike);
             panel = FindViewById<Cheesebaron.SlidingUpPanel.SlidingUpPanelLayout>(Resource.Id.sliding_layout);
             //  var barra3 = FindViewById<LinearLayout>(Resource.Id.linearLayout6);
@@ -248,22 +250,22 @@ namespace App1
             RunOnUiThread(() => fondo.SetBackgroundColor(Color.ParseColor("#323538")));
 
          
-                if (File.Exists(clasesettings.rutacache + "/history.json"))
+                if (File.Exists(Constants.CachePath + "/history.json"))
                 {
 
-                    objetohistorial = JsonConvert.DeserializeObject<historial>(File.ReadAllText(clasesettings.rutacache + "/history.json"));
+                    objetohistorial = JsonConvert.DeserializeObject<History>(File.ReadAllText(Constants.CachePath + "/history.json"));
 
             }
             else
             {
 
-                objetohistorial = new historial();
-                objetohistorial.videos = new List<playlistelements>();
-                objetohistorial.links = new Dictionary<string, int>();
+                objetohistorial = new History();
+                objetohistorial.Videos = new List<PlaylistElement>();
+                objetohistorial.Links = new Dictionary<string, int>();
             }
-            if (File.Exists(clasesettings.rutacache + "/favourites.json"))
+            if (File.Exists(Constants.CachePath + "/favourites.json"))
             {
-                listafavoritos = JsonConvert.DeserializeObject<Dictionary<string, playlistelements>>(File.ReadAllText(clasesettings.rutacache + "/favourites.json"));
+                listafavoritos = JsonConvert.DeserializeObject<Dictionary<string, PlaylistElement>>(File.ReadAllText(Constants.CachePath + "/favourites.json"));
             }
 
             StartActivity(new Intent( this, typeof(actividadinicio)));
@@ -283,10 +285,10 @@ namespace App1
                 if (zelda.Trim() != "")
                 {
                     var link = zelda.Replace("https", "http");
-                    var elemento = new playlistelements()
+                    var elemento = new PlaylistElement()
                     {
-                        link = link,
-                        nombre = label.Text
+                        Link = link,
+                        Name = label.Text
                     };
                     listafavoritos = clasesettings.agregarfavoritos(this, listafavoritos, elemento);
 
@@ -1023,12 +1025,12 @@ namespace App1
                        
 
                         buscando = bool.Parse(listaelementos[4]);
-                        if (modeloip.ips.ContainsKey(ip)) { 
-                        if (modeloip.ips[ip] != listaelementos[5]) {
-                            modeloip.ips[ip] = listaelementos[5];
+                        if (modeloip.Ips.ContainsKey(ip)) { 
+                        if (modeloip.Ips[ip] != listaelementos[5]) {
+                            modeloip.Ips[ip] = listaelementos[5];
                              
                                 var jsons = JsonConvert.SerializeObject(modeloip);
-                                var axc = File.CreateText(clasesettings.rutacache + "/ips.json");
+                                var axc = File.CreateText(Constants.CachePath + "/ips.json");
                                 axc.Write(jsons);
                                 axc.Close();
                             }
@@ -1282,7 +1284,7 @@ namespace App1
                 if (nocomprobar) {
                     break;
                 }
-                if (!prueba_de_lista_generica.SocketExtensions.IsConnected(clientela) && !nocomprobar)
+                if (!SocketHelper.IsConnected(clientela) && !nocomprobar)
                 {
                    
                     

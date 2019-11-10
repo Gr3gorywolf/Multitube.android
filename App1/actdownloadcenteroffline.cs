@@ -104,7 +104,7 @@ namespace App1
             playpause.Click += delegate
             {
                 animar(playpause);
-                mainmenu_Offline.gettearinstancia().play.PerformClick();
+                MainmenuOffline.gettearinstancia().play.PerformClick();
                
             };
           
@@ -323,15 +323,15 @@ namespace App1
 
             while (!this.IsDestroyed)
             {
-                if (mainmenu_Offline.gettearinstancia() != null )
+                if (MainmenuOffline.gettearinstancia() != null )
                 {
 
-                    if (mainmenu_Offline.gettearinstancia().buscando != true)
+                    if (MainmenuOffline.gettearinstancia().buscando != true)
                     {
-                        if (mainmenu_Offline.gettearinstancia().label.Text != tv4.Text 
-                            && mainmenu_Offline.gettearinstancia().label.Text.Trim() != "")
+                        if (MainmenuOffline.gettearinstancia().label.Text != tv4.Text 
+                            && MainmenuOffline.gettearinstancia().label.Text.Trim() != "")
                         {
-                            RunOnUiThread(() => tv4.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                            RunOnUiThread(() => tv4.Text = MainmenuOffline.gettearinstancia().label.Text);
                         }
                     }
                     else {
@@ -340,13 +340,13 @@ namespace App1
 
                 }
                 else
-                if (mainmenu.gettearinstancia() != null)
+                if (Mainmenu.gettearinstancia() != null)
                 {
-                    if (mainmenu.gettearinstancia().label.Text != tv4.Text
-                         &&  mainmenu.gettearinstancia().label.Text.Trim()!=""
+                    if (Mainmenu.gettearinstancia().label.Text != tv4.Text
+                         &&  Mainmenu.gettearinstancia().label.Text.Trim()!=""
                         )
                     {
-                        RunOnUiThread(() => tv4.Text = mainmenu.gettearinstancia().label.Text);
+                        RunOnUiThread(() => tv4.Text = Mainmenu.gettearinstancia().label.Text);
                     }
                 }
                

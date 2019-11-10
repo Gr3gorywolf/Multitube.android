@@ -17,7 +17,7 @@ using System.Net.Http;
 using VideoLibrary;
 using System.Text.RegularExpressions;
 using Plugin.DownloadManager;
-
+using App1.Utils;
 
 namespace App1
 {
@@ -98,7 +98,6 @@ namespace App1
             Intent.Extras.Clear();
             TextView titulo = FindViewById<TextView>(Resource.Id.textView4);
             titulo.Selected = true;
-            prueba_de_lista_generica.Geteartitulo tt = new prueba_de_lista_generica.Geteartitulo();
             this.SetFinishOnTouchOutside(true);
      
             new Thread(() =>
@@ -106,7 +105,7 @@ namespace App1
 
                 RunOnUiThread(() =>
                 {
-                    var plin = tt.GetVideoTitle(tt.LoadJson(linkvid));
+                    var plin =new Geteartitulo().GetVideoTitle(linkvid) ;
                     titulo.Text = plin;
                 });
 
@@ -145,7 +144,7 @@ namespace App1
                     imagenredonda.BringToFront();
                     imagenredonda.BringToFront();
                  
-                    imagenredonda.SetImageBitmap(clasesettings.getRoundedShape(imagenklk));
+                    imagenredonda.SetImageBitmap(ImageHelper.GetRoundedShape(imagenklk));
                     fondo.SetImageBitmap(imagenklk);
                     animar4(imagenredonda);
                     
@@ -278,39 +277,40 @@ namespace App1
             RunOnUiThread(() => progreso.Progress = 25);
 
             var elemento = clasesettings.gettearvideoid(linkvid, false, quality);
-            if (elemento != null) { 
-            title = elemento.titulo;
-            video2 = elemento.downloadurl;
-       
-            RunOnUiThread(() => progreso.Progress = 50);
-    
-            var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
-            string documentsPath = pathFile.AbsolutePath;
-            RunOnUiThread(() => progreso.Progress = 75);
-            string localFilename = RemoveIllegalPathCharacters(title).Trim() + ".mp4";
-            string localPath = Path.Combine(rutadedescarga, localFilename);
-    
-            if (serviciodownload.gettearinstancia() != null)
+            if (elemento != null)
             {
-                serviciodownload.gettearinstancia().descargar(localPath, video2, title, linkvid);
+                title = elemento.titulo;
+                video2 = elemento.downloadurl;
+
+                RunOnUiThread(() => progreso.Progress = 50);
+
+                var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
+                string documentsPath = pathFile.AbsolutePath;
+                RunOnUiThread(() => progreso.Progress = 75);
+                string localFilename = RemoveIllegalPathCharacters(title).Trim() + ".mp4";
+                string localPath = Path.Combine(rutadedescarga, localFilename);
+
+                if (serviciodownload.gettearinstancia() != null)
+                {
+                    serviciodownload.gettearinstancia().descargar(localPath, video2, title, linkvid);
+                }
+                else
+                {
+                    StartService(new Intent(this, typeof(serviciodownload)));
+                    Thread.Sleep(300);
+                    serviciodownload.gettearinstancia().descargar(localPath, video2, title, linkvid);
+                }
+                RunOnUiThread(() => this.Finish());
+                RunOnUiThread(() => progreso.Progress = 100);
+                RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
             }
-            else
-            {
-                StartService(new Intent(this, typeof(serviciodownload)));
-                Thread.Sleep(300);
-                serviciodownload.gettearinstancia().descargar(localPath, video2, title, linkvid);
-            }
-            RunOnUiThread(() => this.Finish());
-            RunOnUiThread(() => progreso.Progress = 100);
-            RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-        }
             else
             {
                 RunOnUiThread(() =>
                 {
 
-            Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
-            });
+                    Toast.MakeText(this, "Error al extraer el video posiblemente los servidores esten en mantenimiento", ToastLength.Long).Show();
+                });
             }
 
 }
@@ -325,41 +325,43 @@ namespace App1
            */
             RunOnUiThread(() => Toast.MakeText(this, "obteniendo informacion del video", ToastLength.Long).Show());
             RunOnUiThread(() => progreso.Progress = 25);
-            var asd = clasesettings.gettearvideoid(linkvid,false,-1);
-            if (asd != null) { 
-            RunOnUiThread(() => progreso.Progress = 50);
-          //  Intent intento = new Intent(this, typeof(serviciodownload));
-            string localFilename = RemoveIllegalPathCharacters(asd.titulo).Trim() + ".mp3";
-            string localPath = Path.Combine(rutadedescarga, localFilename);
-            //  intento.PutExtra("path", localPath);
-            //  intento.PutExtra("archivo", asd.downloadurl);
-            //  intento.PutExtra("titulo", asd.titulo);
-            //  intento.PutExtra("link", linkvid);
-          
-
-            if (serviciodownload.gettearinstancia() != null)
+            var asd = clasesettings.gettearvideoid(linkvid, false, -1);
+            if (asd != null)
             {
-                serviciodownload.gettearinstancia().descargar(localPath, asd.downloadurl, asd.titulo, linkvid);
-            }else
-            {
-                StartService(new Intent(this, typeof(serviciodownload)));
-                Thread.Sleep(300);
-                serviciodownload.gettearinstancia().descargar(localPath, asd.downloadurl, asd.titulo, linkvid);
-            }
-         
+                RunOnUiThread(() => progreso.Progress = 50);
+                //  Intent intento = new Intent(this, typeof(serviciodownload));
+                string localFilename = RemoveIllegalPathCharacters(asd.titulo).Trim() + ".mp3";
+                string localPath = Path.Combine(rutadedescarga, localFilename);
+                //  intento.PutExtra("path", localPath);
+                //  intento.PutExtra("archivo", asd.downloadurl);
+                //  intento.PutExtra("titulo", asd.titulo);
+                //  intento.PutExtra("link", linkvid);
 
 
-           
-                   
-                   
-       
+                if (serviciodownload.gettearinstancia() != null)
+                {
+                    serviciodownload.gettearinstancia().descargar(localPath, asd.downloadurl, asd.titulo, linkvid);
+                }
+                else
+                {
+                    StartService(new Intent(this, typeof(serviciodownload)));
+                    Thread.Sleep(300);
+                    serviciodownload.gettearinstancia().descargar(localPath, asd.downloadurl, asd.titulo, linkvid);
+                }
 
 
-            RunOnUiThread(() => progreso.Progress = 100);
-          ///  StartService(intento);
-            RunOnUiThread(() => this.Finish());
-            RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
-            
+
+
+
+
+
+
+
+                RunOnUiThread(() => progreso.Progress = 100);
+                ///  StartService(intento);
+                RunOnUiThread(() => this.Finish());
+                RunOnUiThread(() => Toast.MakeText(this, "Descarga iniciada", ToastLength.Long).Show());
+
             }
             else
             {
@@ -371,12 +373,7 @@ namespace App1
             }
 
         }
-        public void cojerstream()
-        {
-
-          
-        }
-        public void mostrarnotificacion(int porcentaje,string titulo,string link)
+        public void mostrarnotificacion(int porcentaje, string titulo, string link)
         {
             var pathFile = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads);
             string documentsPath = pathFile.AbsolutePath;
@@ -396,11 +393,11 @@ namespace App1
       .SetSmallIcon(Resource.Drawable.downloadbutton)
       .SetContentIntent(pendingIntent)
       ;
-            
-       
-   
-      
-       
+
+
+
+
+
             // Build the notification:
             Notification notification = builder.Build();
 
@@ -411,8 +408,8 @@ namespace App1
             // Publish the notification:
             const int notificationId = 0;
             notificationManager.Notify(notificationId, notification);
-        
-               
+
+
 
         }
 

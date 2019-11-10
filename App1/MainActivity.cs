@@ -12,6 +12,8 @@ using System;
 using ZXing;
 using System.IO;
 using System.Collections.Generic;
+using App1.Utils;
+
 namespace App1
 {
 
@@ -45,21 +47,7 @@ namespace App1
 
             ////////////////////////////////////miselaneo///////////////////////////////////////////
                ////////////////mimicv2//////////////////////
-                clasesettings.guardarsetting("comando", "");
-            clasesettings.guardarsetting("listaactual", "");
-            clasesettings.guardarsetting("videocerrado", "");
-            clasesettings.guardarsetting("musica", "");
-            clasesettings.guardarsetting("servicio", "");
-            clasesettings.guardarsetting("playerstatus", "");
-            clasesettings.guardarsetting("duracion", "");
-            clasesettings.guardarsetting("progreso", "");
-            clasesettings.guardarsetting("cquerry", "");
-            clasesettings.guardarsetting("acaboelplayer", "");
-            clasesettings.guardarsetting("patra", "");
-            clasesettings.guardarsetting("palante", "");
-            clasesettings.guardarsetting("videoactivo", "no");
-            clasesettings.guardarsetting("progresovideoactual","");
-            clasesettings.guardarsetting("tapnumber", "");
+            
           
             List<string> arraydatos = new List<string>();
             arraydatos.Add(Android.Manifest.Permission.Camera);
@@ -76,7 +64,7 @@ namespace App1
             ///
          
             if (prefs.Contains("video"))
-                clasesettings.guardarsetting("video", "-1");
+                SettingsHelper.SaveSetting("video", "-1");
             prefEditor = prefs.Edit();
             if (prefs.Contains("ipanterior"))
             {
@@ -131,7 +119,7 @@ namespace App1
             };
             boton2.Click += delegate
                  {
-                StartActivity(typeof(mainmenu_Offline));
+                StartActivity(typeof(MainmenuOffline));
                  };
             boton.Click += async(semde,e)=>
                 {
@@ -175,12 +163,12 @@ namespace App1
         public override void FinishAndRemoveTask()
         {
             base.FinishAndRemoveTask();
-            clasesettings.guardarsetting("servicio", "matar");
+            SettingsHelper.SaveSetting("servicio", "matar");
         }
         public override void Finish()
         {
             base.Finish();
-            clasesettings.guardarsetting("elementosactuales", "");
+            SettingsHelper.SaveSetting("elementosactuales", "");
             clasesettings.recogerbasura();
 
 
@@ -208,7 +196,7 @@ namespace App1
                 cliente.Client.Disconnect(false);
                 pasasion = textboxl.Text;
 
-                Intent activity2 = new Intent(this, typeof(mainmenu));
+                Intent activity2 = new Intent(this, typeof(Mainmenu));
                
                 activity2.PutExtra("MyData", pasasion);
                 RunOnUiThread(() => textboxl.Visibility = ViewStates.Invisible);
@@ -243,7 +231,7 @@ namespace App1
                 cliente.Client.Disconnect(false);
                 pasasion = textboxl.Text;
 
-                Intent activity2 = new Intent(this, typeof(mainmenu));
+                Intent activity2 = new Intent(this, typeof(Mainmenu));
 
                 activity2.PutExtra("MyData", pasasion);
                 RunOnUiThread(() => textboxl.Visibility = ViewStates.Invisible);

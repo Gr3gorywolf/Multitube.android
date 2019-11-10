@@ -12,6 +12,8 @@ using Android.Widget;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
+using App1.Utils;
+
 namespace App1
 {
     [Activity(Label = "Multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize, Theme = "@style/Theme.UserDialog")]
@@ -170,7 +172,7 @@ namespace App1
                 var indice = int.Parse(Intent.GetStringExtra("index"));
                 new Thread(() =>
                 {
-                    mainmenu_Offline.gettearinstancia().reproducirlalistalocal(nombrelista);
+                    MainmenuOffline.gettearinstancia().reproducirlalistalocal(nombrelista);
                 }).Start();
                 cerraractividad();
 
@@ -233,10 +235,10 @@ namespace App1
         {
             while (detenedor)
             {
-                if ( clasesettings.gettearvalor("refrescarlistadatos") =="ok")
+                if (SettingsHelper.GetSetting("refrescarlistadatos") =="ok")
                 {
-                  
-                    clasesettings.guardarsetting("refrescarlistadatos", "");
+
+                    SettingsHelper.SaveSetting("refrescarlistadatos", "");
                     refrescar();
                 }
                 Thread.Sleep(150);

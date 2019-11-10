@@ -14,6 +14,7 @@ using System.Threading;
 using System.IO;
 using Plugin.DownloadManager;
 using System.Text.RegularExpressions;
+using App1.Utils;
 
 namespace App1
 {
@@ -93,8 +94,8 @@ namespace App1
             requ.SetNotificationVisibility(DownloadVisibility.VisibleNotifyCompleted);
             requ.SetTitle( tituloo );
             var destino = Android.Net.Uri.FromFile(new Java.IO.File(path));
-            if (clasesettings.gettearvalor("rutadescarga") == Android.OS.Environment.DirectoryDownloads)
-                requ.SetDestinationInExternalPublicDir(clasesettings.gettearvalor("rutadescarga"), Path.GetFileName(path));
+            if (SettingsHelper.GetSetting("rutadescarga") == Android.OS.Environment.DirectoryDownloads)
+                requ.SetDestinationInExternalPublicDir(SettingsHelper.GetSetting("rutadescarga"), Path.GetFileName(path));
             else {
            
             requ.SetDestinationUri(destino);
@@ -135,10 +136,10 @@ namespace App1
 
                 }
                 else {
-                    var datosparsed = clasesettings.obtenermedia(clasesettings.rutacache+"/downloaded.gr3d");
+                    var datosparsed = clasesettings.obtenermedia(Constants.CachePath+"/downloaded.gr3d");
                     var videoid = link.Split('=')[1];
-                    int indexelemento = datosparsed.FindIndex(ax => ax.link.Contains(videoid));
-                    datosparsed[indexelemento].path = path;
+                    int indexelemento = datosparsed.FindIndex(ax => ax.Link.Contains(videoid));
+                    datosparsed[indexelemento].Path = path;
                     var aafff = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d");
                     aafff.Write(clasesettings.serializarmedia(datosparsed));
                     aafff.Close();
@@ -177,10 +178,10 @@ namespace App1
                 }
                 else
                 {
-                    var datosparsed = clasesettings.obtenermedia(clasesettings.rutacache + "/downloaded.gr3d2");
+                    var datosparsed = clasesettings.obtenermedia(Constants.CachePath + "/downloaded.gr3d2");
                     var videoid = link.Split('=')[1];
-                    int indexelemento = datosparsed.FindIndex(ax => ax.link.Contains(videoid));
-                    datosparsed[indexelemento].path = path;
+                    int indexelemento = datosparsed.FindIndex(ax => ax.Link.Contains(videoid));
+                    datosparsed[indexelemento].Path = path;
                     var aafff = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/" + "downloaded.gr3d2");
                     aafff.Write(clasesettings.serializarmedia(datosparsed));
                     aafff.Close();

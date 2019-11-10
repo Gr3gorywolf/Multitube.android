@@ -13,6 +13,8 @@ using System.Net;
 using System.Net.Sockets;
 using Android.Graphics;
 using System.Threading;
+using App1.Utils;
+
 namespace App1
 {
     [Activity(Label = "Abrir con multitube", ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize,Theme = "@style/Theme.UserDialog")]
@@ -77,12 +79,12 @@ namespace App1
                             new Thread(() =>
                             {
 
-                                GR3_UiF.Geteartitulo getter = new GR3_UiF.Geteartitulo();
+                                App1.Geteartitulo getter = new App1.Geteartitulo();
                              
                                buscando = true;
                                 proc = new Thread(new ThreadStart(ponerimagen));
                                 proc.Start();
-                                titulo = getter.GetVideoTitle(getter.LoadJson(url));
+                                titulo = getter.GetVideoTitle(url);
                                
                                 buscando = false;
                                 RunOnUiThread(() => {
@@ -180,19 +182,19 @@ namespace App1
                 animar(agregar);
                 if (!buscando)
                 {
-                    if (mainmenu.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null)
+                    if (Mainmenu.gettearinstancia() != null || MainmenuOffline.gettearinstancia() != null)
                     {
-                        if (mainmenu_Offline.gettearinstancia() == null)
+                        if (MainmenuOffline.gettearinstancia() == null)
                     {
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("agregar()"));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("agregar()"));
                         Thread.Sleep(250);
-                        mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(url));
+                        Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(url));
                     }
                     else
                     {
                         new Thread(() =>
                         {
-                            mainmenu_Offline.gettearinstancia().agregarviddireckt(url, titulo);
+                            MainmenuOffline.gettearinstancia().agregarviddireckt(url, titulo);
                         }).Start();
 
                     }
@@ -211,13 +213,13 @@ namespace App1
                 animar(buscar);
                 if (!buscando)
                 {
-                    if (mainmenu.gettearinstancia() != null || mainmenu_Offline.gettearinstancia() != null)
+                    if (Mainmenu.gettearinstancia() != null || MainmenuOffline.gettearinstancia() != null)
                     {
-                        if (mainmenu_Offline.gettearinstancia() == null)
+                        if (MainmenuOffline.gettearinstancia() == null)
                         {
-                            if (mainmenu.gettearinstancia().clientela.Connected == true)
+                            if (Mainmenu.gettearinstancia().clientela.Connected == true)
                             {
-                                mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(url));
+                                Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes(url));
 
 
                             }
@@ -226,7 +228,7 @@ namespace App1
                         {
                             new Thread(() =>
                             {
-                                mainmenu_Offline.gettearinstancia().buscarviddireckt(url, false);
+                                MainmenuOffline.gettearinstancia().buscarviddireckt(url, false);
                             }).Start();
 
                         }
@@ -256,7 +258,7 @@ namespace App1
           byte[]losbits=  clienteweb.DownloadData("http://i.ytimg.com/vi/" + url.Split('=')[1] + "/mqdefault.jpg");
             Bitmap imagen = BitmapFactory.DecodeByteArray(losbits, 0, losbits.Length);
 
-            RunOnUiThread(() =>imagenview.SetImageBitmap(clasesettings.getRoundedShape( imagen)));
+            RunOnUiThread(() =>imagenview.SetImageBitmap(ImageHelper.GetRoundedShape( imagen)));
                 RunOnUiThread(() => fondo.SetImageBitmap(imagen));
                 RunOnUiThread(() => animar4(imagenview));
             }

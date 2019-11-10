@@ -164,8 +164,8 @@ namespace App1
         }
         public  void six(object sender, EventArgs e)
         {
-            listanombres = mainmenu_Offline.gettearinstancia().lapara;
-            listalinks = mainmenu_Offline.gettearinstancia().laparalinks;
+            listanombres = MainmenuOffline.gettearinstancia().lapara;
+            listalinks = MainmenuOffline.gettearinstancia().laparalinks;
 
 
 

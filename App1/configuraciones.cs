@@ -16,6 +16,7 @@ using Android.Graphics;
 using Android.Renderscripts;
 using System.Net;
 using System.Threading;
+using App1.Utils;
 //using Cheesebaron.MvxPlugins.Settings.Droid;
 namespace App1
 {
@@ -78,9 +79,9 @@ namespace App1
             localizacion = FindViewById<TextView>(Resource.Id.textView3);
          //   botonguardar = FindViewById<ImageView>(Resource.Id.imageView2);
             var colormuestra = FindViewById<ImageView>(Resource.Id.imageView3);
-            colormuestra.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
-            color = clasesettings.gettearvalor("color");
-            reprodautomatica = clasesettings.gettearvalor("automatica");
+            colormuestra.SetBackgroundColor(Color.ParseColor(SettingsHelper.GetSetting("color")));
+            color = SettingsHelper.GetSetting("color");
+            reprodautomatica = SettingsHelper.GetSetting("automatica");
             var ll1 = FindViewById<LinearLayout>(Resource.Id.linearLayout3);
             var ll2 = FindViewById<LinearLayout>(Resource.Id.linearLayout4);
             var ll3 = FindViewById<LinearLayout>(Resource.Id.linearLayout5);
@@ -117,8 +118,8 @@ namespace App1
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             calidades.Adapter = adapter;
 
-            color = clasesettings.gettearvalor("color");
-            calidad =int.Parse( clasesettings.gettearvalor("video"));
+            color = SettingsHelper.GetSetting("color");
+            calidad =int.Parse(SettingsHelper.GetSetting("video"));
             switch (calidad) {
                 case -1:
                     calidades.SetSelection(0);
@@ -131,8 +132,8 @@ namespace App1
                     break;
             }
            
-            if (clasesettings.probarsetting("abrirserver")) {
-                abrirserver = clasesettings.gettearvalor("abrirserver");
+            if (SettingsHelper.HasKey("abrirserver")) {
+                abrirserver = SettingsHelper.GetSetting("abrirserver");
                
             }
             if (abrirserver == "no")
@@ -145,9 +146,9 @@ namespace App1
             }
 
 
-                if (clasesettings.probarsetting("ordenalfabeto"))
+                if (SettingsHelper.HasKey("ordenalfabeto"))
             {
-                ordenalfabeto = clasesettings.gettearvalor("ordenalfabeto");
+                ordenalfabeto = SettingsHelper.GetSetting("ordenalfabeto");
 
                 if (ordenalfabeto == "si")
                 {
@@ -159,7 +160,7 @@ namespace App1
                 }
             }
 
-            if ( clasesettings.probarsetting("rutadescarga")){
+            if (SettingsHelper.HasKey("rutadescarga")){
                 klk = prefs.GetString("rutadescarga", null);
 
             }
@@ -455,15 +456,15 @@ namespace App1
 
 
 
-                clasesettings.guardarsetting("rutadescarga", klk);
+                SettingsHelper.SaveSetting("rutadescarga", klk);
 
 
             }
-            clasesettings.guardarsetting("abrirserver", abrirserver);
-            clasesettings.guardarsetting("ordenalfabeto", ordenalfabeto);
-            clasesettings.guardarsetting("color", color);
-            clasesettings.guardarsetting("video", calidad.ToString());
-            clasesettings.guardarsetting("automatica", reprodautomatica);
+            SettingsHelper.SaveSetting("abrirserver", abrirserver);
+            SettingsHelper.SaveSetting("ordenalfabeto", ordenalfabeto);
+            SettingsHelper.SaveSetting("color", color);
+            SettingsHelper.SaveSetting("video", calidad.ToString());
+            SettingsHelper.SaveSetting("automatica", reprodautomatica);
             //  Toast.MakeText(this, "Guardado exitosamente", ToastLength.Long).Show();
             clasesettings.preguntarsimenuosalir(this);
     

@@ -12,13 +12,15 @@ using Android.Widget;
 using Android.Graphics;
 using System.Net;
 using System.IO;
+using App1.Models;
+
 namespace App1
 {
     class Customadaptador1 : BaseAdapter
     {
 
         Context context;
-        List<Videosimage> listaimagenes;
+        List<VideoImage> listaimagenes;
         bool cargarimageness = false;
         bool modomini = false;
       public  Customadaptador1ViewHolder holder;
@@ -84,7 +86,7 @@ namespace App1
                 new Rect(0, 0, targetWidth, targetHeight), null);
             return targetBitmap;
         }
-        public Customadaptador1(Context context,List<Videosimage>imagenes, bool cargarimagenes,bool modominii, List<Android.Graphics.Bitmap> imagens, List<Android.Graphics.Bitmap> blurimgs)
+        public Customadaptador1(Context context,List<VideoImage>imagenes, bool cargarimagenes,bool modominii, List<Android.Graphics.Bitmap> imagens, List<Android.Graphics.Bitmap> blurimgs)
         {
             cargarimageness = cargarimagenes;
             this.context = context;
@@ -165,7 +167,7 @@ namespace App1
                         holder.imagen.SetImageBitmap(imagen);
                         holder.titulillo.Text = listaimagenes[position].nombre;
                     }*/
-                    holder.titulillo.Text = listaimagenes[position].nombre;
+                    holder.titulillo.Text = listaimagenes[position].Name;
                  
       
                     if (cargarimageness)

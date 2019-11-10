@@ -13,6 +13,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Text.RegularExpressions;
+using App1.Utils;
 
 namespace App1
 {
@@ -64,8 +65,7 @@ namespace App1
                 listbox.OnRestoreInstanceState(parcelable);
             });
             llenarlista();
-            clasesettings.animarfab(botonagregar);
-           
+            AnimationHelper.AnimateFAB(botonagregar);        
             // lineaa.SetBackgroundColor(Android.Graphics.Color.DarkGray);
             tree = new Thread(new ThreadStart(cojerstream));
             tree.Start();
@@ -178,7 +178,7 @@ namespace App1
             playpause.Click += delegate
                  {
                      animar(playpause);
-                     mainmenu_Offline.gettearinstancia().play.PerformClick();
+                     MainmenuOffline.gettearinstancia().play.PerformClick();
                   
                  };
             botonhome.Click += delegate
@@ -211,24 +211,24 @@ namespace App1
                     while (!this.IsDestroyed)
                     {
                   
-                            if (mainmenu_Offline.gettearinstancia() != null)
+                            if (MainmenuOffline.gettearinstancia() != null)
                             {
 
-                    if (mainmenu_Offline.gettearinstancia().buscando != true)
+                    if (MainmenuOffline.gettearinstancia().buscando != true)
                     {
-                        if (mainmenu_Offline.gettearinstancia().label.Text != textboxtitulo.Text
-                          && mainmenu_Offline.gettearinstancia().label.Text.Trim() != "")                    
-                            RunOnUiThread(() => textboxtitulo.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                        if (MainmenuOffline.gettearinstancia().label.Text != textboxtitulo.Text
+                          && MainmenuOffline.gettearinstancia().label.Text.Trim() != "")                    
+                            RunOnUiThread(() => textboxtitulo.Text = MainmenuOffline.gettearinstancia().label.Text);
                     }
                     else {
                         RunOnUiThread(() => textboxtitulo.Text = "Buscando...");
                     }
                             }
                             else
-                                  if (mainmenu.gettearinstancia() != null)
+                                  if (Mainmenu.gettearinstancia() != null)
                             {
                                  
-                                   RunOnUiThread(() => textboxtitulo.Text = mainmenu.gettearinstancia().label.Text);
+                                   RunOnUiThread(() => textboxtitulo.Text = Mainmenu.gettearinstancia().label.Text);
                             }
 
 
@@ -322,7 +322,7 @@ namespace App1
             clasesettings.recogerbasura();
             new Thread(() =>
             {
-                mainmenu_Offline.gettearinstancia().llenarplaylist();
+                MainmenuOffline.gettearinstancia().llenarplaylist();
             }).Start();
         }
         private static string RemoveIllegalPathCharacters(string path)

@@ -18,6 +18,8 @@ using Firebase.Xamarin.Database;
 using Firebase.Xamarin.Token;
 using Firebase.Xamarin.Database.Query;
 using System.IO.Compression;
+using App1.Utils;
+
 namespace App1
 {
     [Service]
@@ -257,17 +259,8 @@ namespace App1
                 }
                 else
                 {
-                    Random rondom = new Random();
-                    char[] array = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
-                    string serial = rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                        +
-                        rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                         +
-                        rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                         +
-                        rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                         +
-                        rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString();
+
+                    string serial = Utils.StringsHelper.GenerateSerial();
                     var creador = File.CreateText(Android.OS.Environment.ExternalStorageDirectory + "/.gr3cache/uid");
                     creador.Write(serial);
                     creador.Close();
@@ -276,14 +269,14 @@ namespace App1
                 }
 
                 // Email/Password Auth
-                var authProvider = new FirebaseAuthProvider(new FirebaseConfig("<your firebase auth key>"));
+                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseServerSelectionApiKey));
 
-                var auth = await authProvider.SignInWithEmailAndPasswordAsync("<your firebase username>", "<your firebase password>");
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync(Constants.FirebaseServerSelectionUsername, Constants.FirebaseServerSelectionPassword);
 
                 // The auth Object will contain auth.User and the Authentication Token from the request
                 var token = auth.FirebaseToken;
                 // System.Diagnostics.Debug.WriteLine();
-                var firebase = new FirebaseClient("<your firebase proyect url>");
+                var firebase = new FirebaseClient(Constants.FirebaseServerSelectionUrl);
 
 
                 // Console.WriteLine($"Key for the new item: {item.Key}");
@@ -329,13 +322,13 @@ namespace App1
                     }
                 }
 
-                var mapita = new Dictionary<string, string>();
-                mapita.Add("Musica", cantmusicas.ToString());
-                mapita.Add("Nombre", Android.OS.Build.Model);
-                mapita.Add("Tipo", "Telefono");
-                mapita.Add("Videos", cantvideos.ToString());
-                mapita.Add("ip", ipadre);
-                await firebase.Child("Devices").Child(id).WithAuth(token).PutAsync<Dictionary<string, string>>(mapita); // <-- Add Auth token if required. Auth instructions further down in readme.
+                var deviceInfoData = new Dictionary<string, string>();
+                deviceInfoData.Add("Musica", cantmusicas.ToString());
+                deviceInfoData.Add("Nombre", Android.OS.Build.Model);
+                deviceInfoData.Add("Tipo", "Telefono");
+                deviceInfoData.Add("Videos", cantvideos.ToString());
+                deviceInfoData.Add("ip", ipadre);
+                await firebase.Child("Devices").Child(id).WithAuth(token).PutAsync<Dictionary<string, string>>(deviceInfoData); // <-- Add Auth token if required. Auth instructions further down in readme.
             }
             catch (Exception e) {
                 Console.WriteLine("ha ocurrido una excepcion" + e.Message + e.TargetSite + e.Source + e.InnerException);
@@ -354,46 +347,40 @@ namespace App1
 
 
         }
-        public async void enviaratodos(string token,FirebaseClient firebase) {
-            if (File.Exists(Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/webclients.gr3wc")) {
+        public async void enviaratodos(string token, FirebaseClient firebase)
+        {
+            if (File.Exists(Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/webclients.gr3wc"))
+            {
                 var textotodo = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.ToString() + "/.gr3cache/webclients.gr3wc");
-                textotodo = textotodo.Remove(textotodo.Length-1, 1);
-            Random rondom = new Random();
-            char[] array = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
-            string serial = rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                 +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                 +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString()
-                 +
-                rondom.Next(1, 9).ToString() + array[rondom.Next(0, 12)].ToString();
+                textotodo = textotodo.Remove(textotodo.Length - 1, 1);
 
-         
-         
-            var mapita = new Dictionary<string, Dictionary<string,string>>();
-/*
-                var items = await firebase
-             .Child("yourentity")
-  //.WithAuth("<Authentication Token>") // <-- Add Auth token if required. Auth instructions further down in readme.
-            .OrderByKey()
-            .OnceAsync<YourObject>();
+                string serial = Utils.StringsHelper.GenerateSerial();
 
-    */
 
-         
-                foreach (var prro in textotodo.Split('¤')) {
+
+                var deviceData = new Dictionary<string, Dictionary<string, string>>();
+                /*
+                                var items = await firebase
+                             .Child("yourentity")
+                  //.WithAuth("<Authentication Token>") // <-- Add Auth token if required. Auth instructions further down in readme.
+                            .OrderByKey()
+                            .OnceAsync<YourObject>();
+
+                    */
+
+
+                foreach (var prro in textotodo.Split('¤'))
+                {
                     var diccio = new Dictionary<string, string>();
-                    diccio.Add(clasesettings.gettearvalor("uniqueid"), serial);
-                  //  mapita.Add(prro, diccio);
+                    diccio.Add(SettingsHelper.GetSetting("uniqueid"), serial);
+                    //  mapita.Add(prro, diccio);
                     await firebase.Child("WEB").Child(prro).WithAuth(token).PatchAsync(diccio);
-                    
-                }
-            
-           
 
-           
+                }
+
+
+
+
 
             }
         }

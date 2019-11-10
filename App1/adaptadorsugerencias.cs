@@ -6,6 +6,7 @@ using Android.Support.V7.Widget;
 using Android.Glide;
 using Android.Content;
 using Android.Glide.Request;
+using App1.Models;
 
 namespace App1
 {
@@ -13,9 +14,9 @@ namespace App1
     {
         public event EventHandler<adaptadorsugerenciasClickEventArgs> ItemClick;
         public event EventHandler<adaptadorsugerenciasClickEventArgs> ItemLongClick;
-        List<elementosugerencia> items;
+        List<Suggestion> items;
         Context contexto;
-        public adaptadorsugerencias(Context con,List<elementosugerencia> data)
+        public adaptadorsugerencias(Context con,List<Suggestion> data)
         {
             items = data;
             contexto = con;
@@ -43,10 +44,10 @@ namespace App1
             // Replace the contents of the view with that element
             var holder = viewHolder as adaptadorsugerenciasViewHolder;
             Glide.With(contexto)
-                   .Load(item.portada)
+                   .Load(item.Portrait)
                    .Apply(RequestOptions.CircleCropTransform().SkipMemoryCache(true).Override(60, 60).Placeholder(Resource.Drawable.image))
                    .Into(holder.imagen);
-            holder.texto.Text = item.nombre;
+            holder.texto.Text = item.Name;
         }
 
         public override int ItemCount => items.Count;

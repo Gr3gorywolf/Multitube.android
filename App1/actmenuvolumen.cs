@@ -40,14 +40,14 @@ namespace App1
             {
                 animar(bajo);
 
-                if (mainmenu.gettearinstancia() != null)
-                    mainmenu.gettearinstancia().clientela.Client.Send(Encoding.UTF8.GetBytes("vol0()"));
+                if (Mainmenu.gettearinstancia() != null)
+                    Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.UTF8.GetBytes("vol0()"));
                 else
                  if (Clouding_service.gettearinstancia() != null)
                 {
-                    mainmenu_Offline.gettearinstancia().volumenactual = 0;
+                    MainmenuOffline.gettearinstancia().volumenactual = 0;
                     Clouding_service.gettearinstancia().musicaplayer.SetVolume(0f, 0f);
-                    mainmenu_Offline.gettearinstancia(). botonaccion.SetBackgroundResource(Resource.Drawable.volumelowrojo);
+                    MainmenuOffline.gettearinstancia(). botonaccion.SetBackgroundResource(Resource.Drawable.volumelowrojo);
                 }
                
                 this.Finish();
@@ -56,13 +56,13 @@ namespace App1
             medio.Click += delegate
             {
                 animar(medio);
-                if (mainmenu.gettearinstancia() != null)
-                    mainmenu.gettearinstancia().clientela.Client.Send(Encoding.UTF8.GetBytes("vol50()"));
+                if (Mainmenu.gettearinstancia() != null)
+                    Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.UTF8.GetBytes("vol50()"));
                 else
                   if (Clouding_service.gettearinstancia() != null) {
-                    mainmenu_Offline.gettearinstancia().volumenactual = 50;
+                    MainmenuOffline.gettearinstancia().volumenactual = 50;
                     Clouding_service.gettearinstancia().musicaplayer.SetVolume(0.5f, 0.5f);
-                    mainmenu_Offline.gettearinstancia(). botonaccion.SetBackgroundResource(Resource.Drawable.volumemediumrojo);
+                    MainmenuOffline.gettearinstancia(). botonaccion.SetBackgroundResource(Resource.Drawable.volumemediumrojo);
 
                 }
                 this.Finish();
@@ -70,13 +70,13 @@ namespace App1
             alto.Click += delegate
             {
                 animar(alto);
-                if (mainmenu.gettearinstancia() != null)
-                    mainmenu.gettearinstancia().clientela.Client.Send(Encoding.UTF8.GetBytes("vol100()"));
+                if (Mainmenu.gettearinstancia() != null)
+                    Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.UTF8.GetBytes("vol100()"));
                 else
                       if (Clouding_service.gettearinstancia() != null) {
-                    mainmenu_Offline.gettearinstancia().volumenactual = 100;
+                    MainmenuOffline.gettearinstancia().volumenactual = 100;
                     Clouding_service.gettearinstancia().musicaplayer.SetVolume(1f, 1f);
-                    mainmenu_Offline.gettearinstancia(). botonaccion.SetBackgroundResource(Resource.Drawable.volumehighrojo);
+                    MainmenuOffline.gettearinstancia(). botonaccion.SetBackgroundResource(Resource.Drawable.volumehighrojo);
                 }
 
                 this.Finish();
@@ -90,10 +90,10 @@ namespace App1
 
 
 
-            if (mainmenu_Offline.gettearinstancia() != null) {
+            if (MainmenuOffline.gettearinstancia() != null) {
 
-                if (mainmenu_Offline.gettearinstancia().panel.IsExpanded) {
-                    var inst = mainmenu_Offline.gettearinstancia();
+                if (MainmenuOffline.gettearinstancia().panel.IsExpanded) {
+                    var inst = MainmenuOffline.gettearinstancia();
                     if (inst.volumenactual == 0)
                         inst.botonaccion.SetBackgroundResource(Resource.Drawable.volumelow);
                     else

@@ -28,6 +28,8 @@ using Android.Support.V7.Content;
 using Android.Glide;
 using Android.Glide.Request;
 using Android.Content.Res;
+using App1.Models;
+using App1.Utils;
 
 namespace App1
 {
@@ -176,11 +178,11 @@ namespace App1
             //   panel.IsUsingDragViewTouchEvents = true;
 
             imagenvideomusica.SetBackgroundResource(Resource.Drawable.videoplayer);
-        //    barraariba.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
-          //  barraabajo.SetBackgroundColor(Color.ParseColor("#2b2e30"));
-          //  sidemenu.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
-            clasesettings.guardarsetting("tapnumber", "0");
-            clasesettings.guardarsetting("offlineactivo", "si");
+            //    barraariba.SetBackgroundColor(Color.ParseColor(clasesettings.gettearvalor("color")));
+            //  barraabajo.SetBackgroundColor(Color.ParseColor("#2b2e30"));
+            //  sidemenu.SetBackgroundColor(Android.Graphics.Color.ParseColor(clasesettings.gettearvalor("color")));
+            SettingsHelper.SaveSetting("tapnumber", "0");
+            SettingsHelper.SaveSetting("offlineactivo", "si");
             holder = video.Holder;
           sidemenu.BringToFront();
             sidemenu.BringToFront();
@@ -204,10 +206,10 @@ namespace App1
             //SupportActionBar.SetBackgroundDrawable( new ColorDrawable(Color.ParseColor("#2b2e30")) );
             //   SupportActionBar.SetHomeButtonEnabled(true);
 
-            if (clasesettings.gettearvalor("mediacache").Trim() != "")
+            if (SettingsHelper.GetSetting("mediacache").Trim() != "")
             {
 
-                postcachepath = clasesettings.gettearvalor("mediacache");
+                postcachepath = SettingsHelper.GetSetting("mediacache");
                
                 if (System.IO.Path.GetFileName(postcachepath).EndsWith(".mp3"))
                 {
@@ -271,7 +273,7 @@ namespace App1
             
          
             botonborrar.Visibility = ViewStates.Gone;
-            if (!clasesettings.probarsetting("mensajetocarinfo"))
+            if (!SettingsHelper.HasKey("mensajetocarinfo"))
             {
                 new Android.Support.V7.App.AlertDialog.Builder(this)
                     .SetTitle("Información")
@@ -279,7 +281,7 @@ namespace App1
                     .SetCancelable(false)
                     .SetPositiveButton("Entendido!", (aa, dfff) =>
                     {
-                        clasesettings.guardarsetting("mensajetocarinfo", "");
+                        SettingsHelper.SaveSetting("mensajetocarinfo", "");
                     })
                     .Create()
                     .Show();
@@ -297,12 +299,12 @@ namespace App1
 
 
             titulo.Selected = true;
-          /****************************************************************************
-           
-             
-             
-             */
-            clasesettings.guardarsetting("videoactivo", "no");
+            /****************************************************************************
+
+
+
+               */
+            SettingsHelper.SaveSetting("videoactivo", "no");
             playpause.SetBackgroundResource(Resource.Drawable.pausebutton2);
             instancia = this;
             video.Visibility = ViewStates.Invisible;
@@ -852,7 +854,7 @@ namespace App1
                 listaordenado.RemoveAt(listaordenado.Count - 1);
             }
 
-                if (clasesettings.gettearvalor("ordenalfabeto") == "si")
+                if (SettingsHelper.GetSetting("ordenalfabeto") == "si")
                 {
                     listaordenado.Sort();
                 }
@@ -939,7 +941,7 @@ namespace App1
                     listaordenado.RemoveAt(listaordenado.Count - 1);
                 }
 
-                if (clasesettings.gettearvalor("ordenalfabeto") == "si")
+                if (SettingsHelper.GetSetting("ordenalfabeto") == "si")
                 {
                     listaordenado.Sort();
                 }
@@ -1048,7 +1050,7 @@ namespace App1
         protected override void OnDestroy()
         {
             if (Clouding_serviceoffline.gettearinstancia().musicaplayer != null)
-                clasesettings.guardarsetting("posactual", Clouding_serviceoffline.gettearinstancia().musicaplayer.CurrentPosition.ToString());
+                SettingsHelper.SaveSetting("posactual", Clouding_serviceoffline.gettearinstancia().musicaplayer.CurrentPosition.ToString());
             if (Clouding_serviceoffline.gettearinstancia() != null)
             {
                 Clouding_serviceoffline.gettearinstancia().musicaplayer.Reset();
@@ -1060,10 +1062,10 @@ namespace App1
                   
             StopService(new Intent(this, typeof(Clouding_serviceoffline)));
             clasesettings.recogerbasura();
-          //  UnregisterReceiver(br);
-         //   instancia = null;
-        
-            clasesettings.guardarsetting("offlineactivo", "no");
+            //  UnregisterReceiver(br);
+            //   instancia = null;
+
+            SettingsHelper.SaveSetting("offlineactivo", "no");
             base.OnDestroy();
         }
        
@@ -1179,15 +1181,15 @@ namespace App1
 
         public void escaneartodo() { 
 
-            var media= new List<medialement>();
+            var media= new List<MediaElement>();
       
-            foreach (var audi in clasesettings.obtenermedia(clasesettings.rutacache + "/downloaded.gr3d"))
-                if (!File.Exists(audi.path))
+            foreach (var audi in clasesettings.obtenermedia(Constants.CachePath + "/downloaded.gr3d"))
+                if (!File.Exists(audi.Path))
                     media.Add(audi);
 
 
-            foreach (var vide in clasesettings.obtenermedia(clasesettings.rutacache + "/downloaded.gr3d2"))
-                if (!File.Exists(vide.path))
+            foreach (var vide in clasesettings.obtenermedia(Constants.CachePath + "/downloaded.gr3d2"))
+                if (!File.Exists(vide.Path))
                     media.Add(vide);
 
             if (media.Count > 0 ) {
@@ -1218,10 +1220,10 @@ namespace App1
 
         }
 
-         void actualizarrutas(List<medialement> mediaelements) {
+         void actualizarrutas(List<MediaElement> mediaelements) {
            
             bool romper = false;
-            var innermedia = new List<medialement>(mediaelements);
+            var innermedia = new List<MediaElement>(mediaelements);
           
             var textoaudios = "";
             var textovideos = "";
@@ -1230,10 +1232,10 @@ namespace App1
             var foundelements = 0;
             var xd2 = this.GetExternalMediaDirs();
          
-            if (File.Exists(clasesettings.rutacache + "/downloaded.gr3d"))
-               textoaudios=  File.ReadAllText(clasesettings.rutacache + "/downloaded.gr3d");
-            if (File.Exists(clasesettings.rutacache + "/downloaded.gr3d2"))
-                textovideos = File.ReadAllText(clasesettings.rutacache + "/downloaded.gr3d2");
+            if (File.Exists(Constants.CachePath + "/downloaded.gr3d"))
+               textoaudios=  File.ReadAllText(Constants.CachePath + "/downloaded.gr3d");
+            if (File.Exists(Constants.CachePath + "/downloaded.gr3d2"))
+                textovideos = File.ReadAllText(Constants.CachePath + "/downloaded.gr3d2");
          RunOnUiThread(()=> { dialogoprogreso3.SetMessage("Escaneando directorios"); });
 
             try
@@ -1267,11 +1269,11 @@ namespace App1
                     RunOnUiThread(() => dialogoprogreso3.Progress++);
                     foreach (var elemento in mediaelements)
                     {
-                        if (File.Exists(newdir + "/" +System.IO.Path.GetFileName( elemento.path)))
+                        if (File.Exists(newdir + "/" +System.IO.Path.GetFileName( elemento.Path)))
                         {
-                            innermedia.RemoveAll(ax => ax.path == elemento.path);
-                            textoaudios = textoaudios.Replace(elemento.path, newdir + "/" + System.IO.Path.GetFileName(elemento.path));
-                            textovideos = textovideos.Replace(elemento.path, newdir + "/" + System.IO.Path.GetFileName(elemento.path));
+                            innermedia.RemoveAll(ax => ax.Path == elemento.Path);
+                            textoaudios = textoaudios.Replace(elemento.Path, newdir + "/" + System.IO.Path.GetFileName(elemento.Path));
+                            textovideos = textovideos.Replace(elemento.Path, newdir + "/" + System.IO.Path.GetFileName(elemento.Path));
                             foundelements++;
                             RunOnUiThread(() => { dialogoprogreso3.SetMessage("Buscando archivos ["+foundelements+"/"+mediaelements.Count+"]"); });
                             if (innermedia.Count == 0)
@@ -1292,11 +1294,11 @@ namespace App1
                 RunOnUiThread(() => dialogoprogreso3.Progress++);
                 foreach (var elemento in mediaelements)
                 {
-                    if (File.Exists(newdir + "/" + System.IO.Path.GetFileName(elemento.path)))
+                    if (File.Exists(newdir + "/" + System.IO.Path.GetFileName(elemento.Path)))
                     {
-                        innermedia.RemoveAll(ax => ax.path == elemento.path);
-                        textoaudios = textoaudios.Replace(elemento.path, newdir + "/" + System.IO.Path.GetFileName(elemento.path));
-                        textovideos = textovideos.Replace(elemento.path, newdir + "/" + System.IO.Path.GetFileName(elemento.path));
+                        innermedia.RemoveAll(ax => ax.Path == elemento.Path);
+                        textoaudios = textoaudios.Replace(elemento.Path, newdir + "/" + System.IO.Path.GetFileName(elemento.Path));
+                        textovideos = textovideos.Replace(elemento.Path, newdir + "/" + System.IO.Path.GetFileName(elemento.Path));
                         foundelements++;
                         RunOnUiThread(() => { dialogoprogreso3.SetMessage("Buscando archivos [" + foundelements + "/" + mediaelements.Count + "]"); });
                         if (innermedia.Count == 0)
@@ -1311,19 +1313,19 @@ namespace App1
             if (innermedia.Count>0)
             {
                 foreach (var elemento in innermedia) {
-                  textoaudios=textoaudios.Replace(elemento.nombre + "²" + elemento.link + "²" + elemento.path + "¤", "");
-                    textovideos = textovideos.Replace(elemento.nombre + "²" + elemento.link + "²" + elemento.path + "¤", "");
+                  textoaudios=textoaudios.Replace(elemento.Name + "²" + elemento.Link + "²" + elemento.Path + "¤", "");
+                    textovideos = textovideos.Replace(elemento.Name + "²" + elemento.Link + "²" + elemento.Path + "¤", "");
                 }
             }
 
             if (textoaudios.Trim() != "") {
-                var auf = File.CreateText(clasesettings.rutacache + "/downloaded.gr3d");
+                var auf = File.CreateText(Constants.CachePath + "/downloaded.gr3d");
                 auf.Write(textoaudios);
                 auf.Close();
             }
             if (textovideos.Trim() != "")
             {
-                var auf2= File.CreateText(clasesettings.rutacache + "/downloaded.gr3d2");
+                var auf2= File.CreateText(Constants.CachePath + "/downloaded.gr3d2");
                 auf2.Write(textovideos);
                 auf2.Close();
             }
@@ -1634,10 +1636,10 @@ namespace App1
                     indiceactual = indice;
 
 
-                }        
+                }
 
 
-                 clasesettings.guardarsetting("mediacache", patheses[indiceactual]);
+                SettingsHelper.SaveSetting("mediacache", patheses[indiceactual]);
                 clasesettings.recogerbasura();
             }
             catch (Exception) {

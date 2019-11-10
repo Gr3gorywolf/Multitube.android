@@ -137,7 +137,7 @@ namespace App1
                                    new Thread(() =>
                                    {
 
-                                       mainmenu_Offline.gettearinstancia().llenarplaylist();
+                                       MainmenuOffline.gettearinstancia().llenarplaylist();
                                    }).Start();
                                });
                                ad.SetNegativeButton("No", (ux, uxdd) => {
@@ -236,11 +236,11 @@ namespace App1
                     menulistaoffline.gettearinstancia().llenarlista();
                 }
                 clasesettings.recogerbasura();
-                if (mainmenu_Offline.gettearinstancia() != null) { 
+                if (MainmenuOffline.gettearinstancia() != null) { 
                 new Thread(() =>
                 {
 
-                    mainmenu_Offline.gettearinstancia().llenarplaylist();
+                    MainmenuOffline.gettearinstancia().llenarplaylist();
                 }).Start();
                 }
                 this.Finish();

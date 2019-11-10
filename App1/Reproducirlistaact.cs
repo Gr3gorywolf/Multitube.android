@@ -12,6 +12,7 @@ using Android.Widget;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
+using App1.Models;
 
 namespace App1
 {
@@ -30,8 +31,8 @@ namespace App1
         public Thread teee;
         bool detenedor = true;
         public List<string> listastring = new List<string>();
-        public List<playlist> listaslocales = new List<playlist>();
-        public List<playlist> listasremotas = new List<playlist>();
+        public List<PlayList> listaslocales = new List<PlayList>();
+        public List<PlayList> listasremotas = new List<PlayList>();
         Android.Support.Design.Widget.TabLayout tl;
       public  int playlistidx = 0;
         //fromlocal es el remoto de aqui y el local de el server
@@ -79,7 +80,7 @@ namespace App1
             playpause.Click += delegate
             {
            
-              mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("playpause()"));
+              Mainmenu.gettearinstancia().clientela.Client.Send(Encoding.Default.GetBytes("playpause()"));
             };
             volverhome.Click += delegate
             {
@@ -104,7 +105,7 @@ namespace App1
 
                         if (listaslocales.Count > 0)
                         {
-                            var adap = new adapterlistaremoto(this, listaslocales.Select(asd => asd.nombre).ToList(), listaslocales.Select(asd => asd.portrait).ToList());
+                            var adap = new adapterlistaremoto(this, listaslocales.Select(asd => asd.Name).ToList(), listaslocales.Select(asd => asd.Portrait).ToList());
                             RunOnUiThread(() =>
                             {
                                 var parcelable = lista.OnSaveInstanceState();
@@ -137,7 +138,7 @@ namespace App1
                         query = "Fromlocal";
                         if (listasremotas.Count > 0)
                         {
-                            var adap = new adapterlistaremoto(this, listasremotas.Select(asd => asd.nombre).ToList(), listasremotas.Select(asd => asd.portrait).ToList());
+                            var adap = new adapterlistaremoto(this, listasremotas.Select(asd => asd.Name).ToList(), listasremotas.Select(asd => asd.Portrait).ToList());
                             RunOnUiThread(() =>
                             {
                                 var parcelable = lista.OnSaveInstanceState();
@@ -178,9 +179,9 @@ namespace App1
                 Intent intento = new Intent(this, typeof(dialogolistasact));
                 if (query == "Fromremote" && listaslocales.Count>0)
                 {
-                    if (listaslocales[playlistidx].portrait.Trim() != "") {
-                        intento.PutExtra("nombrelista", listaslocales[playlistidx].nombre);
-                        intento.PutExtra("portada", listaslocales[playlistidx].portrait);
+                    if (listaslocales[playlistidx].Portrait.Trim() != "") {
+                        intento.PutExtra("nombrelista", listaslocales[playlistidx].Name);
+                        intento.PutExtra("portada", listaslocales[playlistidx].Portrait);
                         intento.PutExtra("querry", query);
 
                         StartActivity(intento);
@@ -193,10 +194,10 @@ namespace App1
                 
                 {
                     if (listasremotas.Count > 0) {
-                        if (listasremotas[playlistidx].elementos.Count > 0)
+                        if (listasremotas[playlistidx].MediaElements.Count > 0)
                         {
-                            intento.PutExtra("nombrelista", listasremotas[playlistidx].nombre);
-                            intento.PutExtra("portada", listasremotas[playlistidx].portrait);
+                            intento.PutExtra("nombrelista", listasremotas[playlistidx].Name);
+                            intento.PutExtra("portada", listasremotas[playlistidx].Portrait);
                             intento.PutExtra("querry", query);
                             StartActivity(intento);
                         }
@@ -248,25 +249,25 @@ namespace App1
                 {
 
 
-                    var listilla = new List<playlistelements>();
-                    var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + listaslocales[playlistidx].nombre);
+                    var listilla = new List<PlaylistElement>();
+                    var texto = File.ReadAllText(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/gr3playerplaylist/" + listaslocales[playlistidx].Name);
                     var nombreses = texto.Split('$')[0].Split(';').ToList();
                     var links= texto.Split('$')[1].Split(';').ToList();
              
-                    var listaelementos = new List<playlistelements>();
+                    var listaelementos = new List<PlaylistElement>();
                     for (int i = 0; i < nombreses.Count; i++) {
 
                         if (nombreses[i].Trim() != "" || links[i].Trim() != "") {
-                        var elemento = new playlistelements()
+                        var elemento = new PlaylistElement()
                         {
-                            nombre = nombreses[i],
-                            link = links[i]
+                            Name = nombreses[i],
+                            Link = links[i]
                         };
                         listaelementos.Add(elemento);
                         }
                     }
-                    listaslocales[playlistidx].elementos = listaelementos;
-                    mainmenu.gettearinstancia()
+                    listaslocales[playlistidx].MediaElements = listaelementos;
+                    Mainmenu.gettearinstancia()
                          .clientelalistas
                          .Client
                          .Send(Encoding.UTF8.GetBytes(query + "__==__==__" + JsonConvert.SerializeObject(listaslocales[playlistidx])));
@@ -280,7 +281,7 @@ namespace App1
 
                 if (listasremotas.Count > 0)
                 {
-                    mainmenu.gettearinstancia()
+                    Mainmenu.gettearinstancia()
                         .clientelalistas
                         .Client
                         .Send(Encoding.UTF8.GetBytes(query + "__==__==__" + JsonConvert.SerializeObject(listasremotas[playlistidx])));
@@ -309,15 +310,15 @@ namespace App1
             {
                 
 
-                if (mainmenu.gettearinstancia() != null)
+                if (Mainmenu.gettearinstancia() != null)
                 {
 
-                    if (mainmenu.gettearinstancia().buscando == false)
+                    if (Mainmenu.gettearinstancia().buscando == false)
                     {
-                        if (mainmenu.gettearinstancia().label.Text != textbox.Text
-                         && mainmenu.gettearinstancia().label.Text.Trim() != "")
+                        if (Mainmenu.gettearinstancia().label.Text != textbox.Text
+                         && Mainmenu.gettearinstancia().label.Text.Trim() != "")
                         {
-                            RunOnUiThread(() => textbox.Text = mainmenu.gettearinstancia().label.Text);
+                            RunOnUiThread(() => textbox.Text = Mainmenu.gettearinstancia().label.Text);
                         }
                     }
                     else {
@@ -326,14 +327,14 @@ namespace App1
                     }
                 }
                 else
-               if (mainmenu.gettearinstancia() != null)
+               if (Mainmenu.gettearinstancia() != null)
                 {
-                    if (mainmenu.gettearinstancia().buscando == false)
+                    if (Mainmenu.gettearinstancia().buscando == false)
                     {
-                        if (mainmenu.gettearinstancia().label.Text.Trim() != ""
-                        && textbox.Text != mainmenu.gettearinstancia().label.Text)
+                        if (Mainmenu.gettearinstancia().label.Text.Trim() != ""
+                        && textbox.Text != Mainmenu.gettearinstancia().label.Text)
                         {
-                            RunOnUiThread(() => textbox.Text = mainmenu.gettearinstancia().label.Text);
+                            RunOnUiThread(() => textbox.Text = Mainmenu.gettearinstancia().label.Text);
                         }
                     }else
                         RunOnUiThread(() => textbox.Text = "Buscando...");
@@ -354,9 +355,9 @@ namespace App1
         public void llenarlistas() {
 
 
-            var jsonremoto = mainmenu.gettearinstancia().jsonlistasremotas;
+            var jsonremoto = Mainmenu.gettearinstancia().jsonlistasremotas;
             if (jsonremoto.Trim().Length > 0)
-                listasremotas = JsonConvert.DeserializeObject<List<playlist>>(jsonremoto);
+                listasremotas = JsonConvert.DeserializeObject<List<PlayList>>(jsonremoto);
 
 
 
@@ -367,18 +368,18 @@ namespace App1
               
                 foreach (var elementos in items)
                 {
-                    var elementolista = new playlist();
-                    elementolista.nombre = System.IO.Path.GetFileNameWithoutExtension(elementos);
+                    var elementolista = new PlayList();
+                    elementolista.Name = System.IO.Path.GetFileNameWithoutExtension(elementos);
                     var text = File.ReadAllText(elementos).Trim();
                     try
                     {
-                        elementolista.portrait = text.Split('$')[1].Split(';')[0];
+                        elementolista.Portrait = text.Split('$')[1].Split(';')[0];
                     }
                     catch (Exception)
                     {
-                        elementolista.portrait = "";
+                        elementolista.Portrait = "";
                     }
-                    elementolista.elementos = new List<playlistelements>();
+                    elementolista.MediaElements = new List<PlaylistElement>();
                     listaslocales.Add(elementolista);
 
                 }
@@ -388,7 +389,7 @@ namespace App1
           
                 if (listaslocales.Count > 0)
                 {
-                    var adap = new adapterlistaremoto(this, listaslocales.Select(asd => asd.nombre).ToList(), listaslocales.Select(asd => asd.portrait).ToList());
+                    var adap = new adapterlistaremoto(this, listaslocales.Select(asd => asd.Name).ToList(), listaslocales.Select(asd => asd.Portrait).ToList());
                 RunOnUiThread(() => {
                     var parcelable = lista.OnSaveInstanceState();
                     lista.Adapter = adap;

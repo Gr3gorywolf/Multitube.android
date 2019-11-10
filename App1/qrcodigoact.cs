@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using Android.Graphics;
 using System.Threading;
 using Android.Support.Design.Widget;
+using App1.Utils;
 
 namespace App1
 {
@@ -74,7 +75,7 @@ namespace App1
                         .Create();
             //    animar2(ll2);
 
-            clasesettings.animarfab(btn);
+            AnimationHelper.AnimateFAB(btn);
             clasesettings.ponerfondoyactualizar(this);
             lista.ItemClick += (se, del) =>
             {
@@ -96,7 +97,7 @@ namespace App1
             playpause.Click += delegate
             {
                 animar(playpause);
-                mainmenu_Offline.gettearinstancia().play.PerformClick();
+                MainmenuOffline.gettearinstancia().play.PerformClick();
              
 
             };
@@ -152,15 +153,15 @@ namespace App1
          
                 while (!this.IsDestroyed)
                 {
-                    if (mainmenu_Offline.gettearinstancia() != null)
+                    if (MainmenuOffline.gettearinstancia() != null)
                     {
 
-                    if (mainmenu_Offline.gettearinstancia().buscando != true)
+                    if (MainmenuOffline.gettearinstancia().buscando != true)
                     {
-                        if (mainmenu_Offline.gettearinstancia().label.Text != textboxtitulo.Text 
-                            && mainmenu_Offline.gettearinstancia().label.Text.Trim()!="")
+                        if (MainmenuOffline.gettearinstancia().label.Text != textboxtitulo.Text 
+                            && MainmenuOffline.gettearinstancia().label.Text.Trim()!="")
                         {
-                            RunOnUiThread(() => textboxtitulo.Text = mainmenu_Offline.gettearinstancia().label.Text);
+                            RunOnUiThread(() => textboxtitulo.Text = MainmenuOffline.gettearinstancia().label.Text);
 
                         }
                     }
@@ -177,13 +178,13 @@ namespace App1
 
 
 
-                    if (mainmenu_Offline.gettearinstancia().clienteses.Count > 0 )
+                    if (MainmenuOffline.gettearinstancia().clienteses.Count > 0 )
                     {
                         try
                         {
-                            var dummynames = mainmenu_Offline.gettearinstancia()
+                            var dummynames = MainmenuOffline.gettearinstancia()
                                 .clienteses.Select(ax => ((IPEndPoint)ax.Client.RemoteEndPoint).Address.ToString())
-                                .Where(aax => aax != mainmenu_Offline.gettearinstancia().ipadre.Trim()).Distinct()
+                                .Where(aax => aax != MainmenuOffline.gettearinstancia().ipadre.Trim()).Distinct()
                                 .ToList();
                             var dummylinks = dummynames.Select(ax => ax + "=sdss").ToList();
 
@@ -216,11 +217,11 @@ namespace App1
                     }
                     }
                     else
-                    if (mainmenu.gettearinstancia() != null)
+                    if (Mainmenu.gettearinstancia() != null)
                     {
-                        if (mainmenu.gettearinstancia().label.Text != textboxtitulo.Text)
+                        if (Mainmenu.gettearinstancia().label.Text != textboxtitulo.Text)
                         {
-                            RunOnUiThread(() => textboxtitulo.Text = mainmenu.gettearinstancia().label.Text);
+                            RunOnUiThread(() => textboxtitulo.Text = Mainmenu.gettearinstancia().label.Text);
                         }
                     }
                     else

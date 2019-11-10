@@ -8,6 +8,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using App1.Utils;
 
 namespace App1
 {
@@ -27,19 +28,19 @@ namespace App1
         }
         public void playpause()
         {
-            if (clasesettings.gettearvalor("playerstatus") != "reproduciendo")
+            if (SettingsHelper.GetSetting("playerstatus") != "reproduciendo")
             {
-             
 
 
-                clasesettings.guardarsetting("cquerry", "play()");
+
+                SettingsHelper.SaveSetting("cquerry", "play()");
             }
             else
 
             {
-             
 
-                clasesettings.guardarsetting("cquerry", "pause()");
+
+                SettingsHelper.SaveSetting("cquerry", "pause()");
 
             }
         }
