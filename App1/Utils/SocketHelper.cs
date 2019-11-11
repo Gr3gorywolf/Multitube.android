@@ -19,6 +19,22 @@ namespace App1.Utils
 {
    public static class SocketHelper
     {
+
+        public static string GetHostAddress()
+        {
+            string ipa = "";
+            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+            foreach (IPAddress ip in localIPs)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    ipa = ip.ToString();
+
+                }
+            }
+            return ipa;
+
+        }
         public static bool IsConnected(this TcpClient s)
         {
             try

@@ -12,10 +12,10 @@ using Android.Widget;
 
 namespace App1.Models
 {
-    class VideoShortInfo
+    public class VideoShortInfo
     {
-        public string titulo { get; set; }
-        public string downloadurl { get; set; }
+        public string Title { get; set; }
+        public string DownloadUrl { get; set; }
 
     }
 }

@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace App1.Models
 {
-    class MediaElement
+   public class MediaElement
     {
         public string Name { get; set; }
         public string Path { get; set; }
