@@ -14,6 +14,7 @@ namespace App1.Utils
 {
    public static class Constants
     {
+        public static bool UseFirebaseServices = false;
         public static string FirebaseSuggestionsUrl = "";
         public static string FirebaseServerSelectionUrl = "";
         public static string FirebaseServerSelectionApiKey = "";

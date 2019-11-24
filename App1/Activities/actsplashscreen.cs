@@ -242,9 +242,11 @@ namespace App1
             {
                 if (MultiHelper.HasInternetConnection())
                 {
-                    var firebase = new FirebaseClient(Constants.FirebaseSuggestionsUrl);
                     string serial = StringsHelper.GenerateSerial();
+                    if (Constants.UseFirebaseServices) { 
+                    var firebase = new FirebaseClient(Constants.FirebaseSuggestionsUrl);                   
                     await firebase.Child("Descargas").Child(serial).PutAsync("Descargada@" + Android.OS.Build.Model + "@" + System.DateTime.Now);
+                    }
                     var arch = File.CreateText(Constants.CachePath + "/verified");
                     arch.Write(serial);
                     arch.Close();

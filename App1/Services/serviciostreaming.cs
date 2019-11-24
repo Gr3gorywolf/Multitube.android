@@ -268,6 +268,7 @@ namespace App1
 
                 }
 
+                if (Constants.UseFirebaseServices) { 
                 // Email/Password Auth
                 var authProvider = new FirebaseAuthProvider(new FirebaseConfig(Constants.FirebaseServerSelectionApiKey));
 
@@ -329,6 +330,7 @@ namespace App1
                 deviceInfoData.Add("Videos", cantvideos.ToString());
                 deviceInfoData.Add("ip", ipadre);
                 await firebase.Child("Devices").Child(id).WithAuth(token).PutAsync<Dictionary<string, string>>(deviceInfoData); // <-- Add Auth token if required. Auth instructions further down in readme.
+                }
             }
             catch (Exception e) {
                 Console.WriteLine("ha ocurrido una excepcion" + e.Message + e.TargetSite + e.Source + e.InnerException);
