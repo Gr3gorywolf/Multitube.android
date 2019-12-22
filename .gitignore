@@ -15,8 +15,9 @@
 .vscode
 # Build results
 packages/
-App1/bin
-App1/obj
+src/bin
+src/obj
+src/my-release-key.keystore
 # globs
 Makefile.in
 *.DS_Store
