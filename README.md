@@ -6,7 +6,7 @@
 <li><a href="#future">Future plans</a></li>
 <li><a href="#download">App download</a></li>
 
-<h6 align="center" id="about"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/App1/Resources/drawable/logo.png"><h6>
+<h6 align="center" id="about"><img src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/src/Resources/drawable/logo.png"><h6>
 <h5 >Multitube android is a multi modules application that allows you to stream and download videos from youtube. This app have 4 main modules that are the following:<h5> 
 <br><h6 align="center"><img color="black" src="https://raw.githubusercontent.com/Gr3gorywolf/Multitube.android/master/docs/img/remote.png" height:"128" width:"128"/></h6>
 <h3 align="center">Remote controller</h3> <br>
