@@ -14,7 +14,8 @@
 .vs
 .vscode
 # Build results
-packages/
+packages
+libvideo.dll
 src/bin
 src/obj
 src/my-release-key.keystore
